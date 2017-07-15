@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Stage</string>
+    <string name="intro_1">Discover new and interesting \n people nearby</string>
+    <string name="intro_2">Swipe right to like someone \n or swipe left to pass</string>
+    <string name="intro_3">If they also swipe right, then \n it\'s a match!</string>
+    <string name="intro_4">Only people you\'ve matched \n with can message you</string>
+    <string name="log_in_with_facebook">Log in with Facebook</string>
+    <string name="log_in_with_phone_number">LOG IN WITH PHONE NUMBER</string>
+    <string name="policy_authentication">By signing in, you agree with our %1$s and %2$s</string>
+    <string name="tos">Terms of \n Service</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="search_people_match_you">Finding people near you&#8230;</string>
+    <string name="allow_access_location">Allow access location</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="settings">SETTINGS</string>
+    <string name="edit_info">EDIT INFO</string>
+    <string name="get_plus">GET PLUS</string>
+    <string name="get_tinder_plus">Get Tinder Plus</string>
+    <string name="get_more_boost">Get more Boosts</string>
+    <string name="get_super_likes">Get Super Likes</string>
+    <string name="tap_to_refill_now">Tap to Refill Now&#8230;</string>
+    <string name="settings_no_all_cap">Settings</string>
+    <string name="show_me">Show Me</string>
+    <string name="men">Men</string>
+    <string name="women">Women</string>
+    <string name="maximum_distance">Maximum distance</string>
+    <string name="age_range">Age range</string>
+    <string name="show_me_on_tinder">Show me on Tinder</string>
+    <string name="notifications">Notifications</string>
+    <string name="new_matches">New Matches</string>
+    <string name="messages">Messages</string>
+    <string name="message_likes">Message Likes</string>
+    <string name="super_likes">Super Likes</string>
+    <string name="app_settings">App Settings</string>
+</resources>
