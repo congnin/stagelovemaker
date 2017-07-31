@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:clickable="true">
+
+    <jp.stage.stagelovemaker.views.BackgroundGradientTopBottom
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <jp.stage.stagelovemaker.views.LoginActionBar
+            android:id="@+id/action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_40ssp"
+            android:layout_marginTop="@dimen/_30ssp"
+            android:gravity="center_horizontal"
+            android:text="Stage Love Maker"
+            android:textColor="#000"
+            android:textSize="@dimen/_20ssp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_5ssp"
+            android:layout_marginStart="@dimen/_20ssp"
+            android:layout_marginTop="@dimen/_15ssp"
+            android:text="User name:"
+            android:textSize="@dimen/_12ssp" />
+
+        <EditText
+            android:id="@+id/username_edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_20ssp"
+            android:layout_marginStart="@dimen/_20ssp"
+            android:background="@drawable/draw_edt_bg"
+            android:padding="@dimen/_5ssp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_5ssp"
+            android:layout_marginStart="@dimen/_20ssp"
+            android:layout_marginTop="@dimen/_10ssp"
+            android:text="Password:"
+            android:textSize="@dimen/_12ssp" />
+
+        <EditText
+            android:id="@+id/password_edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_20ssp"
+            android:layout_marginStart="@dimen/_20ssp"
+            android:background="@drawable/draw_edt_bg"
+            android:inputType="textPassword"
+            android:padding="@dimen/_5ssp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10ssp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/rememberUser_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5ssp"
+                android:text="Remember me?" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/_10ssp"
+            android:layout_marginEnd="@dimen/_20ssp"
+            android:layout_marginStart="@dimen/_20ssp"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/forgotPass_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Forgot password?"
+                android:textColor="#5090F3"
+                android:textSize="@dimen/_12ssp" />
+
+            <TextView
+                android:id="@+id/signUp_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="end"
+                android:text="Sign up?"
+                android:textColor="#5090F3"
+                android:textSize="@dimen/_12ssp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

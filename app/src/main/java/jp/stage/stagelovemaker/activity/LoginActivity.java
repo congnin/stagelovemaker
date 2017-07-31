@@ -3,6 +3,8 @@ package jp.stage.stagelovemaker.activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
@@ -20,6 +22,8 @@ import com.androidpagecontrol.PageControl;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.adapter.IntroPagerAdapter;
 import jp.stage.stagelovemaker.base.CommonActivity;
+import jp.stage.stagelovemaker.fragment.LoginFragment;
+import jp.stage.stagelovemaker.fragment.RegisterFragment;
 
 /**
  * Created by congn on 7/11/2017.
@@ -101,12 +105,21 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
         tvAuthPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
         btLoginFacebook.setOnClickListener(this);
+        btLoginByPhone.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        Bundle bundle = new Bundle();
-        startNewActivity(MainActivity.class, bundle);
-        finish();
+        switch (v.getId()) {
+            case R.id.bt_facebook:
+                LoginFragment loginFragment = LoginFragment.newInstance();
+                replace(loginFragment, LoginFragment.TAG, true, true);
+                break;
+            case R.id.bt_login_phone_number:
+                RegisterFragment registerFragment = RegisterFragment.newInstance();
+                replace(registerFragment, RegisterFragment.TAG, true, true);
+                break;
+        }
+
     }
 }

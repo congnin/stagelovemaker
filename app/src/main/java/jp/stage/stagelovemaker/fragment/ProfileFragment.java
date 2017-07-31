@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.utils.Utils;
 
 /**
  * Created by congn on 7/11/2017.
@@ -22,6 +23,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     TextView tvFormattedName;
     TextView tvWorkSite;
     TextView tvCollege;
+    TextView tvSettings;
+    TextView tvEditInfo;
 
     public static ProfileFragment newInstance() {
         Bundle args = new Bundle();
@@ -39,6 +42,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         tvFormattedName = (TextView) view.findViewById(R.id.tv_formatted_name);
         tvWorkSite = (TextView) view.findViewById(R.id.tv_work_location);
         tvCollege = (TextView) view.findViewById(R.id.tv_college);
+        tvSettings = (TextView) view.findViewById(R.id.tv_settings);
+        tvEditInfo = (TextView) view.findViewById(R.id.tv_edit);
         return view;
     }
 
@@ -54,6 +59,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         Typeface semiBoldType = Typeface.createFromAsset(getActivity().getAssets(), "fonts/proximanovasoft-semibold.otf");
         tvWorkSite.setTypeface(semiBoldType);
         tvCollege.setTypeface(semiBoldType);
+
+        tvSettings.setTypeface(Utils.getProximaRegular(getContext()));
+        tvEditInfo.setTypeface(Utils.getProximaRegular(getContext()));
     }
 
     @Override

@@ -3,10 +3,13 @@ package jp.stage.stagelovemaker.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.StringTokenizer;
 
 /**
@@ -57,6 +60,23 @@ public final class Utils {
             result = result + temp.substring(0, 1).toUpperCase() + temp.substring(1).toLowerCase() + " ";
         }
         return result.trim();
+    }
+
+    public static File getOutputMediaFile(Context context) {
+        String imageFileName = "avatar";
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = null;
+        try {
+            image = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return image;
     }
 
     public static float dip2px(Context context, float dpValue) {

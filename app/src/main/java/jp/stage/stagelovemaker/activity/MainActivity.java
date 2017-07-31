@@ -1,5 +1,6 @@
 package jp.stage.stagelovemaker.activity;
 
+import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.adapter.FeaturesPagerAdapter;
 import jp.stage.stagelovemaker.base.CommonActivity;
 import jp.stage.stagelovemaker.views.MainTabBar;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends CommonActivity implements MainTabBar.MainTabBarCallback,
         ViewPager.OnPageChangeListener {

@@ -4,52 +4,61 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="350dp" />
+        android:layout_height="match_parent">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="350dp" />
 
-    <com.androidpagecontrol.PageControl
-        android:id="@+id/page_control"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/view_pager"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-20dp" />
+        <com.androidpagecontrol.PageControl
+            android:id="@+id/page_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_pager"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-20dp" />
 
-    <Button
-        android:id="@+id/bt_facebook"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/view_pager"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/button_facebook"
-        android:text="@string/log_in_with_facebook"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="17sp" />
+        <Button
+            android:id="@+id/bt_facebook"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/view_pager"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/button_facebook"
+            android:text="@string/log_in"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
 
-    <Button
-        android:id="@+id/bt_login_phone_number"
-        android:layout_width="250dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/bt_facebook"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_login_phone"
-        android:text="@string/log_in_with_phone_number"
-        android:textColor="@color/gray" />
+        <Button
+            android:id="@+id/bt_login_phone_number"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/bt_facebook"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_login_phone"
+            android:text="@string/register"
+            android:textColor="@color/gray" />
 
-    <TextView
-        android:id="@+id/tv_authentication_policy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/bt_login_phone_number"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:lineSpacingExtra="5dp"
-        android:gravity="center_horizontal"
-        android:textColor="@color/darkgrey"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_authentication_policy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bt_login_phone_number"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="5dp"
+            android:textColor="@color/darkgrey"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/flContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

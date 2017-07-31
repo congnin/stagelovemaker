@@ -4,6 +4,6 @@
     <dimen name="page_control_margin">12dp</dimen>
     <dimen name="size_image_tabbar">32dp</dimen>
     <dimen name="margin_avatar_edit">25dp</dimen>
-    <dimen name="margin_horizontal_button_setting">20dp</dimen>
+    <dimen name="margin_horizontal_button_setting">15dp</dimen>
     <dimen name="margin_vertical_button_setting">15dp</dimen>
 </resources>

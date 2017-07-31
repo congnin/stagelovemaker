@@ -18,6 +18,7 @@ import com.edmodo.rangebar.RangeBar;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.Button;
 import jp.stage.stagelovemaker.views.TitleBar;
@@ -26,7 +27,8 @@ import jp.stage.stagelovemaker.views.TitleBar;
  * Created by congn on 7/14/2017.
  */
 
-public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCallback {
+public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCallback,
+        SeekBar.OnSeekBarChangeListener, RangeBar.OnRangeBarChangeListener, View.OnClickListener {
     public static final String TAG = "SettingFragment";
     TitleBar titleBar;
     Button btGetPlus;
@@ -49,7 +51,7 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     RelativeLayout layoutAge;
 
     TextView tvShowMeOnTinder;
-    SwitchCompat switShowOnTinder;
+    SwitchCompat switchShowOnTinder;
     RelativeLayout layoutShowMeOnTinder;
 
     TextView tvNotification;
@@ -58,6 +60,34 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     TextView tvMessageLikes;
     TextView tvSuperLikes;
     RelativeLayout layoutNotification;
+
+    TextView tvShowDistanceIn;
+    TextView tvChooseDistanceUnit;
+    android.widget.Button btKm;
+    android.widget.Button btMi;
+    RelativeLayout layoutShowDistance;
+
+    TextView tvContactUs;
+    TextView tvHelpSupport;
+    RelativeLayout layoutHelpSupport;
+
+    TextView tvShareApp;
+    RelativeLayout layoutShareApp;
+
+    TextView tvLegal;
+    TextView tvLicenses;
+    TextView tvPrivacy;
+    TextView tvTerms;
+    RelativeLayout layoutLegal;
+
+    TextView tvLogout;
+    RelativeLayout layoutLogout;
+
+    int fromAge;
+    int toAge;
+    int radius;
+    Boolean isMile;
+    String valueDistance;
 
     public static SettingFragment newInstance() {
 
@@ -100,6 +130,28 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         tvMessageLikes = (TextView) view.findViewById(R.id.tv_message_likes);
         tvSuperLikes = (TextView) view.findViewById(R.id.tv_super_likes);
         layoutNotification = (RelativeLayout) view.findViewById(R.id.layout_notification);
+
+        tvShowDistanceIn = (TextView) view.findViewById(R.id.tv_show_distance_in);
+        tvChooseDistanceUnit = (TextView) view.findViewById(R.id.tv_choose_distance_unit);
+        btKm = (android.widget.Button) view.findViewById(R.id.bt_km);
+        btMi = (android.widget.Button) view.findViewById(R.id.bt_mi);
+        layoutShowDistance = (RelativeLayout) view.findViewById(R.id.layout_show_distance);
+
+        tvContactUs = (TextView) view.findViewById(R.id.tv_contact_us);
+        tvHelpSupport = (TextView) view.findViewById(R.id.tv_help_support);
+        layoutHelpSupport = (RelativeLayout) view.findViewById(R.id.layout_help_support);
+
+        tvShareApp = (TextView) view.findViewById(R.id.tv_share_app);
+        layoutShareApp = (RelativeLayout) view.findViewById(R.id.layout_share_app);
+
+        tvLegal = (TextView) view.findViewById(R.id.tv_legal);
+        tvLicenses = (TextView) view.findViewById(R.id.tv_licenses);
+        tvPrivacy = (TextView) view.findViewById(R.id.tv_privacy);
+        tvTerms = (TextView) view.findViewById(R.id.tv_tos);
+        layoutLegal = (RelativeLayout) view.findViewById(R.id.layout_legal);
+
+        tvLogout = (TextView) view.findViewById(R.id.tv_logout);
+        layoutLogout = (RelativeLayout) view.findViewById(R.id.layout_logout);
         return view;
     }
 
@@ -133,11 +185,13 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         tvDistance.setTypeface(Utils.getProximaBold(getContext()));
         ((GradientDrawable) layoutDistance.getBackground()).setStroke(1, ContextCompat.getColor(getContext(), R.color.gray80));
         ((GradientDrawable) layoutDistance.getBackground()).setColor(Color.WHITE);
+        seekBarDistance.setOnSeekBarChangeListener(this);
 
         tvAgeRange.setTypeface(Utils.getProximaBold(getContext()));
         tvAge.setTypeface(Utils.getProximaSemiBold(getContext()));
         ((GradientDrawable) layoutAge.getBackground()).setStroke(1, ContextCompat.getColor(getContext(), R.color.gray80));
         ((GradientDrawable) layoutAge.getBackground()).setColor(Color.WHITE);
+        rangeAge.setOnRangeBarChangeListener(this);
 
         tvShowMeOnTinder.setTypeface(Utils.getProximaSemiBold(getContext()));
         ((GradientDrawable) layoutShowMeOnTinder.getBackground()).setStroke(1, ContextCompat.getColor(getContext(), R.color.gray80));
@@ -150,6 +204,46 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         tvSuperLikes.setTypeface(Utils.getProximaSemiBold(getContext()));
         ((GradientDrawable) layoutNotification.getBackground()).setStroke(1, ContextCompat.getColor(getContext(), R.color.gray80));
         ((GradientDrawable) layoutNotification.getBackground()).setColor(Color.WHITE);
+
+        tvShowDistanceIn.setTypeface(Utils.getProximaBold(getContext()));
+        tvChooseDistanceUnit.setTypeface(Utils.getProximaSemiBold(getContext()));
+        ((GradientDrawable) layoutShowDistance.getBackground()).setStroke(1, ContextCompat.getColor(getContext(), R.color.gray80));
+        ((GradientDrawable) layoutShowDistance.getBackground()).setColor(Color.WHITE);
+//        ((GradientDrawable) btKm.getBackground()).setStroke(1, Color.TRANSPARENT);
+//        ((GradientDrawable) btKm.getBackground()).setColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+//        btKm.setTextColor(Color.WHITE);
+        chooseDistanceUnit(btKm, btMi);
+        btKm.setTypeface(Utils.getProximaSemiBold(getContext()));
+        btMi.setTypeface(Utils.getProximaSemiBold(getContext()));
+
+        tvContactUs.setTypeface(Utils.getProximaBold(getContext()));
+        tvHelpSupport.setTypeface(Utils.getProximaBold(getContext()));
+        ((GradientDrawable) layoutHelpSupport.getBackground()).setStroke(1, ContextCompat.getColor(getContext(), R.color.gray80));
+        ((GradientDrawable) layoutHelpSupport.getBackground()).setColor(Color.WHITE);
+
+        tvShareApp.setTypeface(Utils.getProximaBold(getContext()));
+        ((GradientDrawable) layoutShareApp.getBackground()).setStroke(1, ContextCompat.getColor(getContext(), R.color.gray80));
+        ((GradientDrawable) layoutShareApp.getBackground()).setColor(Color.WHITE);
+
+        tvLegal.setTypeface(Utils.getProximaBold(getContext()));
+        tvLicenses.setTypeface(Utils.getProximaSemiBold(getContext()));
+        tvPrivacy.setTypeface(Utils.getProximaSemiBold(getContext()));
+        tvTerms.setTypeface(Utils.getProximaSemiBold(getContext()));
+        ((GradientDrawable) layoutLegal.getBackground()).setStroke(1, ContextCompat.getColor(getContext(), R.color.gray80));
+        ((GradientDrawable) layoutLegal.getBackground()).setColor(Color.WHITE);
+
+        tvLogout.setTypeface(Utils.getProximaBold(getContext()));
+        ((GradientDrawable) layoutLogout.getBackground()).setStroke(1, ContextCompat.getColor(getContext(), R.color.gray80));
+        ((GradientDrawable) layoutLogout.getBackground()).setColor(Color.WHITE);
+
+        valueDistance = getString(R.string.km);
+        seekBarDistance.setMax(160);
+        isMile = false;
+        rangeAge.setTickCount(Constants.MAX_AGE - Constants.MIN_AGE + 1);
+        tvChooseDistanceUnit.setText(getString(R.string.km));
+
+        btMi.setOnClickListener(this);
+        btKm.setOnClickListener(this);
     }
 
     @Override
@@ -170,5 +264,67 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     @Override
     public void onMiddleButtonClicked() {
 
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (seekBar == seekBarDistance && isMile != null) {
+            String more = "";
+            if (isMile == true) {
+                radius = progress;
+                if (progress == 100) {
+                    more = "+";
+                }
+            } else {
+                radius = (int) (progress * 0.625);
+                if (progress == 160) {
+                    more = "+";
+                }
+            }
+            tvDistance.setText(progress + valueDistance + more);
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onIndexChangeListener(RangeBar rangeBar, int i, int i1) {
+        fromAge = i + Constants.MIN_AGE;
+        toAge = i1 + Constants.MIN_AGE;
+        tvAge.setText((fromAge) + "-" + (toAge));
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_km:
+                chooseDistanceUnit(btKm, btMi);
+                isMile = false;
+                tvChooseDistanceUnit.setText(getString(R.string.km));
+                break;
+            case R.id.bt_mi:
+                chooseDistanceUnit(btMi, btKm);
+                isMile = true;
+                tvChooseDistanceUnit.setText(getString(R.string.mi));
+                break;
+        }
+    }
+
+    private void chooseDistanceUnit(android.widget.Button button1, android.widget.Button button2) {
+        ((GradientDrawable) button1.getBackground()).setColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+        ((GradientDrawable) button1.getBackground()).setStroke(0, Color.TRANSPARENT);
+        button1.setTextColor(Color.WHITE);
+
+        ((GradientDrawable) button2.getBackground()).setColor(Color.TRANSPARENT);
+        ((GradientDrawable) button2.getBackground()).setStroke(0, Color.TRANSPARENT);
+        button2.setTextColor(ContextCompat.getColor(getContext(), R.color.gray37));
     }
 }

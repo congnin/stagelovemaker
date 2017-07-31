@@ -6,6 +6,9 @@
     <string name="intro_4">Only people you\'ve matched \n with can message you</string>
     <string name="log_in_with_facebook">Log in with Facebook</string>
     <string name="log_in_with_phone_number">LOG IN WITH PHONE NUMBER</string>
+    <string name="log_in">Log in</string>
+    <string name="register">Register</string>
+    <string name="next">NEXT</string>
     <string name="policy_authentication">By signing in, you agree with our %1$s and %2$s</string>
     <string name="tos">Terms of \n Service</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -25,6 +28,9 @@
     <string name="women">Women</string>
     <string name="maximum_distance">Maximum distance</string>
     <string name="age_range">Age range</string>
+    <string name="show_distances_in">Show Distance in</string>
+    <string name="mi">Mi.</string>
+    <string name="km">Km.</string>
     <string name="show_me_on_tinder">Show me on Tinder</string>
     <string name="notifications">Notifications</string>
     <string name="new_matches">New Matches</string>
@@ -32,4 +38,18 @@
     <string name="message_likes">Message Likes</string>
     <string name="super_likes">Super Likes</string>
     <string name="app_settings">App Settings</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="help_support">Help &#38; Support</string>
+    <string name="share_app">Share App</string>
+    <string name="restore_purchase">Restore Purchase</string>
+    <string name="legal">Legal</string>
+    <string name="licenses">Licenses</string>
+    <string name="term_of_service">Terms of Service</string>
+    <string name="logout">Logout</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_from_gallery">Choose from Gallery</string>
+    <string name="take_photo">Take photo</string>
+    <string name="select_picture">Select Picture</string>
+    <string name="explain_smart_photos">Smart Photos continuously tests all your profile photos and picks the best one to show first.</string>
 </resources>

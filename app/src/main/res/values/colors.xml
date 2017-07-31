@@ -10,9 +10,13 @@
     <color name="light_red">#ffb2b2</color>
     <color name="medium_dark_gray">#4a4a4a</color>
     <color name="dark_gray">#9b9b9b</color>
-    <color name="light_gray">#ececec</color>
+    <color name="very_light_gray">#ececec</color>
     <color name="moderate_violet">#7c47c3</color>
     <color name="light_blue">#3da5ff</color>
     <color name="gray37">#8e8e8e</color>
     <color name="light_grayish_red">#fbd0d0</color>
+    <color name="pink">#F81682</color>
+    <color name="light_gray">#dbdbdb</color>
+    <color name="color_dim_text">#B3FFFFFF</color>
+    <color name="very_dark_gray">#353535</color>
 </resources>

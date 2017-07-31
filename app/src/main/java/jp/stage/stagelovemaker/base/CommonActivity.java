@@ -1,5 +1,6 @@
 package jp.stage.stagelovemaker.base;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,13 +9,18 @@ import android.support.v7.app.AppCompatActivity;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.utils.Utils;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by congn on 7/11/2017.
  */
 
 public class CommonActivity extends AppCompatActivity {
-
+    
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     public void add(final BaseFragment fragment, final String tag, final boolean backstack, final boolean animation) {
 

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "jp.stage.stagelovemaker"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -36,6 +36,10 @@ dependencies {
     compile 'pl.bclogic:pulsator4droid:1.0.3'
     compile 'com.edmodo:rangebar:1.0.0'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
+    compile 'com.intuit.ssp:ssp-android:1.0.4'
+    compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.4.+'
+    compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 
     testCompile 'junit:junit:4.12'
 }
