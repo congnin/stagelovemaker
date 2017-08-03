@@ -11,7 +11,7 @@ public final class Constants {
 
     public static final String KEY_DATA = "key_data";
 
-    public static final int MIN_AGE = 17;
+    public static final int MIN_AGE = 18;
     public static final int MAX_AGE = 60;
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;

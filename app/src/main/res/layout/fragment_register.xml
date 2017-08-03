@@ -34,6 +34,7 @@
                 android:src="@mipmap/ic_launcher" />
 
             <TextView
+                android:id="@+id/registerName_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10ssp"
@@ -73,6 +74,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/regiterUserName_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10ssp"
@@ -90,6 +92,7 @@
                 android:textSize="@dimen/_12ssp" />
 
             <TextView
+                android:id="@+id/registerPass_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10ssp"
@@ -107,6 +110,7 @@
                 android:textSize="@dimen/_12ssp" />
 
             <TextView
+                android:id="@+id/registerRepeatPass_Tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10ssp"
@@ -124,6 +128,7 @@
                 android:textSize="@dimen/_12ssp" />
 
             <TextView
+                android:id="@+id/registerEmail_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10ssp"
@@ -141,6 +146,7 @@
                 android:textSize="@dimen/_12ssp" />
 
             <TextView
+                android:id="@+id/registerGender_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10ssp"
@@ -171,6 +177,7 @@
             </RadioGroup>
 
             <TextView
+                android:id="@+id/registerBirthday_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10ssp"

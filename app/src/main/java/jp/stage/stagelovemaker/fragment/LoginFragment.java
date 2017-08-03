@@ -8,10 +8,12 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.LoginActionBar;
 
 /**
@@ -21,6 +23,9 @@ import jp.stage.stagelovemaker.views.LoginActionBar;
 public class LoginFragment extends BaseFragment implements LoginActionBar.LoginActionBarDelegate{
     public static final String TAG = "LoginFragment";
     LoginActionBar actionBar;
+
+    TextView stageTitleTv, userNameTv, passwordTv, forgotPassTv, registerTv;
+
     boolean bFlagButtonNext = false;
     public static LoginFragment newInstance() {
 
@@ -36,6 +41,11 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_login, container, false);
         actionBar = (LoginActionBar) view.findViewById(R.id.action_bar);
+        stageTitleTv = (TextView)view.findViewById(R.id.stage_title_tv);
+        userNameTv = (TextView)view.findViewById(R.id.username_tv);
+        passwordTv = (TextView)view.findViewById(R.id.password_tv);
+        forgotPassTv = (TextView)view.findViewById(R.id.forgotPass_tv);
+        registerTv = (TextView)view.findViewById(R.id.signUp_tv);
         return view;
     }
 
@@ -45,6 +55,12 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
         actionBar.setDelegate(getTag(), this);
         actionBar.setTitle(getString(R.string.log_in));
         actionBar.setTextNextColor(ContextCompat.getColor(getContext(), R.color.color_dim_text));
+
+        stageTitleTv.setTypeface(Utils.getProximaBold(getContext()));
+        userNameTv.setTypeface(Utils.getProximaBold(getContext()));
+        passwordTv.setTypeface(Utils.getProximaBold(getContext()));
+        forgotPassTv.setTypeface(Utils.getProximaBold(getContext()));
+        registerTv.setTypeface(Utils.getProximaBold(getContext()));
     }
 
     @Override

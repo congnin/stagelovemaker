@@ -15,6 +15,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/titleBar">
 
         <LinearLayout
@@ -34,13 +36,16 @@
                     android:layout_marginEnd="@dimen/_5ssp"
                     android:layout_weight="2">
 
-                    <com.github.siyamed.shapeimageview.BubbleImageView
+                    <com.github.siyamed.shapeimageview.RoundedImageView
                         android:id="@+id/imageView_1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="@dimen/_3ssp"
                         android:background="@drawable/draw_image_view_bg"
                         android:scaleType="fitCenter"
+                        app:siBorderColor="@android:color/transparent"
+                        app:siBorderWidth="0dp"
+                        app:siRadius="@dimen/_10ssp"
                         app:siSquare="true" />
 
                     <TextView
@@ -74,13 +79,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <com.github.siyamed.shapeimageview.BubbleImageView
+                        <com.github.siyamed.shapeimageview.RoundedImageView
                             android:id="@+id/imageView_2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_5ssp"
                             android:layout_marginStart="@dimen/_5ssp"
                             android:background="@drawable/draw_image_view_bg"
+                            android:scaleType="fitCenter"
+                            app:siBorderColor="@android:color/transparent"
+                            app:siBorderWidth="0dp"
+                            app:siRadius="@dimen/_10ssp"
                             app:siSquare="true" />
 
                         <TextView
@@ -110,13 +119,17 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relative_1">
 
-                        <com.github.siyamed.shapeimageview.BubbleImageView
+                        <com.github.siyamed.shapeimageview.RoundedImageView
                             android:id="@+id/imageView_3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5ssp"
                             android:layout_marginTop="@dimen/_5ssp"
                             android:background="@drawable/draw_image_view_bg"
+                            android:scaleType="fitCenter"
+                            app:siBorderColor="@android:color/transparent"
+                            app:siBorderWidth="0dp"
+                            app:siRadius="@dimen/_10ssp"
                             app:siSquare="true" />
 
                         <TextView
@@ -158,11 +171,15 @@
                     android:layout_marginEnd="@dimen/_5ssp"
                     android:layout_weight="1">
 
-                    <com.github.siyamed.shapeimageview.BubbleImageView
+                    <com.github.siyamed.shapeimageview.RoundedImageView
                         android:id="@+id/imageView_6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/draw_image_view_bg"
+                        android:scaleType="fitCenter"
+                        app:siBorderColor="@android:color/transparent"
+                        app:siBorderWidth="0dp"
+                        app:siRadius="@dimen/_10ssp"
                         app:siSquare="true" />
 
                     <TextView
@@ -194,11 +211,15 @@
                     android:layout_marginStart="@dimen/_5ssp"
                     android:layout_weight="1">
 
-                    <com.github.siyamed.shapeimageview.BubbleImageView
+                    <com.github.siyamed.shapeimageview.RoundedImageView
                         android:id="@+id/imageView_5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/draw_image_view_bg"
+                        android:scaleType="fitCenter"
+                        app:siBorderColor="@android:color/transparent"
+                        app:siBorderWidth="0dp"
+                        app:siRadius="@dimen/_10ssp"
                         app:siSquare="true" />
 
                     <TextView
@@ -229,11 +250,15 @@
                     android:layout_marginStart="@dimen/_5ssp"
                     android:layout_weight="1">
 
-                    <com.github.siyamed.shapeimageview.BubbleImageView
+                    <com.github.siyamed.shapeimageview.RoundedImageView
                         android:id="@+id/imageView_4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/draw_image_view_bg"
+                        android:scaleType="fitCenter"
+                        app:siBorderColor="@android:color/transparent"
+                        app:siBorderWidth="0dp"
+                        app:siRadius="@dimen/_10ssp"
                         app:siSquare="true" />
 
                     <TextView
@@ -267,12 +292,12 @@
                 android:background="#FFFFFF">
 
                 <TextView
+                    android:id="@+id/smart_photo_tv"
+                    style="@style/MyTextViewHeaderStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/_10ssp"
-                    android:text="Smart photos"
-                    android:textColor="@color/pink"
-                    android:textSize="@dimen/_12ssp" />
+                    android:text="Smart photos" />
 
                 <android.support.v7.widget.SwitchCompat
                     android:layout_width="wrap_content"
@@ -285,6 +310,8 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/smart_photo_des_tv"
+                style="@style/MyTextViewSettingStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_10ssp"
@@ -292,14 +319,14 @@
                 android:textSize="@dimen/_12ssp" />
 
             <TextView
+                android:id="@+id/about_user_tv"
+                style="@style/MyTextViewHeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_10ssp"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginTop="@dimen/_10ssp"
-                android:text="About Cong"
-                android:textSize="@dimen/_12ssp"
-                android:textStyle="bold" />
+                android:text="About Cong" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -309,6 +336,7 @@
 
                 <EditText
                     android:id="@+id/edt_about_user"
+                    style="@style/MyTextViewSettingStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_10ssp"
@@ -332,76 +360,79 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/currentWork_tv"
+                style="@style/MyTextViewHeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_10ssp"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginTop="@dimen/_12ssp"
                 android:text="Current Work"
-                android:textSize="@dimen/_12ssp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/select_work_tv"
+                style="@style/MyTextViewSettingStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_3ssp"
                 android:background="@drawable/draw_white_bg"
                 android:lines="1"
                 android:padding="@dimen/_10ssp"
-                android:text="Select Work"
-                android:textSize="@dimen/_12ssp" />
+                android:text="Select Work" />
 
             <TextView
+                android:id="@+id/school_tv"
+                style="@style/MyTextViewHeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_10ssp"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginTop="@dimen/_12ssp"
                 android:text="School"
-                android:textSize="@dimen/_12ssp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/select_school_tv"
+                style="@style/MyTextViewSettingStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_3ssp"
                 android:background="@drawable/draw_white_bg"
                 android:lines="1"
                 android:padding="@dimen/_10ssp"
-                android:text="Select school"
-                android:textSize="@dimen/_12ssp" />
+                android:text="Select school" />
 
             <TextView
+                android:id="@+id/instagram_tv"
+                style="@style/MyTextViewHeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_10ssp"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginTop="@dimen/_12ssp"
                 android:text="Show my Instagram Photos"
-                android:textSize="@dimen/_12ssp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/connect_instagram"
+                style="@style/MyTextViewSettingStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_3ssp"
                 android:background="@drawable/draw_white_bg"
                 android:padding="@dimen/_10ssp"
-                android:text="Connect Instagram"
-                android:textColor="@color/pink"
-                android:textSize="@dimen/_12ssp" />
+                android:text="Connect Instagram" />
 
             <TextView
+                android:id="@+id/gender_tv"
+                style="@style/MyTextViewHeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_10ssp"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginTop="@dimen/_12ssp"
                 android:text="Gender"
-                android:textSize="@dimen/_12ssp"
                 android:textStyle="bold" />
 
             <RadioGroup
@@ -413,6 +444,7 @@
 
                 <RadioButton
                     android:id="@+id/man_radio_btn"
+                    style="@style/MyTextViewSettingStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_10ssp"
@@ -422,6 +454,7 @@
 
                 <RadioButton
                     android:id="@+id/woman_radio_btn"
+                    style="@style/MyTextViewSettingStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_10ssp"
@@ -431,13 +464,14 @@
             </RadioGroup>
 
             <TextView
+                android:id="@+id/controlProfile_tv"
+                style="@style/MyTextViewHeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_10ssp"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginTop="@dimen/_12ssp"
                 android:text="Control Your Profile"
-                android:textSize="@dimen/_12ssp"
                 android:textStyle="bold" />
 
             <RelativeLayout
@@ -447,11 +481,12 @@
                 android:background="#FFFFFF">
 
                 <TextView
+                    android:id="@+id/show_age_tv"
+                    style="@style/MyTextViewSettingStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/_10ssp"
-                    android:text="Dont show my age"
-                    android:textSize="@dimen/_12ssp" />
+                    android:text="Dont show my age" />
 
                 <android.support.v7.widget.SwitchCompat
                     android:id="@+id/dont_show_age"
@@ -470,12 +505,13 @@
                 android:background="#FFFFFF">
 
                 <TextView
+                    android:id="@+id/invi_distance_tv"
+                    style="@style/MyTextViewSettingStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/_10ssp"
                     android:paddingStart="@dimen/_10ssp"
-                    android:text="Make my distance invisible"
-                    android:textSize="@dimen/_12ssp" />
+                    android:text="Make my distance invisible" />
 
                 <android.support.v7.widget.SwitchCompat
                     android:id="@+id/distance_invi"

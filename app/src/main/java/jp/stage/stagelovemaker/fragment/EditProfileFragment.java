@@ -16,14 +16,15 @@ import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.github.siyamed.shapeimageview.BubbleImageView;
-import com.makeramen.roundedimageview.RoundedImageView;
+import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
@@ -52,8 +53,13 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
     ScrollView scrollView;
     RelativeLayout avatarMainLayout;
     LinearLayout avatarAddLayout;
+    TextView smartPhotoTv, aboutUserTv, smartPhotoDesTv, instagramTv;
+    TextView currentWorkTv, controlProfileTv, schoolTv, genderTv;
+    EditText aboutUserEdt;
+    TextView selectWorkTv, selectSchoolTv, connectInstaTv, showAgeTv, inviDistanceTv;
+    RadioButton manBtn, womanBtn;
 
-    ArrayList<BubbleImageView> avatarImageView = new ArrayList<>();
+    ArrayList<RoundedImageView> avatarImageView = new ArrayList<>();
     ArrayList<ImageView> removeImageView = new ArrayList<>();
 
     int indexChange;
@@ -77,12 +83,12 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         titleBar = (TitleBar) view.findViewById(R.id.titleBar);
-        avatarImageView.add((BubbleImageView) view.findViewById(R.id.imageView_1));
-        avatarImageView.add((BubbleImageView) view.findViewById(R.id.imageView_2));
-        avatarImageView.add((BubbleImageView) view.findViewById(R.id.imageView_3));
-        avatarImageView.add((BubbleImageView) view.findViewById(R.id.imageView_4));
-        avatarImageView.add((BubbleImageView) view.findViewById(R.id.imageView_5));
-        avatarImageView.add((BubbleImageView) view.findViewById(R.id.imageView_6));
+        avatarImageView.add((RoundedImageView) view.findViewById(R.id.imageView_1));
+        avatarImageView.add((RoundedImageView) view.findViewById(R.id.imageView_2));
+        avatarImageView.add((RoundedImageView) view.findViewById(R.id.imageView_3));
+        avatarImageView.add((RoundedImageView) view.findViewById(R.id.imageView_4));
+        avatarImageView.add((RoundedImageView) view.findViewById(R.id.imageView_5));
+        avatarImageView.add((RoundedImageView) view.findViewById(R.id.imageView_6));
         removeImageView.add((ImageView) view.findViewById(R.id.add_imageView_1));
         removeImageView.add((ImageView) view.findViewById(R.id.add_imageView_2));
         removeImageView.add((ImageView) view.findViewById(R.id.add_imageView_3));
@@ -94,6 +100,23 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         cancelCropView = (TextView) view.findViewById(R.id.back_txt_cropview);
         chooseCropView = (TextView) view.findViewById(R.id.done_txt_cropview);
         rotateImage = (ImageView) view.findViewById(R.id.rotate_img);
+        smartPhotoTv = (TextView)view.findViewById(R.id.smart_photo_tv);
+        smartPhotoDesTv = (TextView)view.findViewById(R.id.smart_photo_des_tv);
+        aboutUserTv = (TextView)view.findViewById(R.id.about_user_tv);
+        instagramTv = (TextView)view.findViewById(R.id.instagram_tv);
+        currentWorkTv = (TextView)view.findViewById(R.id.currentWork_tv);
+        schoolTv = (TextView)view.findViewById(R.id.school_tv);
+        controlProfileTv = (TextView)view.findViewById(R.id.controlProfile_tv);
+        genderTv = (TextView)view.findViewById(R.id.gender_tv);
+        aboutUserEdt = (EditText)view.findViewById(R.id.edt_about_user);
+        selectWorkTv = (TextView)view.findViewById(R.id.select_work_tv);
+        selectSchoolTv = (TextView)view.findViewById(R.id.select_school_tv);
+        showAgeTv = (TextView)view.findViewById(R.id.show_age_tv);
+        inviDistanceTv =(TextView)view.findViewById(R.id.invi_distance_tv);
+        connectInstaTv = (TextView)view.findViewById(R.id.connect_instagram);
+        manBtn = (RadioButton)view.findViewById(R.id.man_radio_btn);
+        womanBtn = (RadioButton)view.findViewById(R.id.woman_radio_btn);
+
         return view;
     }
 
@@ -103,6 +126,23 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         titleBar.setTitle(getString(R.string.edit_profile));
         titleBar.enableBackButton();
         titleBar.setCallback(this);
+
+        //set UI
+        smartPhotoTv.setTypeface(Utils.getProximaBold(getContext()));
+        smartPhotoDesTv.setTypeface(Utils.getProximaBold(getContext()));
+        schoolTv.setTypeface(Utils.getProximaBold(getContext()));
+        genderTv.setTypeface(Utils.getProximaBold(getContext()));
+        currentWorkTv.setTypeface(Utils.getProximaBold(getContext()));
+        instagramTv.setTypeface(Utils.getProximaBold(getContext()));
+        controlProfileTv.setTypeface(Utils.getProximaBold(getContext()));
+        aboutUserTv.setTypeface(Utils.getProximaBold(getContext()));
+        selectSchoolTv.setTypeface(Utils.getProximaBold(getContext()));
+        selectWorkTv.setTypeface(Utils.getProximaBold(getContext()));
+        inviDistanceTv.setTypeface(Utils.getProximaBold(getContext()));
+        connectInstaTv.setTypeface(Utils.getProximaBold(getContext()));
+        showAgeTv.setTypeface(Utils.getProximaBold(getContext()));
+        manBtn.setTypeface(Utils.getProximaBold(getContext()));
+        womanBtn.setTypeface(Utils.getProximaBold(getContext()));
 
         cancelCropView.setOnClickListener(mySingleListener);
         chooseCropView.setOnClickListener(mySingleListener);
@@ -123,6 +163,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             cropImage();
+
         } else if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             picUri = data.getData();
@@ -275,7 +316,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             if (Build.VERSION.SDK_INT >= 24) {
-                picUri = FileProvider.getUriForFile(getContext(), "com.blablaing.app.fileprovider", Utils.getOutputMediaFile(getContext()));
+                picUri = FileProvider.getUriForFile(getContext(), "jp.stage.stagelovemaker.fileprovider", Utils.getOutputMediaFile(getContext()));
             } else {
                 picUri = Uri.fromFile(Utils.getOutputMediaFile(getContext()));
             }
@@ -289,9 +330,10 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         iRotation = 0;
         layoutCropView.setVisibility(View.VISIBLE);
         cropImageView.setImageUriAsync(picUri);
+        removeImageView.get(indexChange).setImageResource(R.drawable.delete_image);
     }
 
-    void removeAvatar(BubbleImageView imageView, ImageView removeImage) {
+    void removeAvatar(RoundedImageView imageView, ImageView removeImage) {
         removeImage.setImageResource(R.drawable.add_image);
         imageView.setImageResource(R.drawable.draw_image_view_bg);
         imageView.setBorderColor(Color.TRANSPARENT);

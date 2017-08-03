@@ -26,6 +26,7 @@
     <string name="show_me">Show Me</string>
     <string name="men">Men</string>
     <string name="women">Women</string>
+    <string name="discovery_settings">Discovery settings</string>
     <string name="maximum_distance">Maximum distance</string>
     <string name="age_range">Age range</string>
     <string name="show_distances_in">Show Distance in</string>
@@ -46,6 +47,7 @@
     <string name="licenses">Licenses</string>
     <string name="term_of_service">Terms of Service</string>
     <string name="logout">Logout</string>
+    <string name="delete_account">Delete Account</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="choose_from_gallery">Choose from Gallery</string>

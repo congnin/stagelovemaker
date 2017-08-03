@@ -66,21 +66,21 @@ public class MainTabBar extends RelativeLayout implements View.OnClickListener {
             callback.onTabChanged(index);
         }
         if (index == TAB_PROFILE) {
-            profileImageView.setImageResource(R.drawable.icon_profile);
+            profileImageView.setImageResource(R.mipmap.ic_main_pink);
         } else {
-            profileImageView.setImageResource(R.drawable.icon_profile_gray);
+            profileImageView.setImageResource(R.mipmap.ic_main_gray);
         }
 
         if (index == TAB_STAGE) {
-            stageImageView.setImageResource(R.drawable.icon_star_fill_blue);
+            stageImageView.setImageResource(R.mipmap.ic_flame_pink);
         } else {
-            stageImageView.setImageResource(R.drawable.icon_star_fill_gray);
+            stageImageView.setImageResource(R.mipmap.ic_flame_gray);
         }
 
         if (index == TAB_CHAT) {
-            chatImageView.setImageResource(R.drawable.icon_chat);
+            chatImageView.setImageResource(R.mipmap.ic_chat_pink);
         } else {
-            chatImageView.setImageResource(R.drawable.icon_chat_gray);
+            chatImageView.setImageResource(R.mipmap.ic_chat_gray);
         }
     }
 

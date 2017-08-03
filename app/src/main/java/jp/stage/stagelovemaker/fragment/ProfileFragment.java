@@ -1,28 +1,24 @@
 package jp.stage.stagelovemaker.fragment;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.github.siyamed.shapeimageview.CircularImageView;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
-import jp.stage.stagelovemaker.utils.Utils;
 
 /**
  * Created by congn on 7/11/2017.
  */
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener {
-    ImageView ivSettings;
-    ImageView ivEditProfile;
+    CircularImageView ivSettings;
+    CircularImageView ivEditProfile;
     TextView tvFormattedName;
-    TextView tvWorkSite;
-    TextView tvCollege;
     TextView tvSettings;
     TextView tvEditInfo;
 
@@ -33,35 +29,22 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        ivSettings = (ImageView) view.findViewById(R.id.iv_settings);
-        ivEditProfile = (ImageView) view.findViewById(R.id.iv_edit);
+        ivSettings = (CircularImageView) view.findViewById(R.id.iv_settings);
+        ivEditProfile = (CircularImageView) view.findViewById(R.id.iv_edit);
         tvFormattedName = (TextView) view.findViewById(R.id.tv_formatted_name);
-        tvWorkSite = (TextView) view.findViewById(R.id.tv_work_location);
-        tvCollege = (TextView) view.findViewById(R.id.tv_college);
         tvSettings = (TextView) view.findViewById(R.id.tv_settings);
         tvEditInfo = (TextView) view.findViewById(R.id.tv_edit);
         return view;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ivSettings.setOnClickListener(this);
         ivEditProfile.setOnClickListener(this);
-
-        Typeface boldType = Typeface.createFromAsset(getActivity().getAssets(), "fonts/proximanovasoft-bold.otf");
-        tvFormattedName.setTypeface(boldType);
-
-        Typeface semiBoldType = Typeface.createFromAsset(getActivity().getAssets(), "fonts/proximanovasoft-semibold.otf");
-        tvWorkSite.setTypeface(semiBoldType);
-        tvCollege.setTypeface(semiBoldType);
-
-        tvSettings.setTypeface(Utils.getProximaRegular(getContext()));
-        tvEditInfo.setTypeface(Utils.getProximaRegular(getContext()));
     }
 
     @Override
