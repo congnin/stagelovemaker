@@ -29,7 +29,7 @@
     <string name="discovery_settings">Discovery settings</string>
     <string name="maximum_distance">Maximum distance</string>
     <string name="age_range">Age range</string>
-    <string name="show_distances_in">Show Distance in</string>
+    <string name="distance_unit">Distance unit</string>
     <string name="mi">Mi.</string>
     <string name="km">Km.</string>
     <string name="show_me_on_tinder">Show me on Tinder</string>
@@ -48,8 +48,13 @@
     <string name="term_of_service">Terms of Service</string>
     <string name="logout">Logout</string>
     <string name="delete_account">Delete Account</string>
+    <string name="select_work">Select work</string>
+    <string name="school">School</string>
+    <string name="select_school">Select school</string>
+    <string name="done">Done</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="about_me">About me</string>
     <string name="choose_from_gallery">Choose from Gallery</string>
     <string name="take_photo">Take photo</string>
     <string name="select_picture">Select Picture</string>

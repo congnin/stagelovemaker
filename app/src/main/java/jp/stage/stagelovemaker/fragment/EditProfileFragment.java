@@ -46,17 +46,15 @@ import static jp.stage.stagelovemaker.utils.Constants.REQUEST_IMAGE_GALLERY;
 public class EditProfileFragment extends BaseFragment implements TitleBar.TitleBarCallback,
         View.OnClickListener {
     public static final String TAG = "EditProfileFragment";
-    final int NUMBER_AVATAR = 6;
-    final int NO_AVATAR = -2;
 
     TitleBar titleBar;
     ScrollView scrollView;
     RelativeLayout avatarMainLayout;
     LinearLayout avatarAddLayout;
-    TextView smartPhotoTv, aboutUserTv, smartPhotoDesTv, instagramTv;
-    TextView currentWorkTv, controlProfileTv, schoolTv, genderTv;
+    TextView smartPhotoTv, aboutUserTv, instagramTv;
+    TextView currentWorkTv, schoolTv, genderTv;
     EditText aboutUserEdt;
-    TextView selectWorkTv, selectSchoolTv, connectInstaTv, showAgeTv, inviDistanceTv;
+    TextView selectWorkTv, selectSchoolTv, connectInstaTv;
     RadioButton manBtn, womanBtn;
 
     ArrayList<RoundedImageView> avatarImageView = new ArrayList<>();
@@ -100,19 +98,14 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         cancelCropView = (TextView) view.findViewById(R.id.back_txt_cropview);
         chooseCropView = (TextView) view.findViewById(R.id.done_txt_cropview);
         rotateImage = (ImageView) view.findViewById(R.id.rotate_img);
-        smartPhotoTv = (TextView)view.findViewById(R.id.smart_photo_tv);
-        smartPhotoDesTv = (TextView)view.findViewById(R.id.smart_photo_des_tv);
         aboutUserTv = (TextView)view.findViewById(R.id.about_user_tv);
         instagramTv = (TextView)view.findViewById(R.id.instagram_tv);
         currentWorkTv = (TextView)view.findViewById(R.id.currentWork_tv);
         schoolTv = (TextView)view.findViewById(R.id.school_tv);
-        controlProfileTv = (TextView)view.findViewById(R.id.controlProfile_tv);
         genderTv = (TextView)view.findViewById(R.id.gender_tv);
         aboutUserEdt = (EditText)view.findViewById(R.id.edt_about_user);
         selectWorkTv = (TextView)view.findViewById(R.id.select_work_tv);
         selectSchoolTv = (TextView)view.findViewById(R.id.select_school_tv);
-        showAgeTv = (TextView)view.findViewById(R.id.show_age_tv);
-        inviDistanceTv =(TextView)view.findViewById(R.id.invi_distance_tv);
         connectInstaTv = (TextView)view.findViewById(R.id.connect_instagram);
         manBtn = (RadioButton)view.findViewById(R.id.man_radio_btn);
         womanBtn = (RadioButton)view.findViewById(R.id.woman_radio_btn);
@@ -125,24 +118,8 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         super.onActivityCreated(savedInstanceState);
         titleBar.setTitle(getString(R.string.edit_profile));
         titleBar.enableBackButton();
+        titleBar.setTitleRight(getString(R.string.done));
         titleBar.setCallback(this);
-
-        //set UI
-        smartPhotoTv.setTypeface(Utils.getProximaBold(getContext()));
-        smartPhotoDesTv.setTypeface(Utils.getProximaBold(getContext()));
-        schoolTv.setTypeface(Utils.getProximaBold(getContext()));
-        genderTv.setTypeface(Utils.getProximaBold(getContext()));
-        currentWorkTv.setTypeface(Utils.getProximaBold(getContext()));
-        instagramTv.setTypeface(Utils.getProximaBold(getContext()));
-        controlProfileTv.setTypeface(Utils.getProximaBold(getContext()));
-        aboutUserTv.setTypeface(Utils.getProximaBold(getContext()));
-        selectSchoolTv.setTypeface(Utils.getProximaBold(getContext()));
-        selectWorkTv.setTypeface(Utils.getProximaBold(getContext()));
-        inviDistanceTv.setTypeface(Utils.getProximaBold(getContext()));
-        connectInstaTv.setTypeface(Utils.getProximaBold(getContext()));
-        showAgeTv.setTypeface(Utils.getProximaBold(getContext()));
-        manBtn.setTypeface(Utils.getProximaBold(getContext()));
-        womanBtn.setTypeface(Utils.getProximaBold(getContext()));
 
         cancelCropView.setOnClickListener(mySingleListener);
         chooseCropView.setOnClickListener(mySingleListener);
@@ -179,7 +156,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
 
     @Override
     public void onRightButtonClicked() {
-
+        getActivity().onBackPressed();
     }
 
     @Override
