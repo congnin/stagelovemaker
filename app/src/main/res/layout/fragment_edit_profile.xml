@@ -286,6 +286,93 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/firstname_tv"
+                style="@style/MyTitleSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10ssp"
+                android:layout_marginStart="@dimen/_10ssp"
+                android:layout_marginTop="@dimen/_10ssp"
+                android:text="@string/first_name"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3ssp"
+                android:background="@drawable/draw_white_bg">
+
+                <EditText
+                    android:id="@+id/edit_first_name"
+                    style="@style/MyContentSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10ssp"
+                    android:background="@android:color/transparent"
+                    android:hint="Input first name"
+                    android:textColorHint="@color/light_gray" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/lastname_tv"
+                style="@style/MyTitleSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10ssp"
+                android:layout_marginStart="@dimen/_10ssp"
+                android:layout_marginTop="@dimen/_10ssp"
+                android:text="@string/last_name"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3ssp"
+                android:background="@drawable/draw_white_bg">
+
+                <EditText
+                    android:id="@+id/edit_last_name"
+                    style="@style/MyContentSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10ssp"
+                    android:background="@android:color/transparent"
+                    android:hint="Input last name"
+                    android:textColorHint="@color/light_gray" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/birthday_tv"
+                style="@style/MyTitleSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10ssp"
+                android:layout_marginStart="@dimen/_10ssp"
+                android:layout_marginTop="@dimen/_10ssp"
+                android:text="@string/birthday"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3ssp"
+                android:background="@drawable/draw_white_bg">
+
+                <TextView
+                    android:id="@+id/edit_birthday"
+                    style="@style/MyContentSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10ssp"
+                    android:background="@android:color/transparent"
+                    android:hint="Input birthday"
+                    android:textColorHint="@color/light_gray" />
+
+            </RelativeLayout>
+
+            <TextView
                 android:id="@+id/about_user_tv"
                 style="@style/MyTitleSettings"
                 android:layout_width="wrap_content"
@@ -294,7 +381,6 @@
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginTop="@dimen/_10ssp"
                 android:text="@string/about_me"
-                android:textColor="@color/colorAccent"
                 android:textStyle="bold" />
 
             <RelativeLayout
@@ -313,18 +399,6 @@
                     android:hint="About you"
                     android:textColorHint="@color/light_gray" />
 
-                <TextView
-                    android:id="@+id/count_number_words"
-                    style="@style/MyContentSettings"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/edt_about_user"
-                    android:layout_marginBottom="@dimen/_10ssp"
-                    android:layout_marginEnd="@dimen/_10ssp"
-                    android:text="500"
-                    android:textColor="@color/light_gray" />
-
             </RelativeLayout>
 
             <TextView
@@ -336,7 +410,6 @@
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginTop="@dimen/_12ssp"
                 android:text="Current Work"
-                android:textColor="@color/colorAccent"
                 android:textStyle="bold" />
 
             <EditText
@@ -346,10 +419,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_3ssp"
                 android:background="@drawable/draw_white_bg"
+                android:hint="@string/select_work"
                 android:lines="1"
                 android:padding="@dimen/_10ssp"
-                android:textColorHint="@color/light_gray"
-                android:hint="@string/select_work" />
+                android:textColorHint="@color/light_gray" />
 
             <TextView
                 android:id="@+id/school_tv"
@@ -360,7 +433,6 @@
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginTop="@dimen/_12ssp"
                 android:text="@string/school"
-                android:textColor="@color/colorAccent"
                 android:textStyle="bold" />
 
             <EditText
@@ -370,10 +442,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_3ssp"
                 android:background="@drawable/draw_white_bg"
+                android:hint="@string/select_school"
                 android:lines="1"
-                android:textColorHint="@color/light_gray"
                 android:padding="@dimen/_10ssp"
-                android:hint="@string/select_school" />
+                android:textColorHint="@color/light_gray" />
 
             <TextView
                 android:id="@+id/instagram_tv"
@@ -384,19 +456,19 @@
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginTop="@dimen/_12ssp"
                 android:text="Show my Instagram Photos"
-                android:textColor="@color/colorAccent"
+
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/connect_instagram"
                 style="@style/MyContentSettings"
-                android:textColor="@android:color/black"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_3ssp"
                 android:background="@drawable/draw_white_bg"
                 android:padding="@dimen/_10ssp"
-                android:text="Connect Instagram" />
+                android:text="Connect Instagram"
+                android:textColor="@color/colorAccent" />
 
             <TextView
                 android:id="@+id/gender_tv"

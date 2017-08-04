@@ -28,7 +28,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
         featuresPagerAdapter = new FeaturesPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(featuresPagerAdapter);
         mainTabBar.setCallback(this);
-
+        mainTabBar.changeTab(MainTabBar.TAB_STAGE);
         viewPager.addOnPageChangeListener(this);
     }
 

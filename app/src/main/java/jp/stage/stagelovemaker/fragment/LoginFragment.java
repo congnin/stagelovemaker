@@ -20,13 +20,15 @@ import jp.stage.stagelovemaker.views.LoginActionBar;
  * Created by congn on 7/28/2017.
  */
 
-public class LoginFragment extends BaseFragment implements LoginActionBar.LoginActionBarDelegate{
+public class LoginFragment extends BaseFragment implements LoginActionBar.LoginActionBarDelegate,
+        View.OnClickListener {
     public static final String TAG = "LoginFragment";
     LoginActionBar actionBar;
 
     TextView stageTitleTv, userNameTv, passwordTv, forgotPassTv, registerTv;
 
     boolean bFlagButtonNext = false;
+
     public static LoginFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -39,13 +41,13 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
         actionBar = (LoginActionBar) view.findViewById(R.id.action_bar);
-        stageTitleTv = (TextView)view.findViewById(R.id.stage_title_tv);
-        userNameTv = (TextView)view.findViewById(R.id.username_tv);
-        passwordTv = (TextView)view.findViewById(R.id.password_tv);
-        forgotPassTv = (TextView)view.findViewById(R.id.forgotPass_tv);
-        registerTv = (TextView)view.findViewById(R.id.signUp_tv);
+        stageTitleTv = (TextView) view.findViewById(R.id.stage_title_tv);
+        userNameTv = (TextView) view.findViewById(R.id.username_tv);
+        passwordTv = (TextView) view.findViewById(R.id.password_tv);
+        forgotPassTv = (TextView) view.findViewById(R.id.forgotPass_tv);
+        registerTv = (TextView) view.findViewById(R.id.signUp_tv);
         return view;
     }
 
@@ -61,6 +63,8 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
         passwordTv.setTypeface(Utils.getProximaBold(getContext()));
         forgotPassTv.setTypeface(Utils.getProximaBold(getContext()));
         registerTv.setTypeface(Utils.getProximaBold(getContext()));
+
+        forgotPassTv.setOnClickListener(this);
     }
 
     @Override
@@ -72,5 +76,11 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
     public void didNext() {
         startNewActivity(MainActivity.class, null);
         ActivityCompat.finishAffinity(getActivity());
+    }
+
+    @Override
+    public void onClick(View v) {
+        ForgotPasswordFragment forgotPasswordFragment = ForgotPasswordFragment.newInstance();
+        replace(forgotPasswordFragment, ForgotPasswordFragment.TAG, true, true);
     }
 }

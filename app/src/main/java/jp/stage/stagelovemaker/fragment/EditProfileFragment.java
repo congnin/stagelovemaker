@@ -1,6 +1,7 @@
 package jp.stage.stagelovemaker.fragment;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,9 +30,11 @@ import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.OnSingleClickListener;
 import jp.stage.stagelovemaker.views.TitleBar;
@@ -54,6 +58,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
     TextView smartPhotoTv, aboutUserTv, instagramTv;
     TextView currentWorkTv, schoolTv, genderTv;
     EditText aboutUserEdt;
+    TextView tvBirthday;
     TextView selectWorkTv, selectSchoolTv, connectInstaTv;
     RadioButton manBtn, womanBtn;
 
@@ -68,6 +73,15 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
     TextView chooseCropView;
     ImageView rotateImage;
     int iRotation;
+
+    Calendar now;
+    int iMonth;
+    int iDay;
+    int iYear;
+    String firstName = "";
+    String lastName = "";
+    String birthday = "";
+    String gender = "";
 
     public static EditProfileFragment newInstance() {
         Bundle args = new Bundle();
@@ -98,17 +112,18 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         cancelCropView = (TextView) view.findViewById(R.id.back_txt_cropview);
         chooseCropView = (TextView) view.findViewById(R.id.done_txt_cropview);
         rotateImage = (ImageView) view.findViewById(R.id.rotate_img);
-        aboutUserTv = (TextView)view.findViewById(R.id.about_user_tv);
-        instagramTv = (TextView)view.findViewById(R.id.instagram_tv);
-        currentWorkTv = (TextView)view.findViewById(R.id.currentWork_tv);
-        schoolTv = (TextView)view.findViewById(R.id.school_tv);
-        genderTv = (TextView)view.findViewById(R.id.gender_tv);
-        aboutUserEdt = (EditText)view.findViewById(R.id.edt_about_user);
-        selectWorkTv = (TextView)view.findViewById(R.id.select_work_tv);
-        selectSchoolTv = (TextView)view.findViewById(R.id.select_school_tv);
-        connectInstaTv = (TextView)view.findViewById(R.id.connect_instagram);
-        manBtn = (RadioButton)view.findViewById(R.id.man_radio_btn);
-        womanBtn = (RadioButton)view.findViewById(R.id.woman_radio_btn);
+        aboutUserTv = (TextView) view.findViewById(R.id.about_user_tv);
+        instagramTv = (TextView) view.findViewById(R.id.instagram_tv);
+        currentWorkTv = (TextView) view.findViewById(R.id.currentWork_tv);
+        schoolTv = (TextView) view.findViewById(R.id.school_tv);
+        genderTv = (TextView) view.findViewById(R.id.gender_tv);
+        aboutUserEdt = (EditText) view.findViewById(R.id.edt_about_user);
+        selectWorkTv = (TextView) view.findViewById(R.id.select_work_tv);
+        selectSchoolTv = (TextView) view.findViewById(R.id.select_school_tv);
+        connectInstaTv = (TextView) view.findViewById(R.id.connect_instagram);
+        manBtn = (RadioButton) view.findViewById(R.id.man_radio_btn);
+        womanBtn = (RadioButton) view.findViewById(R.id.woman_radio_btn);
+        tvBirthday = (TextView) view.findViewById(R.id.edit_birthday);
 
         return view;
     }
@@ -124,6 +139,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         cancelCropView.setOnClickListener(mySingleListener);
         chooseCropView.setOnClickListener(mySingleListener);
         cropImageView.setGuidelines(CropImageView.Guidelines.ON);
+        tvBirthday.setOnClickListener(this);
         layoutCropView.setVisibility(View.GONE);
         ((GradientDrawable) rotateImage.getBackground()).setStroke(0,
                 ContextCompat.getColor(getContext(), R.color.very_dark_gray));
@@ -133,6 +149,11 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
             avatarImageView.get(i).setOnClickListener(mySingleListener);
             removeImageView.get(i).setOnClickListener(this);
         }
+
+        now = Calendar.getInstance();
+        iMonth = now.get(Calendar.MONTH);
+        iDay = now.get(Calendar.DAY_OF_MONTH);
+        iYear = now.get(Calendar.YEAR) - Constants.MIN_AGE;
     }
 
     @Override
@@ -173,6 +194,21 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
     public void onClick(View v) {
         Utils.hideSoftKeyboard(getActivity());
         switch (v.getId()) {
+            case R.id.edit_birthday:
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.DAY_OF_MONTH, 31);
+                calendar.set(Calendar.MONTH, 11);
+                calendar.set(Calendar.YEAR, now.get(Calendar.YEAR) - Constants.MIN_AGE);
+                DatePickerDialog dpd;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    dpd = new DatePickerDialog(getActivity(), R.style.style_date_picker_dialog, myDateListener, iYear, iMonth, iDay);
+                } else {
+                    dpd = new DatePickerDialog(getActivity(), myDateListener, iYear, iMonth, iDay);
+                }
+
+                dpd.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+                dpd.show();
+                break;
             case R.id.rotate_img: {
                 iRotation = iRotation + 90;
                 if (iRotation == 360) {
@@ -315,4 +351,17 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         imageView.setImageResource(R.drawable.draw_image_view_bg);
         imageView.setBorderColor(Color.TRANSPARENT);
     }
+
+    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+            iDay = dayOfMonth;
+            iMonth = monthOfYear;
+            iYear = year;
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, monthOfYear, dayOfMonth);
+            birthday = Utils.formatDateLocal(getActivity(), calendar.getTime());
+            tvBirthday.setText(birthday);
+        }
+    };
 }

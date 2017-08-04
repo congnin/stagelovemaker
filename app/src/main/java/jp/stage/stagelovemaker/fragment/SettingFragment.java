@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
@@ -17,10 +18,13 @@ import android.widget.TextView;
 import com.edmodo.rangebar.RangeBar;
 
 import jp.stage.stagelovemaker.R;
+import jp.stage.stagelovemaker.activity.LoginActivity;
+import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.Button;
+import jp.stage.stagelovemaker.views.LoginActionBar;
 import jp.stage.stagelovemaker.views.TitleBar;
 
 /**
@@ -235,6 +239,8 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
                 }
             }
         });
+
+        layoutLogout.setOnClickListener(this);
     }
 
     @Override
@@ -327,6 +333,10 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
                 isMile = true;
                 tvChooseDistanceUnit.setText(getString(R.string.mi));
                 calculateDistanceByUnit();
+                break;
+            case R.id.layout_logout:
+                startNewActivity(LoginActivity.class, null);
+                ActivityCompat.finishAffinity(getActivity());
                 break;
         }
     }

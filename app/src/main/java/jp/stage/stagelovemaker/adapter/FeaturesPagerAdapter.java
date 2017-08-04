@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import jp.stage.stagelovemaker.fragment.ChatFragment;
+import jp.stage.stagelovemaker.fragment.MainStageFragment;
+import jp.stage.stagelovemaker.fragment.MatchesFragment;
 import jp.stage.stagelovemaker.fragment.ProfileFragment;
 import jp.stage.stagelovemaker.fragment.StageFragment;
 
@@ -16,14 +18,14 @@ import jp.stage.stagelovemaker.fragment.StageFragment;
 
 public class FeaturesPagerAdapter extends FragmentPagerAdapter {
     ProfileFragment profileFragment;
-    StageFragment stageFragment;
-    ChatFragment chatFragment;
+    MainStageFragment mainStageFragment;
+    MatchesFragment matchesFragment;
 
     public FeaturesPagerAdapter(FragmentManager fm) {
         super(fm);
         profileFragment = ProfileFragment.newInstance();
-        stageFragment = StageFragment.newInstance();
-        chatFragment = ChatFragment.newInstance();
+        mainStageFragment = MainStageFragment.newInstance();
+        matchesFragment = MatchesFragment.newInstance();
     }
 
     @Override
@@ -32,9 +34,9 @@ public class FeaturesPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return profileFragment;
             case 1:
-                return stageFragment;
+                return mainStageFragment;
             case 2:
-                return chatFragment;
+                return matchesFragment;
         }
         return null;
     }
