@@ -28,4 +28,6 @@ public final class Constants {
     public static final String SHARE_REF_NOTIFICATION = "RefShowNotification";
 
     public static final String GET_LOCATION = "GetLocation";
+
+    public static final String LINK_FAIL = "http://wwww.me";
 }

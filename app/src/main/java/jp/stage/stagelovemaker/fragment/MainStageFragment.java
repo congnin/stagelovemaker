@@ -52,6 +52,7 @@ public class MainStageFragment extends BaseFragment implements SearchFragment.Se
 
     @Override
     public void onSearchFinished() {
-        Toast.makeText(getActivity(), "HU HU HU", Toast.LENGTH_SHORT).show();
+        StageFragment stageFragment = StageFragment.newInstance();
+        replace(stageFragment, StageFragment.TAG, false, false, R.id.flPals);
     }
 }

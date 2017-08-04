@@ -9,12 +9,13 @@ import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.adapter.FeaturesPagerAdapter;
 import jp.stage.stagelovemaker.base.CommonActivity;
 import jp.stage.stagelovemaker.views.MainTabBar;
+import jp.stage.stagelovemaker.views.NonSwipeableViewPager;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends CommonActivity implements MainTabBar.MainTabBarCallback,
         ViewPager.OnPageChangeListener {
     MainTabBar mainTabBar;
-    ViewPager viewPager;
+    NonSwipeableViewPager viewPager;
     FeaturesPagerAdapter featuresPagerAdapter;
     int indexTab;
 
@@ -23,7 +24,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainTabBar = (MainTabBar) findViewById(R.id.main_tabbar);
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager = (NonSwipeableViewPager) findViewById(R.id.view_pager);
 
         featuresPagerAdapter = new FeaturesPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(featuresPagerAdapter);
