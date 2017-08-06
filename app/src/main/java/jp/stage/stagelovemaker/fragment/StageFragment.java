@@ -83,6 +83,7 @@ public class StageFragment extends BaseFragment {
                 pgbCard.setVisibility(View.GONE);
             }
         }, 1000);
+
     }
 
     private void addEvents() {
@@ -91,6 +92,7 @@ public class StageFragment extends BaseFragment {
             public void cardSwipedTop(long stableId) {
                 Log.i("CardFragment", "card was swiped left, position in adapter: " + stableId);
                 if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+
                     cardAdapter.remove(0);
                     cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
                 }
@@ -179,11 +181,12 @@ public class StageFragment extends BaseFragment {
         ivDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = cardStack.getAdapterIndex();
+                long index = cardStack.getTopCardItemId();
                 //Toast.makeText(getActivity(), "" + index, Toast.LENGTH_SHORT).show();
-                if (index > 0) {
-                    ArrayList<UserInfo> revert = userInfos.clone();
-                    DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(userInfos.get(index - 1));
+                if (index >= 0 && cardStack.getAdapterIndex() > 0) {
+                    UserInfo userInfo = (UserInfo) cardAdapter.getItem(0);
+                    DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(userInfo);
+                    detailProfileFragment.setCallback(callback);
                     replace(detailProfileFragment, DetailProfileFragment.TAG, true, true);
                 }
 
@@ -262,4 +265,36 @@ public class StageFragment extends BaseFragment {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.detach(this).attach(this).commit();
     }
+
+    private DetailProfileFragment.DetailProfileCallback callback = new DetailProfileFragment.DetailProfileCallback() {
+        @Override
+        public void onNopeClicked() {
+            getActivity().onBackPressed();
+            if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                cardStack.swipeTopCardLeft(200);
+                cardAdapter.remove(0);
+                cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
+            }
+        }
+
+        @Override
+        public void onLikeClicked() {
+            getActivity().onBackPressed();
+            if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                cardStack.swipeTopCardRight(200);
+                cardAdapter.remove(0);
+                cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
+            }
+        }
+
+        @Override
+        public void onStarClicked() {
+            getActivity().onBackPressed();
+            if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                cardStack.swipeTopCardTop(200);//200 time
+                cardAdapter.remove(0);
+                cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
+            }
+        }
+    };
 }

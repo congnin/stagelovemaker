@@ -76,52 +76,53 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
     }
 
     public void getLocation() {
-        if (Utils.getLocation(getActivity()) == null) {
-            if (gps == null) {
-                gps = new GPSTracker(getActivity());
-                gps.setDelegate(this);
-            }
-            gps.getLocation();
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (getActivity() != null && !getActivity().isFinishing() && !getActivity().isDestroyed()) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (gps != null && gps.getLocation() == null) {
-                                    tvDescription.setText(R.string.des_deny_location);
-                                    //accessButton.setVisibility(View.VISIBLE);
-                                }
-                            }
-                        });
-                    }
-                }
-            }, 120000);
-            if (gps.canGetLocation()) {
-                double latitude = gps.getLatitude();
-                double longitude = gps.getLongitude();
-                Utils.setLocation(getActivity(), latitude, longitude);
-                showAnimationSearch(true);
-
-            } else {
-                if (getActivity() != null) {
-
-                }
-                if (gps.getTypeDenyLocation() == 0) {
-                    if (getActivity() != null) {
-
-                    }
-                    AlertDialog dialog = new AlertDialog(getContext(), Utils.fromHtml(getString(R.string.request_access_location)), R.mipmap.icon_location);
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.setDelegate(SearchFragment.this, Constants.GET_LOCATION);
-                    dialog.show();
-                } else if (gps.getTypeDenyLocation() == 2) {
-                    showAnimationSearch(false);
-                }
-            }
-        }
+//        if (Utils.getLocation(getActivity()) == null) {
+//            if (gps == null) {
+//                gps = new GPSTracker(getActivity());
+//                gps.setDelegate(this);
+//            }
+//            gps.getLocation();
+//            final Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (getActivity() != null && !getActivity().isFinishing() && !getActivity().isDestroyed()) {
+//                        getActivity().runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                if (gps != null && gps.getLocation() == null) {
+//                                    tvDescription.setText(R.string.des_deny_location);
+//                                    //accessButton.setVisibility(View.VISIBLE);
+//                                }
+//                            }
+//                        });
+//                    }
+//                }
+//            }, 120000);
+//            if (gps.canGetLocation()) {
+//                double latitude = gps.getLatitude();
+//                double longitude = gps.getLongitude();
+//                Utils.setLocation(getActivity(), latitude, longitude);
+//                showAnimationSearch(true);
+//
+//            } else {
+//                if (getActivity() != null) {
+//
+//                }
+//                if (gps.getTypeDenyLocation() == 0) {
+//                    if (getActivity() != null) {
+//
+//                    }
+//                    AlertDialog dialog = new AlertDialog(getContext(), Utils.fromHtml(getString(R.string.request_access_location)), R.mipmap.icon_location);
+//                    dialog.setCanceledOnTouchOutside(false);
+//                    dialog.setDelegate(SearchFragment.this, Constants.GET_LOCATION);
+//                    dialog.show();
+//                } else if (gps.getTypeDenyLocation() == 2) {
+//                    showAnimationSearch(false);
+//                }
+//            }
+//        }
+        showAnimationSearch(true);
     }
 
     public void showAnimationSearch(Boolean bsearch) {

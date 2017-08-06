@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -15,10 +17,181 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <jp.stage.stagelovemaker.views.UserImageSlide
-                android:id="@+id/user_image_slide"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="375dp" />
+                android:layout_height="285dp">
+
+                <jp.stage.stagelovemaker.views.UserImageSlide
+                    android:id="@+id/user_image_slide"
+                    android:layout_width="match_parent"
+                    android:layout_height="285dp" />
+
+                <com.github.siyamed.shapeimageview.CircularImageView
+                    android:id="@+id/iv_back"
+                    app:siBorderColor="@android:color/white"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@mipmap/ic_down"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="20dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    fontPath="fonts/proximanovasoft-semibold.otf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:text="Nathalia,"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    tools:ignore="MissingPrefix" />
+
+                <TextView
+                    android:id="@+id/tv_age"
+                    fontPath="fonts/proximanovasoft-semibold.otf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_toRightOf="@+id/tv_name"
+                    android:text="19"
+                    android:textSize="20sp"
+                    tools:ignore="MissingPrefix" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@mipmap/icon_three_dot" />
+            </RelativeLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:id="@+id/iv_work"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_column="0"
+                    android:layout_marginLeft="16dp"
+                    android:layout_row="0"
+                    android:src="@mipmap/ic_work" />
+
+                <TextView
+                    android:id="@+id/tv_work"
+                    fontPath="fonts/proximanovasoft-regular.otf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_row="0"
+                    android:ellipsize="marquee"
+                    android:text="NEW YORD PRESBYTERIAN..."
+                    android:textAllCaps="true"
+                    android:textSize="16sp"
+                    tools:ignore="MissingPrefix" />
+
+                <ImageView
+                    android:id="@+id/iv_school"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_column="0"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_row="1"
+                    android:src="@mipmap/ic_school" />
+
+                <TextView
+                    android:id="@+id/tv_school"
+                    fontPath="fonts/proximanovasoft-regular.otf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_row="1"
+                    android:ellipsize="marquee"
+                    android:text="New York University"
+                    android:textSize="16sp"
+                    tools:ignore="MissingPrefix" />
+
+                <ImageView
+                    android:id="@+id/iv_location"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_column="0"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_row="2"
+                    android:src="@mipmap/ic_marker" />
+
+                <TextView
+                    android:id="@+id/tv_location"
+                    fontPath="fonts/proximanovasoft-regular.otf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_row="2"
+                    android:ellipsize="marquee"
+                    android:text="xxx miles away"
+                    android:textSize="16sp"
+                    tools:ignore="MissingPrefix" />
+            </GridLayout>
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/circleButtonClose"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@drawable/ic_close"
+            app:cb_color="#ffddde"
+            app:cb_pressedRingWidth="20dp" />
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/circleButtonHeart"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:paddingTop="6dp"
+            android:src="@drawable/ic_heart"
+            app:cb_color="#dcfff5"
+            app:cb_pressedRingWidth="20dp" />
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/circleButtonStar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@drawable/ic_star"
+            app:cb_color="#ddefff"
+            app:cb_pressedRingWidth="20dp" />
+    </LinearLayout>
 </RelativeLayout>
