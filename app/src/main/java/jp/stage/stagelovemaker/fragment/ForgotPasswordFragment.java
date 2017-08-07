@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
@@ -114,7 +115,8 @@ public class ForgotPasswordFragment extends BaseFragment implements FormInputTex
                 Utils.hideSoftKeyboard(getActivity());
                 bFlagButtonReset = true;
                 if (validate()) {
-                    //resetPassword();
+                    getActivity().onBackPressed();
+                    Toast.makeText(getActivity(), "A new password will send to your email", Toast.LENGTH_LONG).show();
                 }
             }
         }

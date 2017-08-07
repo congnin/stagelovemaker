@@ -34,6 +34,7 @@ import java.util.Calendar;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.model.InstagramUserModel;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.OnSingleClickListener;
@@ -48,7 +49,7 @@ import static jp.stage.stagelovemaker.utils.Constants.REQUEST_IMAGE_GALLERY;
  */
 
 public class EditProfileFragment extends BaseFragment implements TitleBar.TitleBarCallback,
-        View.OnClickListener {
+        View.OnClickListener, InstagramFragment.InstagramFragmentDelegate {
     public static final String TAG = "EditProfileFragment";
 
     TitleBar titleBar;
@@ -140,6 +141,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         chooseCropView.setOnClickListener(mySingleListener);
         cropImageView.setGuidelines(CropImageView.Guidelines.ON);
         tvBirthday.setOnClickListener(this);
+        connectInstaTv.setOnClickListener(this);
         layoutCropView.setVisibility(View.GONE);
         ((GradientDrawable) rotateImage.getBackground()).setStroke(0,
                 ContextCompat.getColor(getContext(), R.color.very_dark_gray));
@@ -247,6 +249,11 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
                 removeAvatar(avatarImageView.get(indexChange), removeImageView.get(indexChange));
                 break;
             }
+            case R.id.connect_instagram:
+                InstagramFragment fragment = InstagramFragment.createInstance();
+                fragment.setDelegate(this);
+                add(fragment, InstagramFragment.TAG, true, false);
+                break;
         }
     }
 
@@ -364,4 +371,9 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
             tvBirthday.setText(birthday);
         }
     };
+
+    @Override
+    public void instagramUserInfo(String model) {
+        connectInstaTv.setText(model);
+    }
 }

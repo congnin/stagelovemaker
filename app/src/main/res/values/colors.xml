@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#00E1FF</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FD536A</color>
+    <color name="colorAccent">#FF5860</color>
     <color name="gray">#808080</color>
     <color name="darkgrey">#A9A9A9</color>
     <color name="most_white">#F5F7FA</color>
@@ -17,6 +17,7 @@
     <color name="light_grayish_red">#fbd0d0</color>
     <color name="pink">#F81682</color>
     <color name="light_gray">#dbdbdb</color>
+    <color name="hintText">#38000000</color>
     <color name="color_dim_text">#B3FFFFFF</color>
     <color name="very_dark_gray">#353535</color>
     <color name="lineView">#12000000</color>
@@ -27,4 +28,8 @@
     <color name="text_shadow_white">#FFFFFF</color>
     <color name="white">#FFFFFF</color>
     <color name="gray_dark">#979797</color>
+    <color name="slide_1">#4f91ff</color>
+    <color name="slide_2">#fb9c25</color>
+    <color name="slide_3">#5ab55d</color>
+    <color name="slide_4">#ea2d6d</color>
 </resources>

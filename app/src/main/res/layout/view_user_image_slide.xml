@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="285dp">
+    android:layout_height="370dp">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/slide_avatar"
         android:layout_width="match_parent"
-        android:layout_height="285dp" />
+        android:layout_height="370dp" />
 
     <jp.stage.stagelovemaker.views.PageControl
         android:id="@+id/pagecontrol_avatar"
@@ -18,7 +18,7 @@
     <ImageView
         android:id="@+id/image_holder_avatar"
         android:layout_width="match_parent"
-        android:layout_height="285dp"
+        android:layout_height="370dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY" />
 </RelativeLayout>

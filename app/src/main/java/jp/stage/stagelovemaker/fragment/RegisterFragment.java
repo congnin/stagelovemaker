@@ -1,9 +1,18 @@
 package jp.stage.stagelovemaker.fragment;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,29 +21,47 @@ import android.widget.TextView;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.model.SignUp;
+import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
+import jp.stage.stagelovemaker.views.FormInputText;
 import jp.stage.stagelovemaker.views.LoginActionBar;
 import jp.stage.stagelovemaker.views.LoginActionBar.LoginActionBarDelegate;
+import jp.stage.stagelovemaker.views.OnSingleClickListener;
 
 /**
  * Created by congn on 7/28/2017.
- *
  */
 
-public class RegisterFragment extends BaseFragment implements LoginActionBarDelegate {
+public class RegisterFragment extends BaseFragment implements LoginActionBarDelegate,
+        FormInputText.FormInputTextDelegate {
     public static final String TAG = "RegisterFragment";
     LoginActionBar actionBar;
     boolean bFlagButtonNext = false;
 
-    TextView nameTv, userNameTv, passTv, repeatPassTv, emailTv, maleBtn, femaleBtn, birthdayTv, genderTv;
+    FormInputText tvUsername;
+    FormInputText tvEmail;
+    FormInputText tvPassword;
+    FormInputText tvConfirmPassword;
+    TextView tvDescription;
+
+    SignUp signUp;
+    String username = "";
+    String email = "";
+    String password = "";
+    String confirmPass = "";
 
     public static RegisterFragment newInstance() {
-
         Bundle args = new Bundle();
-
         RegisterFragment fragment = new RegisterFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        signUp = new SignUp();
     }
 
     @Nullable
@@ -43,16 +70,11 @@ public class RegisterFragment extends BaseFragment implements LoginActionBarDele
         View view = inflater.inflate(R.layout.fragment_register, container, false);
         actionBar = (LoginActionBar) view.findViewById(R.id.action_bar);
 
-        nameTv = (TextView)view.findViewById(R.id.registerName_tv);
-        userNameTv = (TextView)view.findViewById(R.id.regiterUserName_tv);
-        passTv = (TextView)view.findViewById(R.id.registerPass_tv);
-        repeatPassTv = (TextView)view.findViewById(R.id.registerRepeatPass_Tv);
-        emailTv = (TextView)view.findViewById(R.id.registerEmail_tv);
-        maleBtn = (TextView)view.findViewById(R.id.male_radioBtn);
-        femaleBtn = (TextView)view.findViewById(R.id.feMale_radioBtn);
-        birthdayTv = (TextView)view.findViewById(R.id.registerBirthday_tv);
-        genderTv = (TextView)view.findViewById(R.id.registerGender_tv);
-
+        tvUsername = (FormInputText) view.findViewById(R.id.tv_username);
+        tvEmail = (FormInputText) view.findViewById(R.id.tv_email);
+        tvPassword = (FormInputText) view.findViewById(R.id.tv_password);
+        tvConfirmPassword = (FormInputText) view.findViewById(R.id.tv_confirm_password);
+        tvDescription = (TextView) view.findViewById(R.id.tv_description);
         return view;
     }
 
@@ -63,16 +85,60 @@ public class RegisterFragment extends BaseFragment implements LoginActionBarDele
         actionBar.setTitle(getString(R.string.register));
         actionBar.setTextNextColor(ContextCompat.getColor(getContext(), R.color.color_dim_text));
 
-        //set Ui
-        nameTv.setTypeface(Utils.getProximaBold(getContext()));
-        userNameTv.setTypeface(Utils.getProximaBold(getContext()));
-        passTv.setTypeface(Utils.getProximaBold(getContext()));
-        repeatPassTv.setTypeface(Utils.getProximaBold(getContext()));
-        emailTv.setTypeface(Utils.getProximaBold(getContext()));
-        maleBtn.setTypeface(Utils.getProximaBold(getContext()));
-        femaleBtn.setTypeface(Utils.getProximaBold(getContext()));
-        birthdayTv.setTypeface(Utils.getProximaBold(getContext()));
-        genderTv.setTypeface(Utils.getProximaBold(getContext()));
+        tvUsername.renderDara(getString(R.string.username), false);
+        tvEmail.renderDara(getString(R.string.email), false);
+        tvPassword.renderDara(getString(R.string.password), true);
+        tvConfirmPassword.renderDara(getString(R.string.confirm_password), true);
+        tvUsername.setDelegate(this, Constants.TAG_CONTROL_INPUT_USERNAME);
+        tvEmail.setDelegate(this, Constants.TAG_CONTROL_INPUT_EMAIL);
+        tvPassword.setDelegate(this, Constants.TAG_CONTROL_INPUT_PASSWORD);
+        tvConfirmPassword.setDelegate(this, Constants.TAG_CONTROL_INPUT_CONFIRM_PASS);
+
+        tvDescription.setOnClickListener(mySingleListener);
+        String tos = getString(R.string.term_of_service);
+        String policy = getString(R.string.privacy_policy);
+        String des = String.format(getString(R.string.policy_authentication), tos, policy);
+        SpannableString spannableString = new SpannableString(des);
+        ClickableSpan clickableTos = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(true);
+            }
+        };
+
+        ClickableSpan clickablePolicy = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(true);
+            }
+        };
+
+        int start = des.indexOf(tos);
+        spannableString.setSpan(clickableTos, start, start + tos.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getActivity(), R.color.darkgrey)), start, start + tos.length(), 0);
+
+        start = des.indexOf(policy);
+
+        spannableString.setSpan(clickablePolicy, start, start + policy.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getActivity(), R.color.darkgrey)), start, start + policy.length(), 0);
+
+        tvDescription.setText(spannableString);
+
+        tvDescription.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
@@ -82,7 +148,133 @@ public class RegisterFragment extends BaseFragment implements LoginActionBarDele
 
     @Override
     public void didNext() {
-        startNewActivity(MainActivity.class, null);
-        ActivityCompat.finishAffinity(getActivity());
+        nextAction();
+    }
+
+    @Override
+    public void valuechange(String tag, String text) {
+        switch (tag) {
+            case Constants.TAG_CONTROL_INPUT_USERNAME:
+                username = text;
+                break;
+            case Constants.TAG_CONTROL_INPUT_PASSWORD:
+                password = text;
+                break;
+            case Constants.TAG_CONTROL_INPUT_CONFIRM_PASS:
+                confirmPass = text;
+                break;
+            case Constants.TAG_CONTROL_INPUT_EMAIL:
+                email = text;
+                break;
+        }
+        validate();
+    }
+
+    @Override
+    public void didReturn(String tag) {
+        nextAction();
+    }
+
+    @Override
+    public void inputTextFocus(Boolean b, String tag) {
+
+    }
+
+    private boolean validate() {
+        boolean isValid = true;
+        if (bFlagButtonNext) {
+            tvUsername.setIssuseText("");
+            tvPassword.setIssuseText("");
+            tvConfirmPassword.setIssuseText("");
+        }
+        if (TextUtils.isEmpty(username)) {
+            if (bFlagButtonNext) {
+                tvUsername.setIssuseText(getString(R.string.username_blank));
+            }
+            isValid = false;
+        }
+        if (TextUtils.isEmpty(email)) {
+            if (bFlagButtonNext) {
+                tvEmail.setIssuseText(getString(R.string.email_blank));
+            }
+            isValid = false;
+        } else {
+            if (!Utils.isValidEmail(email)) {
+                if (bFlagButtonNext) {
+                    tvEmail.setIssuseText(getString(R.string.email_invalid));
+                }
+                isValid = false;
+            }
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            if (bFlagButtonNext) {
+                tvPassword.setIssuseText(getString(R.string.password_blank));
+            }
+            isValid = false;
+        } else if (password.length() < 8) {
+            if (bFlagButtonNext) {
+                tvPassword.setIssuseText(getString(R.string.password_invalid));
+            }
+            isValid = false;
+        }
+        if (TextUtils.isEmpty(confirmPass)) {
+            if (bFlagButtonNext) {
+                tvConfirmPassword.setIssuseText(getString(R.string.field_blank));
+            }
+            isValid = false;
+        } else if (!confirmPass.equals(password)) {
+            if (bFlagButtonNext) {
+                tvConfirmPassword.setIssuseText(getString(R.string.password_not_match));
+            }
+            isValid = false;
+        }
+
+        if (isValid) {
+            actionBar.setTextNextColor(Color.WHITE);
+        } else {
+            actionBar.setTextNextColor(ContextCompat.getColor(getContext(), R.color.color_dim_text));
+        }
+
+        if (bFlagButtonNext) {
+            bFlagButtonNext = false;
+        }
+        return isValid;
+    }
+
+    private OnSingleClickListener mySingleListener = new OnSingleClickListener() {
+        @Override
+        public void onSingleClick(View v) {
+
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(signUp != null){
+            tvEmail.setTitle(signUp.getEmail());
+            tvPassword.setTitle(signUp.getPassword());
+            tvUsername.setTitle(signUp.getUsername());
+            tvConfirmPassword.setTitle(signUp.getPassword());
+        }
+    }
+
+    private void nextAction(){
+        Utils.hideSoftKeyboard(getActivity());
+        bFlagButtonNext = true;
+        if (validate()) {
+            if (signUp != null) {
+                signUp.setUsername(username);
+                signUp.setEmail(email);
+                signUp.setPassword(password);
+            }
+            RegisterProfileFragment registerProfileFragment = RegisterProfileFragment.newInstance();
+            replace(registerProfileFragment, RegisterProfileFragment.TAG, true, true);
+        }
+    }
+
+    public SignUp getSignUp(){
+        return signUp;
     }
 }

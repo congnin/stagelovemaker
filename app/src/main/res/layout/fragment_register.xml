@@ -17,185 +17,59 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/action_bar">
+        android:layout_below="@+id/action_bar"
+        android:fillViewport="true">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_20ssp"
-            android:layout_marginStart="@dimen/_20ssp"
-            android:layout_marginTop="@dimen/_10ssp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="@dimen/_100ssp"
-                android:layout_height="@dimen/_100ssp"
-                android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher" />
+            <jp.stage.stagelovemaker.views.FormInputText
+                android:id="@+id/tv_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/form_margin"
+                android:layout_marginRight="@dimen/form_margin"
+                android:layout_marginTop="17.5dp" />
+
+            <jp.stage.stagelovemaker.views.FormInputText
+                android:id="@+id/tv_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_username"
+                android:layout_marginLeft="@dimen/form_margin"
+                android:layout_marginRight="@dimen/form_margin" />
+
+            <jp.stage.stagelovemaker.views.FormInputText
+                android:id="@+id/tv_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_email"
+                android:layout_marginLeft="@dimen/form_margin"
+                android:layout_marginRight="@dimen/form_margin" />
+
+            <jp.stage.stagelovemaker.views.FormInputText
+                android:id="@+id/tv_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_password"
+                android:layout_marginLeft="@dimen/form_margin"
+                android:layout_marginRight="@dimen/form_margin" />
 
             <TextView
-                android:id="@+id/registerName_tv"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_description"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:text="Your name:"
-                android:textSize="@dimen/_12ssp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3ssp"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/firstName_edt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_2ssp"
-                    android:layout_weight="1"
-                    android:background="@drawable/draw_edt_bg"
-                    android:hint="First name"
-                    android:padding="@dimen/_5ssp"
-                    android:textColorHint="#dbdbdb"
-                    android:textSize="@dimen/_12ssp" />
-
-                <EditText
-                    android:id="@+id/lastName_edt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_2ssp"
-                    android:layout_weight="1"
-                    android:background="@drawable/draw_edt_bg"
-                    android:hint="Last name"
-                    android:padding="@dimen/_5ssp"
-                    android:textColorHint="#dbdbdb"
-                    android:textSize="@dimen/_12ssp" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/regiterUserName_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:text="Username:"
-                android:textSize="@dimen/_12ssp" />
-
-            <EditText
-                android:id="@+id/userName_edt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3ssp"
-                android:background="@drawable/draw_edt_bg"
-                android:padding="@dimen/_5ssp"
-                android:textColorHint="#dbdbdb"
-                android:textSize="@dimen/_12ssp" />
-
-            <TextView
-                android:id="@+id/registerPass_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:text="Password:"
-                android:textSize="@dimen/_12ssp" />
-
-            <EditText
-                android:id="@+id/password_edt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3ssp"
-                android:background="@drawable/draw_edt_bg"
-                android:padding="@dimen/_5ssp"
-                android:textColorHint="#dbdbdb"
-                android:textSize="@dimen/_12ssp" />
-
-            <TextView
-                android:id="@+id/registerRepeatPass_Tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:text="Repeat Password:"
-                android:textSize="@dimen/_12ssp" />
-
-            <EditText
-                android:id="@+id/repeatPassword_edt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3ssp"
-                android:background="@drawable/draw_edt_bg"
-                android:padding="@dimen/_5ssp"
-                android:textColorHint="#dbdbdb"
-                android:textSize="@dimen/_12ssp" />
-
-            <TextView
-                android:id="@+id/registerEmail_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:text="Email:"
-                android:textSize="@dimen/_12ssp" />
-
-            <EditText
-                android:id="@+id/email_edt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3ssp"
-                android:background="@drawable/draw_edt_bg"
-                android:padding="@dimen/_5ssp"
-                android:textColorHint="#dbdbdb"
-                android:textSize="@dimen/_12ssp" />
-
-            <TextView
-                android:id="@+id/registerGender_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:text="Gender:"
-                android:textSize="@dimen/_12ssp" />
-
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3ssp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/male_radioBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_20ssp"
-                    android:checked="true"
-                    android:text="Male" />
-
-                <RadioButton
-                    android:id="@+id/feMale_radioBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Female" />
-
-            </RadioGroup>
-
-            <TextView
-                android:id="@+id/registerBirthday_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:text="Birthday:"
-                android:textSize="@dimen/_12ssp" />
-
-            <TextView
-                android:id="@+id/birthday_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_20ssp"
-                android:layout_marginTop="@dimen/_3ssp"
-                android:background="@drawable/draw_edt_bg"
-                android:padding="@dimen/_5ssp"
-                android:textColorHint="#dbdbdb"
-                android:textSize="@dimen/_12ssp" />
-
-        </LinearLayout>
+                android:layout_below="@+id/tv_confirm_password"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="19dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center"
+                android:lineSpacingExtra="5dp"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </RelativeLayout>
 
     </ScrollView>
 </RelativeLayout>

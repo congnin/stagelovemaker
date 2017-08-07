@@ -1,10 +1,13 @@
 package jp.stage.stagelovemaker.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by congn on 8/4/2017.
  */
 
-public class InstagramPhoto {
+public class InstagramPhoto implements Parcelable {
     private String id;
     private String low_resolution_url;
     private String thumbnail_url;
@@ -41,4 +44,39 @@ public class InstagramPhoto {
     public void setStandard_resolution_url(String standard_resolution_url) {
         this.standard_resolution_url = standard_resolution_url;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.low_resolution_url);
+        dest.writeString(this.thumbnail_url);
+        dest.writeString(this.standard_resolution_url);
+    }
+
+    public InstagramPhoto() {
+    }
+
+    protected InstagramPhoto(Parcel in) {
+        this.id = in.readString();
+        this.low_resolution_url = in.readString();
+        this.thumbnail_url = in.readString();
+        this.standard_resolution_url = in.readString();
+    }
+
+    public static final Parcelable.Creator<InstagramPhoto> CREATOR = new Parcelable.Creator<InstagramPhoto>() {
+        @Override
+        public InstagramPhoto createFromParcel(Parcel source) {
+            return new InstagramPhoto(source);
+        }
+
+        @Override
+        public InstagramPhoto[] newArray(int size) {
+            return new InstagramPhoto[size];
+        }
+    };
 }

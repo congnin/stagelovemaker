@@ -6,6 +6,6 @@
     <ImageView
         android:id="@+id/avatar_pal_img"
         android:layout_width="match_parent"
-        android:layout_height="285dp"
+        android:layout_height="370dp"
         android:scaleType="fitXY" />
 </RelativeLayout>

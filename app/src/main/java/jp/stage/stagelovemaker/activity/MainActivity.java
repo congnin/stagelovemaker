@@ -8,6 +8,7 @@ import android.os.Bundle;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.adapter.FeaturesPagerAdapter;
 import jp.stage.stagelovemaker.base.CommonActivity;
+import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.MainTabBar;
 import jp.stage.stagelovemaker.views.NonSwipeableViewPager;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -35,6 +36,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
 
     @Override
     public void onTabChanged(int index) {
+        Utils.hideSoftKeyboard(this);
         viewPager.setCurrentItem(index - 1, true);
     }
 

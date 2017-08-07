@@ -259,6 +259,44 @@ public class StageFragment extends BaseFragment {
         lsAvatar3.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/398252_117627541702095_1453024477_n.jpg?oh=d4b9b2087c7e640e8f6d4a20729526b6&oe=59FC9B7F");
         user3.setAvatars(lsAvatar3);
         userInfos.add(user3);
+
+        //user4
+        UserInfo user4 = new UserInfo();
+        user4.setId(4);
+        user4.setFirstName("Xuân Văn");
+        user4.setBirthday("26");
+        user4.setSchool("Đại Học Sài Gòn");
+        user4.setCurrentWork("5 miles away");
+        user4.setAbout("I like men, not boys");
+        user4.setInstagram_username("xuan");
+
+        ArrayList<String> lsAvatar4 = new ArrayList<>();
+        lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/18813592_1353188041414248_3429241207302083409_n.jpg?oh=e36ba30a973944b456c3d37968856318&oe=59F439BE");
+        lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/17022363_1254960111237042_6004721529587085946_n.jpg?oh=c41cbe28f1e56a2615c0f504168a281b&oe=59FD1C87");
+        lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/17022363_1254960111237042_6004721529587085946_n.jpg?oh=c41cbe28f1e56a2615c0f504168a281b&oe=59FD1C87");
+        lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/13238969_1017917748274614_2431214287453914295_n.jpg?oh=dd86dbe760c5d1f222db4425be128da7&oe=59F2F0BB");
+        lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/10583832_933984950001228_5689300757840375409_n.jpg?oh=0e79ed43a8f293f9b4c58df4337f0481&oe=59F05627");
+        user4.setAvatars(lsAvatar4);
+        userInfos.add(user4);
+
+        //user5
+        UserInfo user5 = new UserInfo();
+        user5.setId(5);
+        user5.setFirstName("Linh Trang");
+        user5.setBirthday("26");
+        user5.setSchool("Đại Học Dược Hà Nội");
+        user5.setCurrentWork("5 miles away");
+        user5.setAbout("I like men, not boys");
+        user5.setInstagram_username("trang");
+
+        ArrayList<String> lsAvatar5 = new ArrayList<>();
+        lsAvatar5.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/20431726_888959477922972_7456149219621141755_n.jpg?oh=af87ed2f371a21a861f64ce9b43f758a&oe=59ED2F9F");
+        lsAvatar5.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/20032126_879475698871350_5681736896207979341_n.jpg?oh=4163dae0d54e1580b78a87eece894f56&oe=5A380F33");
+        lsAvatar5.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/19961124_878221568996763_9102671846111115650_n.jpg?oh=c6ffc0aca005aca0d8ff77731a7b1373&oe=59EA9F56");
+        lsAvatar5.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/18581993_1935352263390865_7410908807051897907_n.jpg?oh=a6b3cd89f20acf76a97b24fdd0bb3a96&oe=59F89E7C");
+        lsAvatar5.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/18582227_845772922241628_2639825437519428745_n.jpg?oh=353a0fe10debb5ae6f574163ae5738df&oe=5A2C2B85");
+        user5.setAvatars(lsAvatar5);
+        userInfos.add(user5);
     }
 
     private void reloadFragment() {

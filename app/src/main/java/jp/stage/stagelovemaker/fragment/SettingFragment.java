@@ -265,7 +265,7 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
 
     private void calculateDistanceByUnit() {
         String more = "";
-        float progress;
+        int progress;
         if (isMile) {
             progress = radius;
             if (progress == 100 / 1.6) {
@@ -273,7 +273,7 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
             }
             valueDistance = getString(R.string.mi);
         } else {
-            progress = (float) (radius * 1.6);
+            progress = (int) (radius * 1.6);
             if (progress == 100) {
                 more = "+";
             }

@@ -4,4 +4,9 @@
         <item>@string/choose_from_gallery</item>
         <item>@string/take_photo</item>
     </string-array>
+
+    <string-array name="gender_profile">
+        <item>@string/man</item>
+        <item>@string/woman</item>
+    </string-array>
 </resources>

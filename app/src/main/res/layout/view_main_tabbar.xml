@@ -57,8 +57,7 @@
                         android:layout_width="@dimen/size_image_tabbar"
                         android:layout_height="@dimen/size_image_tabbar"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="4dp"
-                        android:src="@drawable/icon_star_fill_blue" />
+                        android:layout_marginTop="4dp" />
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -79,8 +78,7 @@
                         android:layout_width="@dimen/size_image_tabbar"
                         android:layout_height="@dimen/size_image_tabbar"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="4dp"
-                        android:src="@drawable/icon_chat" />
+                        android:layout_marginTop="4dp" />
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>

@@ -3,8 +3,10 @@ package jp.stage.stagelovemaker.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -13,15 +15,24 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import jp.stage.stagelovemaker.MyApplication;
+import jp.stage.stagelovemaker.R;
 
 /**
  * Created by congn on 7/11/2017.
@@ -209,6 +220,17 @@ public final class Utils {
         return true;
     }
 
+    public static Date parseDateString(String date) {
+        Date calendar = null;
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+        try {
+            calendar = format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return calendar;
+    }
+
     public static Location getLocation(Activity activity) {
         if (Utils.getApplication(activity) != null) {
             return Utils.getApplication(activity).getLocation();
@@ -233,5 +255,50 @@ public final class Utils {
             return (MyApplication) activity.getApplication();
         }
         return null;
+    }
+
+    public static void setAvatar(Context context, final ImageView imageView, String avatarUrl) {
+        if (context == null) {
+            return;
+        }
+        String url = Constants.LINK_FAIL;
+        if (!TextUtils.isEmpty(avatarUrl)) {
+            url = avatarUrl;
+        }
+
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        Glide.with(context)
+                .load(url)
+                .centerCrop()
+                .placeholder(R.mipmap.ic_holder)
+                .error(R.mipmap.ic_holder)
+                .into(imageView);
+    }
+
+    public static String loadJSONFromAsset(Context context, String jsonFileName)
+            throws IOException {
+        AssetManager manager = context.getAssets();
+        InputStream is = manager.open(jsonFileName);
+        int size = is.available();
+        byte[] buffer = new byte[size];
+        is.read(buffer);
+        is.close();
+        return new String(buffer, "UTF-8");
+    }
+
+    @SuppressWarnings("deprecation")
+    public static void clearCookies(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        } else {
+            CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(context);
+            cookieSyncMngr.startSync();
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.removeAllCookie();
+            cookieManager.removeSessionCookie();
+            cookieSyncMngr.stopSync();
+            cookieSyncMngr.sync();
+        }
     }
 }
