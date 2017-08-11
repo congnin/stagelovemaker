@@ -17,11 +17,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.model.ErrorModel;
 import jp.stage.stagelovemaker.model.SignUp;
+import jp.stage.stagelovemaker.model.SignUpModel;
+import jp.stage.stagelovemaker.network.IHttpResponse;
+import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.FormInputText;
@@ -45,11 +52,13 @@ public class RegisterFragment extends BaseFragment implements LoginActionBarDele
     FormInputText tvConfirmPassword;
     TextView tvDescription;
 
-    SignUp signUp;
+    SignUpModel signUpModel;
     String username = "";
     String email = "";
     String password = "";
     String confirmPass = "";
+    NetworkManager networkManager;
+    Gson gson;
 
     public static RegisterFragment newInstance() {
         Bundle args = new Bundle();
@@ -61,7 +70,9 @@ public class RegisterFragment extends BaseFragment implements LoginActionBarDele
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        signUp = new SignUp();
+        signUpModel = new SignUpModel();
+        networkManager = new NetworkManager(getActivity(), iHttpResponse);
+        gson = new Gson();
     }
 
     @Nullable
@@ -252,29 +263,47 @@ public class RegisterFragment extends BaseFragment implements LoginActionBarDele
     @Override
     public void onResume() {
         super.onResume();
-        if(signUp != null){
-            tvEmail.setTitle(signUp.getEmail());
-            tvPassword.setTitle(signUp.getPassword());
-            tvUsername.setTitle(signUp.getUsername());
-            tvConfirmPassword.setTitle(signUp.getPassword());
+        if (signUpModel != null) {
+            tvEmail.setTitle(signUpModel.getEmail());
+            tvPassword.setTitle(signUpModel.getPassword());
+            tvUsername.setTitle(signUpModel.getUsername());
+            tvConfirmPassword.setTitle(signUpModel.getPassword());
         }
     }
 
-    private void nextAction(){
+    private void nextAction() {
         Utils.hideSoftKeyboard(getActivity());
         bFlagButtonNext = true;
         if (validate()) {
-            if (signUp != null) {
-                signUp.setUsername(username);
-                signUp.setEmail(email);
-                signUp.setPassword(password);
+            if (signUpModel != null) {
+                signUpModel.setUsername(username);
+                signUpModel.setEmail(email);
+                signUpModel.setPassword(password);
+                networkManager.requestApi(networkManager
+                                .validateUsernameAndEmail(signUpModel.getUsername(), signUpModel.getEmail()),
+                        Constants.ID_VALIDATE_EMAIL);
+
             }
-            RegisterProfileFragment registerProfileFragment = RegisterProfileFragment.newInstance();
-            replace(registerProfileFragment, RegisterProfileFragment.TAG, true, true);
         }
     }
 
-    public SignUp getSignUp(){
-        return signUp;
+    public IHttpResponse iHttpResponse = new IHttpResponse() {
+        @Override
+        public void onHttpComplete(String response, int idRequest) {
+            RegisterProfileFragment registerProfileFragment = RegisterProfileFragment.newInstance();
+            replace(registerProfileFragment, RegisterProfileFragment.TAG, true, true);
+        }
+
+        @Override
+        public void onHttpError(String response, int idRequest, int errorCode) {
+            ErrorModel errorModel = gson.fromJson(response, ErrorModel.class);
+            if (!TextUtils.isEmpty(errorModel.getErrorMsg())) {
+                Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    public SignUpModel getSignUp() {
+        return signUpModel;
     }
 }

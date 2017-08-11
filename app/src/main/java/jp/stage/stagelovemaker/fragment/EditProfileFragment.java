@@ -168,7 +168,6 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
                 && data != null && data.getData() != null) {
             picUri = data.getData();
             cropImage();
-
         }
     }
 

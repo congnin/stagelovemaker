@@ -77,7 +77,11 @@
     <string name="no_matching_found">No matching found.</string>
     <string name="search">Search</string>
     <string name="email">Email</string>
+    <string name="accept">Accept</string>
+    <string name="question_logout">Are you sure you want to log out? Still you will be seen by compatible users in your last known location.</string>
     <string name="reset_password">Reset password</string>
+    <string name="you_are_loggout">You are Logged out.</string>
+    <string name="log_out">LOG OUT</string>
     <string name="email_blank">Please enter your email.</string>
     <string name="username_blank">Please enter your username</string>
     <string name="email_invalid">Your email is invalid.</string>

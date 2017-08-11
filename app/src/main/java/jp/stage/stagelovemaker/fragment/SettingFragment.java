@@ -14,13 +14,16 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.edmodo.rangebar.RangeBar;
 
+import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.LoginActivity;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.dialog.QuestionDialog;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.Button;
@@ -335,8 +338,12 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
                 calculateDistanceByUnit();
                 break;
             case R.id.layout_logout:
-                startNewActivity(LoginActivity.class, null);
-                ActivityCompat.finishAffinity(getActivity());
+                QuestionDialog dialog = new QuestionDialog(getActivity(), Utils.capitalize(getString(R.string.log_out)),
+                        getString(R.string.question_logout));
+                dialog.setColorTitle(Color.RED);
+                dialog.setTitleButtonOK(getString(R.string.logout).toUpperCase());
+                dialog.setDelegate(questionLogout, "");
+                dialog.show();
                 break;
         }
     }
@@ -351,4 +358,20 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         ((GradientDrawable) button2.getBackground()).setStroke(0, Color.TRANSPARENT);
         button2.setTextColor(ContextCompat.getColor(getContext(), R.color.gray37));
     }
+
+    public QuestionDialog.QuestionRequestDialogDelegate questionLogout = new QuestionDialog.QuestionRequestDialogDelegate() {
+        @Override
+        public void clickAllow(Boolean bAllow, String type) {
+            if (bAllow) {
+                Toast.makeText(getContext(), getString(R.string.you_are_loggout), Toast.LENGTH_LONG).show();
+                MyApplication app = Utils.getApplication(getActivity());
+                if (app != null) {
+                    app.setAccessToken("", getActivity());
+                    app.setLocation(null);
+                }
+                startNewActivity(LoginActivity.class, null);
+                ActivityCompat.finishAffinity(getActivity());
+            }
+        }
+    };
 }

@@ -5,7 +5,7 @@ package jp.stage.stagelovemaker.network;
  */
 
 public interface IHttpResponse {
-    public void onHttpComplete(String response, int idRequest);
+    void onHttpComplete(String response, int idRequest);
 
-    public void onHttpError(String response, int idRequest, int errorCode);
+    void onHttpError(String response, int idRequest, int errorCode);
 }

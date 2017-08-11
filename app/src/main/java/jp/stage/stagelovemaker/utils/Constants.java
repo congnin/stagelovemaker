@@ -50,4 +50,9 @@ public final class Constants {
 
     public static final String INSTAGRAM_AUTH_URL = "https://instagram.com/oauth/authorize/";
     public static final String INSTAGRAM_BASE_URL = "https://api.instagram.com";
+
+    public final static int ID_SIGN_UP = 1;
+    public final static int ID_SIGN_IN = 2;
+    public final static int ID_UPLOAD_AVATAR = 3;
+    public final static int ID_VALIDATE_EMAIL = 4;
 }

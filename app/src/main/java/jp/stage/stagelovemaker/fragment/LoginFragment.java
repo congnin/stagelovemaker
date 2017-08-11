@@ -11,10 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.model.ErrorModel;
+import jp.stage.stagelovemaker.model.SignUpModel;
+import jp.stage.stagelovemaker.model.UserTokenModel;
+import jp.stage.stagelovemaker.network.IHttpResponse;
+import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.FormInputText;
@@ -37,8 +45,11 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
 
     String username = "";
     String password = "";
+    SignUpModel signUpModel;
 
     boolean bFlagButtonNext = false;
+    NetworkManager networkManager;
+    Gson gson;
 
     public static LoginFragment newInstance() {
 
@@ -47,6 +58,13 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
         LoginFragment fragment = new LoginFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        networkManager = new NetworkManager(getActivity(), iHttpResponse);
+        gson = new Gson();
     }
 
     @Nullable
@@ -98,8 +116,7 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
         Utils.hideSoftKeyboard(getActivity());
         bFlagButtonNext = true;
         if (validate()) {
-            startNewActivity(MainActivity.class, null);
-            ActivityCompat.finishAffinity(getActivity());
+            networkManager.requestApi(networkManager.signIn(username, password), Constants.ID_SIGN_IN);
         }
     }
 
@@ -118,7 +135,11 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
 
     @Override
     public void didReturn(String tag) {
-
+        Utils.hideSoftKeyboard(getActivity());
+        bFlagButtonNext = true;
+        if (validate()) {
+            networkManager.requestApi(networkManager.signIn(username, password), Constants.ID_SIGN_IN);
+        }
     }
 
     @Override
@@ -161,4 +182,38 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
         }
         return isValid;
     }
+
+    private void loginSuccess(UserTokenModel model) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.KEY_DATA, model);
+        Utils.getApplication(getActivity()).setAccessToken(model.getTokenCode(), getActivity());
+        startNewActivity(MainActivity.class, bundle);
+        ActivityCompat.finishAffinity(getActivity());
+    }
+
+    public IHttpResponse iHttpResponse = new IHttpResponse() {
+        @Override
+        public void onHttpComplete(String response, int idRequest) {
+            switch (idRequest) {
+                case Constants.ID_SIGN_IN:
+                    UserTokenModel userTokenModel = gson.fromJson(response, UserTokenModel.class);
+                    if (userTokenModel != null) {
+                        loginSuccess(userTokenModel);
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onHttpError(String response, int idRequest, int errorCode) {
+            switch (idRequest) {
+                case Constants.ID_SIGN_IN:
+                    ErrorModel errorModel = gson.fromJson(response, ErrorModel.class);
+                    if (!TextUtils.isEmpty(errorModel.getErrorMsg())) {
+                        Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_LONG).show();
+                    }
+
+            }
+        }
+    };
 }

@@ -33,6 +33,8 @@ import java.util.StringTokenizer;
 
 import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * Created by congn on 7/11/2017.
@@ -300,5 +302,12 @@ public final class Utils {
             cookieSyncMngr.stopSync();
             cookieSyncMngr.sync();
         }
+    }
+
+    public static RequestBody toRequestBody(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return null;
+        }
+        return RequestBody.create(MediaType.parse("text/plain"), text);
     }
 }

@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.Calendar;
@@ -32,6 +33,10 @@ import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.model.SignUp;
+import jp.stage.stagelovemaker.model.SignUpModel;
+import jp.stage.stagelovemaker.model.UserTokenModel;
+import jp.stage.stagelovemaker.network.IHttpResponse;
+import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.Avatar;
@@ -71,19 +76,29 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
     TextView cancelCropView;
     TextView chooseCropView;
 
-    SignUp signUp;
+    SignUpModel signUpModel;
     String firstName = "";
     String lastName = "";
     String birthday = "";
     String gender = "";
     ImageView rotateImage;
     int iRotation;
+    NetworkManager networkManager;
+    Gson gson;
+    UserTokenModel userTokenModel;
 
     public static RegisterProfileFragment newInstance() {
         Bundle args = new Bundle();
         RegisterProfileFragment fragment = new RegisterProfileFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        networkManager = new NetworkManager(getActivity(), iHttpResponse);
+        gson = new Gson();
     }
 
     @Nullable
@@ -195,8 +210,8 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
                 builder.setItems(genders, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         indexGender = item;
-                        gender = genders[item].toString();
-                        tvGender.setValue(genders[item].toString());
+                        gender = genders[item];
+                        tvGender.setValue(genders[item]);
                         tvGender.setIssuseText("");
                         validate();
                     }
@@ -222,8 +237,8 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
                 break;
             }
             case R.id.done_txt_cropview: {
-                if (signUp != null && cropImageView != null && cropImageView.getCroppedImage() != null) {
-                    signUp.setAvatar(cropImageView.getCroppedImage());
+                if (signUpModel != null && cropImageView != null && cropImageView.getCroppedImage() != null) {
+                    signUpModel.setAvatar(cropImageView.getCroppedImage());
                     ivAvatar.setAvatar(cropImageView.getCroppedImage());
                 }
             }
@@ -243,32 +258,32 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
     }
 
     private void updateDataSignup() {
-        if (signUp != null) {
-            signUp.setFirst_name(firstName);
-            signUp.setLast_name(lastName);
-            signUp.setBirthday(birthday);
-            signUp.setIndexGender(indexGender);
+        if (signUpModel != null) {
+            signUpModel.setFirst_name(firstName);
+            signUpModel.setLast_name(lastName);
+            signUpModel.setBirthday(birthday);
+            signUpModel.setGender(indexGender);
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (signUp != null) {
-            birthday = signUp.getBirthday();
-            firstName = signUp.getFirst_name();
-            lastName = signUp.getLast_name();
-            tvFirstName.setTitle(signUp.getFirst_name());
-            tvLastName.setTitle(signUp.getLast_name());
-            tvBirthday.setValue(signUp.getBirthday());
-            if (signUp.getIndexGender() != -1) {
-                gender = genders[signUp.getIndexGender()];
-                indexGender = signUp.getIndexGender();
+        if (signUpModel != null) {
+            birthday = signUpModel.getBirthday();
+            firstName = signUpModel.getFirst_name();
+            lastName = signUpModel.getLast_name();
+            tvFirstName.setTitle(signUpModel.getFirst_name());
+            tvLastName.setTitle(signUpModel.getLast_name());
+            tvBirthday.setValue(signUpModel.getBirthday());
+            if (signUpModel.getGender() != -1) {
+                gender = genders[signUpModel.getGender()];
+                indexGender = signUpModel.getGender();
                 tvGender.setValue(gender);
             }
 
-            if (!TextUtils.isEmpty(signUp.getBirthday())) {
-                Date date = Utils.parseDateString(signUp.getBirthday());
+            if (!TextUtils.isEmpty(signUpModel.getBirthday())) {
+                Date date = Utils.parseDateString(signUpModel.getBirthday());
                 if (date != null) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(date);
@@ -278,11 +293,11 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
                 }
             }
 
-            if (signUp.getAvatar() != null) {
-                ivAvatar.setAvatar(signUp.getAvatar());
+            if (signUpModel.getAvatar() != null) {
+                ivAvatar.setAvatar(signUpModel.getAvatar());
             } else {
-                if (!TextUtils.isEmpty(signUp.getLink_avatar())) {
-                    ivAvatar.setAvatar(signUp.getLink_avatar());
+                if (!TextUtils.isEmpty(signUpModel.getLink_avatar())) {
+                    ivAvatar.setAvatar(signUpModel.getLink_avatar());
                 }
             }
         }
@@ -376,7 +391,7 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
             RegisterFragment fragment = (RegisterFragment) getActivity().getSupportFragmentManager()
                     .findFragmentByTag(RegisterFragment.TAG);
             if (fragment != null) {
-                signUp = fragment.getSignUp();
+                signUpModel = fragment.getSignUp();
             }
         }
     }
@@ -411,8 +426,55 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
         Utils.hideSoftKeyboard(getActivity());
         if (validate()) {
             updateDataSignup();
+            networkManager.requestApi(networkManager.signUp(signUpModel), Constants.ID_SIGN_UP);
+
+        }
+    }
+
+    private void uploadAvatar(){
+
+    }
+
+    private void onHandleResponse(final int idRequest) {
+        if (getActivity() == null) {
+            return;
+        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                switch (idRequest){
+                    case Constants.ID_SIGN_UP:
+                        Utils.getApplication(getActivity()).setAccessToken(userTokenModel.getTokenCode(), getActivity());
+                        if (signUpModel.getAvatar() != null) {
+                            uploadAvatar();
+                            break;
+                        }
+                }
+            }
+        });
+    }
+
+    public IHttpResponse iHttpResponse = new IHttpResponse() {
+        @Override
+        public void onHttpComplete(String response, int idRequest) {
+            switch (idRequest) {
+                case Constants.ID_SIGN_UP:
+                    userTokenModel = gson.fromJson(response, UserTokenModel.class);
+                    if (userTokenModel != null) {
+                        onHandleResponse(idRequest);
+                    }
+                    break;
+
+                case Constants.ID_UPLOAD_AVATAR:
+                    break;
+            }
             startNewActivity(MainActivity.class, null);
             ActivityCompat.finishAffinity(getActivity());
         }
-    }
+
+        @Override
+        public void onHttpError(String response, int idRequest, int errorCode) {
+
+        }
+    };
 }
