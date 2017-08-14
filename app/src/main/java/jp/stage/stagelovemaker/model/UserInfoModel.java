@@ -180,6 +180,7 @@ public class UserInfoModel implements Parcelable {
         this.modified = modified;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -187,7 +188,7 @@ public class UserInfoModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeList(this.avatars);
+        dest.writeTypedList(this.avatars);
         dest.writeParcelable(this.discover, flags);
         dest.writeParcelable(this.setting, flags);
         dest.writeParcelable(this.meta, flags);
@@ -198,8 +199,8 @@ public class UserInfoModel implements Parcelable {
         dest.writeString(this.email);
         dest.writeValue(this.gender);
         dest.writeValue(this.age);
-        dest.writeValue(this.latitude);
-        dest.writeValue(this.longitude);
+        dest.writeDouble(this.latitude);
+        dest.writeDouble(this.longitude);
         dest.writeString(this.created);
         dest.writeString(this.modified);
     }
@@ -208,8 +209,7 @@ public class UserInfoModel implements Parcelable {
     }
 
     protected UserInfoModel(Parcel in) {
-        this.avatars = new ArrayList<AvatarModel>();
-        in.readList(this.avatars, AvatarModel.class.getClassLoader());
+        this.avatars = in.createTypedArrayList(AvatarModel.CREATOR);
         this.discover = in.readParcelable(DiscoverModel.class.getClassLoader());
         this.setting = in.readParcelable(SettingModel.class.getClassLoader());
         this.meta = in.readParcelable(MetaModel.class.getClassLoader());
@@ -220,8 +220,8 @@ public class UserInfoModel implements Parcelable {
         this.email = in.readString();
         this.gender = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.age = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.latitude = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.longitude = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
         this.created = in.readString();
         this.modified = in.readString();
     }

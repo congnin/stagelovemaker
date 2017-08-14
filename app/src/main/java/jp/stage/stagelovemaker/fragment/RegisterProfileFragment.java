@@ -452,7 +452,7 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
         }
         Utils.writeBooleanSharedPref(getActivity(), Constants.SHARE_REF_NOTIFICATION, true);
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.KEY_DATA, userTokenModel);
+        bundle.putParcelable(Constants.KEY_DATA, userTokenModel.getUserInfo());
         Utils.getApplication(getActivity()).setAccessToken(userTokenModel.getTokenCode(), getActivity());
         Utils.getApplication(getActivity()).setId(userTokenModel.getUserInfo().getId(), getActivity());
         startNewActivity(MainActivity.class, bundle);
@@ -474,7 +474,6 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
                             break;
                         }
                     case Constants.ID_UPLOAD_AVATAR:
-                        userTokenModel.setUrl(urlImage);
                         setMainActivity();
                         break;
                 }
