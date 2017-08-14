@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Build;
@@ -22,6 +23,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -86,6 +89,22 @@ public final class Utils {
         return result.trim();
     }
 
+    public static File savebitmap(Context context, Bitmap bmp, String name) {
+        File pictureFile = getOutputMediaFile(context);
+        if (pictureFile == null) {
+            return null;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            bmp.compress(Bitmap.CompressFormat.PNG, 60, fos);
+            fos.close();
+            return pictureFile;
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+        return null;
+    }
+
     public static File getOutputMediaFile(Context context) {
         String imageFileName = "avatar";
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -137,6 +156,10 @@ public final class Utils {
 
     public static Typeface getProximaSemiBold(Context context) {
         return getFont(context, "fonts/proximanovasoft-semibold.otf");
+    }
+
+    public static String formatDate(Context context, Date date) {
+        return new SimpleDateFormat("dd/MM/yyyy", Locale.US).format(date);
     }
 
     public static String formatDateLocal(Context context, Date date) {
@@ -268,7 +291,6 @@ public final class Utils {
             url = avatarUrl;
         }
 
-        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(context)
                 .load(url)
                 .centerCrop()

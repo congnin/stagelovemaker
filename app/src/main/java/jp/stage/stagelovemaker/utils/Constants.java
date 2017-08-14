@@ -55,4 +55,6 @@ public final class Constants {
     public final static int ID_SIGN_IN = 2;
     public final static int ID_UPLOAD_AVATAR = 3;
     public final static int ID_VALIDATE_EMAIL = 4;
+    public final static int ID_SELF_INFO = 5;
+    public final static int ID_UPDATED_LOCATION = 6;
 }

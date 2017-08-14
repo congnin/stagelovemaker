@@ -24,6 +24,7 @@ import jp.stage.stagelovemaker.activity.LoginActivity;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.dialog.QuestionDialog;
+import jp.stage.stagelovemaker.model.SettingModel;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.Button;
@@ -97,11 +98,11 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     int radius;
     Boolean isMile;
     String valueDistance;
+    SettingFragmentCallback callback;
 
-    public static SettingFragment newInstance() {
-
+    public static SettingFragment newInstance(SettingModel settingModel) {
         Bundle args = new Bundle();
-
+        args.putParcelable(Constants.KEY_DATA, settingModel);
         SettingFragment fragment = new SettingFragment();
         fragment.setArguments(args);
         return fragment;
@@ -374,4 +375,12 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
             }
         }
     };
+
+    public void setCallback(SettingFragmentCallback callback) {
+        this.callback = callback;
+    }
+
+    public interface SettingFragmentCallback {
+        void onSettingChanged();
+    }
 }

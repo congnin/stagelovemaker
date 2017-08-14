@@ -16,7 +16,7 @@ import java.util.List;
 public class UserInfoModel implements Parcelable {
     @SerializedName("avatars")
     @Expose
-    private List<Object> avatars = null;
+    private List<AvatarModel> avatars = new ArrayList<>();
     @SerializedName("discover")
     @Expose
     private DiscoverModel discover;
@@ -49,10 +49,10 @@ public class UserInfoModel implements Parcelable {
     private Integer age;
     @SerializedName("latitude")
     @Expose
-    private Integer latitude;
+    private double latitude;
     @SerializedName("longitude")
     @Expose
-    private Integer longitude;
+    private double longitude;
     @SerializedName("created")
     @Expose
     private String created;
@@ -60,11 +60,11 @@ public class UserInfoModel implements Parcelable {
     @Expose
     private String modified;
 
-    public List<Object> getAvatars() {
+    public List<AvatarModel> getAvatars() {
         return avatars;
     }
 
-    public void setAvatars(List<Object> avatars) {
+    public void setAvatars(List<AvatarModel> avatars) {
         this.avatars = avatars;
     }
 
@@ -148,7 +148,7 @@ public class UserInfoModel implements Parcelable {
         this.age = age;
     }
 
-    public Integer getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
@@ -156,7 +156,7 @@ public class UserInfoModel implements Parcelable {
         this.latitude = latitude;
     }
 
-    public Integer getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
@@ -208,8 +208,8 @@ public class UserInfoModel implements Parcelable {
     }
 
     protected UserInfoModel(Parcel in) {
-        this.avatars = new ArrayList<Object>();
-        in.readList(this.avatars, Object.class.getClassLoader());
+        this.avatars = new ArrayList<AvatarModel>();
+        in.readList(this.avatars, AvatarModel.class.getClassLoader());
         this.discover = in.readParcelable(DiscoverModel.class.getClassLoader());
         this.setting = in.readParcelable(SettingModel.class.getClassLoader());
         this.meta = in.readParcelable(MetaModel.class.getClassLoader());
@@ -226,7 +226,7 @@ public class UserInfoModel implements Parcelable {
         this.modified = in.readString();
     }
 
-    public static final Parcelable.Creator<UserInfoModel> CREATOR = new Parcelable.Creator<UserInfoModel>() {
+    public static final Creator<UserInfoModel> CREATOR = new Creator<UserInfoModel>() {
         @Override
         public UserInfoModel createFromParcel(Parcel source) {
             return new UserInfoModel(source);

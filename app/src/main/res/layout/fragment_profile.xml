@@ -12,15 +12,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.github.siyamed.shapeimageview.CircularImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_avatar"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
-            android:src="@drawable/toto"
-            app:siBorderColor="@color/light_red"
-            app:siBorderWidth="1dp" />
+            android:src="@mipmap/avatar"
+            app:civ_border_color="@color/light_red"
+            app:civ_border_width="1dp" />
 
         <TextView
             android:id="@+id/tv_formatted_name"

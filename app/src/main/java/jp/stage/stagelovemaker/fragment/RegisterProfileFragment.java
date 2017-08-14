@@ -29,6 +29,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.util.Calendar;
 import java.util.Date;
 
+import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
@@ -86,6 +87,7 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
     NetworkManager networkManager;
     Gson gson;
     UserTokenModel userTokenModel;
+    String urlImage;
 
     public static RegisterProfileFragment newInstance() {
         Bundle args = new Bundle();
@@ -379,7 +381,7 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
             iYear = year;
             Calendar calendar = Calendar.getInstance();
             calendar.set(year, monthOfYear, dayOfMonth);
-            birthday = Utils.formatDateLocal(getActivity(), calendar.getTime());
+            birthday = Utils.formatDate(getActivity(), calendar.getTime());
             tvBirthday.setValue(birthday);
             tvBirthday.setIssuseText("");
             validate();
@@ -424,15 +426,37 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
     public void nextAction() {
         bFlagButtonNext = true;
         Utils.hideSoftKeyboard(getActivity());
-        if (validate()) {
-            updateDataSignup();
-            networkManager.requestApi(networkManager.signUp(signUpModel), Constants.ID_SIGN_UP);
-
+        if (userTokenModel != null) {
+            uploadAvatar();
+        } else {
+            if (validate()) {
+                updateDataSignup();
+                networkManager.requestApi(networkManager.signUp(signUpModel), Constants.ID_SIGN_UP);
+            }
         }
     }
 
-    private void uploadAvatar(){
+    private void uploadAvatar() {
+        if (signUpModel.getAvatar() != null) {
+            networkManager.requestApi(networkManager.uploadAvatar(0, signUpModel.getAvatar()),
+                    Constants.ID_UPLOAD_AVATAR);
+        } else {
+            setMainActivity();
+        }
+    }
 
+    private void setMainActivity() {
+        MyApplication app = Utils.getApplication(getActivity());
+        if (app != null) {
+            app.setLocation(null);
+        }
+        Utils.writeBooleanSharedPref(getActivity(), Constants.SHARE_REF_NOTIFICATION, true);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.KEY_DATA, userTokenModel);
+        Utils.getApplication(getActivity()).setAccessToken(userTokenModel.getTokenCode(), getActivity());
+        Utils.getApplication(getActivity()).setId(userTokenModel.getUserInfo().getId(), getActivity());
+        startNewActivity(MainActivity.class, bundle);
+        ActivityCompat.finishAffinity(getActivity());
     }
 
     private void onHandleResponse(final int idRequest) {
@@ -442,13 +466,17 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                switch (idRequest){
+                switch (idRequest) {
                     case Constants.ID_SIGN_UP:
                         Utils.getApplication(getActivity()).setAccessToken(userTokenModel.getTokenCode(), getActivity());
                         if (signUpModel.getAvatar() != null) {
                             uploadAvatar();
                             break;
                         }
+                    case Constants.ID_UPLOAD_AVATAR:
+                        userTokenModel.setUrl(urlImage);
+                        setMainActivity();
+                        break;
                 }
             }
         });
@@ -466,15 +494,22 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
                     break;
 
                 case Constants.ID_UPLOAD_AVATAR:
+                    UserTokenModel avatarModel = gson.fromJson(response, UserTokenModel.class);
+                    if (avatarModel != null) {
+                        urlImage = avatarModel.getUrl();
+                        onHandleResponse(idRequest);
+                    }
                     break;
             }
-            startNewActivity(MainActivity.class, null);
-            ActivityCompat.finishAffinity(getActivity());
         }
 
         @Override
         public void onHttpError(String response, int idRequest, int errorCode) {
-
+            switch (idRequest) {
+                case Constants.ID_UPLOAD_AVATAR:
+                    setMainActivity();
+                    break;
+            }
         }
     };
 }

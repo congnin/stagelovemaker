@@ -187,6 +187,7 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.KEY_DATA, model);
         Utils.getApplication(getActivity()).setAccessToken(model.getTokenCode(), getActivity());
+        Utils.getApplication(getActivity()).setId(model.getUserInfo().getId(), getActivity());
         startNewActivity(MainActivity.class, bundle);
         ActivityCompat.finishAffinity(getActivity());
     }

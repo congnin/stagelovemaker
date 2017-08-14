@@ -296,9 +296,15 @@ public class RegisterFragment extends BaseFragment implements LoginActionBarDele
 
         @Override
         public void onHttpError(String response, int idRequest, int errorCode) {
-            ErrorModel errorModel = gson.fromJson(response, ErrorModel.class);
-            if (!TextUtils.isEmpty(errorModel.getErrorMsg())) {
-                Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_LONG).show();
+            switch (idRequest) {
+                case Constants.ID_VALIDATE_EMAIL:
+                    ErrorModel errorModel = gson.fromJson(response, ErrorModel.class);
+                    if (errorModel != null) {
+                        if (!TextUtils.isEmpty(errorModel.getErrorMsg())) {
+                            Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    break;
             }
         }
     };

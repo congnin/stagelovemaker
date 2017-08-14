@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.utils.Constants;
 
 /**
  * Created by congn on 8/4/2017.
@@ -54,5 +55,15 @@ public class MainStageFragment extends BaseFragment implements SearchFragment.Se
     public void onSearchFinished() {
         StageFragment stageFragment = StageFragment.newInstance();
         replace(stageFragment, StageFragment.TAG, false, false, R.id.flPals);
+    }
+
+    public void allowAccessLocation(Boolean b) {
+        if (searchFragment != null) {
+            if (b) {
+                searchFragment.getLocation();
+            } else {
+                searchFragment.clickAllow(false, Constants.GET_LOCATION);
+            }
+        }
     }
 }

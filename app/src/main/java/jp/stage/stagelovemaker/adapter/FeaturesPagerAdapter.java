@@ -41,6 +41,10 @@ public class FeaturesPagerAdapter extends FragmentPagerAdapter {
         return null;
     }
 
+    public void getLocation(Boolean b) {
+        mainStageFragment.allowAccessLocation(b);
+    }
+
     @Override
     public int getCount() {
         return 3;

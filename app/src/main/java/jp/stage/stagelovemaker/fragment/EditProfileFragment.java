@@ -2,6 +2,7 @@ package jp.stage.stagelovemaker.fragment;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +27,10 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.siyamed.shapeimageview.RoundedImageView;
+import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
@@ -34,7 +38,10 @@ import java.util.Calendar;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.model.ErrorModel;
 import jp.stage.stagelovemaker.model.InstagramUserModel;
+import jp.stage.stagelovemaker.network.IHttpResponse;
+import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.OnSingleClickListener;
@@ -83,12 +90,42 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
     String lastName = "";
     String birthday = "";
     String gender = "";
+    NetworkManager networkManager;
+    Gson gson;
 
     public static EditProfileFragment newInstance() {
         Bundle args = new Bundle();
         EditProfileFragment fragment = new EditProfileFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public IHttpResponse iHttpResponse = new IHttpResponse() {
+        @Override
+        public void onHttpComplete(String response, int idRequest) {
+            switch (idRequest) {
+                case Constants.ID_UPLOAD_AVATAR:
+                    Toast.makeText(getActivity(), "" + indexChange, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onHttpError(String response, int idRequest, int errorCode) {
+            switch (idRequest) {
+                case Constants.ID_UPLOAD_AVATAR:
+                    ErrorModel errorModel = gson.fromJson(response, ErrorModel.class);
+                    if (errorModel != null && !TextUtils.isEmpty(errorModel.getErrorMsg())) {
+                        Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                    }
+            }
+        }
+    };
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        networkManager = new NetworkManager(getActivity(), iHttpResponse);
+        gson = new Gson();
     }
 
     @Nullable
@@ -306,6 +343,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         if (imageBitmap != null) {
             removeImageView.get(indexChange).setVisibility(View.VISIBLE);
             avatarImageView.get(indexChange).setImageBitmap(imageBitmap);
+            networkManager.requestApi(networkManager.uploadAvatar(indexChange, imageBitmap), Constants.ID_UPLOAD_AVATAR);
         }
     }
 

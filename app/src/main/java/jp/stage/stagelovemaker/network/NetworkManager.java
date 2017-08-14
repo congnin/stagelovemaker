@@ -3,14 +3,17 @@ package jp.stage.stagelovemaker.network;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -19,6 +22,8 @@ import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.model.SignUpModel;
 import jp.stage.stagelovemaker.utils.Utils;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -69,7 +74,8 @@ public class NetworkManager {
                     String formatedToken = "Bearer " + accessToken;
                     Request original = chain.request();
                     Request.Builder requestBuilder = original.newBuilder()
-                            .addHeader("Authorization", formatedToken);
+                            .addHeader("Authorization", formatedToken)
+                            .addHeader("Content-type", "application/x-www-form-urlencoded");
 
                     Request request = requestBuilder.build();
                     return chain.proceed(request);
@@ -114,7 +120,8 @@ public class NetworkManager {
                                     iHttpResponse.onHttpError(responseModel.getResult().toString(), idRequest, responseModel.getStatus());
                                 }
                             } else {
-                                iHttpResponse.onHttpError(mContext.getString(R.string.unknown_error_network), idRequest, 0);
+                                Toast.makeText(mContext, mContext.getString(R.string.unknown_error_network), Toast.LENGTH_LONG).show();
+                                iHttpResponse.onHttpError("", idRequest, 0);
                             }
                         }
                     }
@@ -189,7 +196,29 @@ public class NetworkManager {
     }
 
     public Call<ResponseModel> validateUsernameAndEmail(String username, String email) {
-        String usernameAndEmail = String.format("username=%s&email=%s", username, email);
-        return apiService.validateUserAndEmail(usernameAndEmail);
+        //String usernameAndEmail = String.format("username=%s&email=%s", username, email);
+        return apiService.validateUserAndEmail(username, email);
+    }
+
+    public Call<ResponseModel> uploadAvatar(int index, Bitmap bitmap) {
+        File newfile = Utils.savebitmap(mContext, bitmap, "avatar");
+        newfile.getPath();
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("image/png"), newfile);
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("avatar", newfile.getName(), requestFile);
+        return apiService.uploadAvatar(body, index);
+    }
+
+    public Call<ResponseModel> getProfile(int id) {
+        return apiService.getProfile(id);
+    }
+
+    public Call<ResponseModel> updateLocation(int id, double latitude, double longitude) {
+        JsonObject data = new JsonObject();
+        data.addProperty("latitude", latitude);
+        data.addProperty("longitude", longitude);
+
+        return apiService.updateLocation(id, data);
     }
 }

@@ -23,6 +23,9 @@ public class UserTokenModel implements Parcelable {
     @SerializedName("token_code")
     @Expose
     private String tokenCode;
+    @SerializedName("url")
+    @Expose
+    private String url;
 
     public Integer getErrorCode() {
         return errorCode;
@@ -56,6 +59,14 @@ public class UserTokenModel implements Parcelable {
         this.tokenCode = tokenCode;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -67,6 +78,7 @@ public class UserTokenModel implements Parcelable {
         dest.writeString(this.errorMsg);
         dest.writeParcelable(this.userInfo, flags);
         dest.writeString(this.tokenCode);
+        dest.writeString(this.url);
     }
 
     public UserTokenModel() {
@@ -77,9 +89,10 @@ public class UserTokenModel implements Parcelable {
         this.errorMsg = in.readString();
         this.userInfo = in.readParcelable(UserInfoModel.class.getClassLoader());
         this.tokenCode = in.readString();
+        this.url = in.readString();
     }
 
-    public static final Parcelable.Creator<UserTokenModel> CREATOR = new Parcelable.Creator<UserTokenModel>() {
+    public static final Creator<UserTokenModel> CREATOR = new Creator<UserTokenModel>() {
         @Override
         public UserTokenModel createFromParcel(Parcel source) {
             return new UserTokenModel(source);
