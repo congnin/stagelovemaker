@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.model.DiscoverModel;
 import jp.stage.stagelovemaker.model.SettingModel;
 import jp.stage.stagelovemaker.model.UserInfoModel;
 import jp.stage.stagelovemaker.model.UserTokenModel;
@@ -103,7 +104,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (userTokenModel != null && userTokenModel.getUserInfo() != null
                         && userTokenModel.getUserInfo().getSetting() != null) {
                     SettingModel settingModel = userTokenModel.getUserInfo().getSetting();
-                    SettingFragment settingFragment = SettingFragment.newInstance(settingModel);
+                    DiscoverModel discoverModel = userTokenModel.getUserInfo().getDiscover();
+                    SettingFragment settingFragment = SettingFragment.newInstance(settingModel, discoverModel);
                     settingFragment.setCallback(settingCallback);
                     add(settingFragment, SettingFragment.TAG, true, true, R.id.flContainer);
                 }

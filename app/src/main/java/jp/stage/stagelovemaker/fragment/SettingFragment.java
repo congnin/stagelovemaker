@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import jp.stage.stagelovemaker.activity.LoginActivity;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.dialog.QuestionDialog;
+import jp.stage.stagelovemaker.model.DiscoverModel;
 import jp.stage.stagelovemaker.model.SettingModel;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
@@ -56,7 +58,6 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     RelativeLayout layoutAge;
 
     TextView tvShowMeOnTinder;
-    SwitchCompat switchShowOnTinder;
     RelativeLayout layoutShowMeOnTinder;
 
     TextView tvNotification;
@@ -89,20 +90,29 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     RelativeLayout layoutLogout;
 
     SwitchCompat switchMan, switchWoman;
+    SwitchCompat switchShowOnTinder;
+    SwitchCompat switchNotifyNewMatches;
+    SwitchCompat switchNotifyMessage;
+    SwitchCompat switchNotifyMessageLike;
+    SwitchCompat switchNotifySuperLikes;
 
     TextView tvDeleteAccount;
     RelativeLayout layoutDeleteAccount;
 
+    String unitDistance;
     int fromAge;
     int toAge;
     int radius;
     Boolean isMile;
     String valueDistance;
     SettingFragmentCallback callback;
+    SettingModel settingModel;
+    DiscoverModel discoverModel;
 
-    public static SettingFragment newInstance(SettingModel settingModel) {
+    public static SettingFragment newInstance(SettingModel settingModel, DiscoverModel discoverModel) {
         Bundle args = new Bundle();
         args.putParcelable(Constants.KEY_DATA, settingModel);
+        args.putParcelable(Constants.KEY_DATA_TWO, discoverModel);
         SettingFragment fragment = new SettingFragment();
         fragment.setArguments(args);
         return fragment;
@@ -165,6 +175,11 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
 
         switchMan = (SwitchCompat) view.findViewById(R.id.switch_men);
         switchWoman = (SwitchCompat) view.findViewById(R.id.switch_women);
+        switchShowOnTinder = (SwitchCompat) view.findViewById(R.id.switch_show_me_on_tinder);
+        switchNotifyNewMatches = (SwitchCompat) view.findViewById(R.id.switch_new_matches);
+        switchNotifyMessage = (SwitchCompat) view.findViewById(R.id.switch_messages);
+        switchNotifyMessageLike = (SwitchCompat) view.findViewById(R.id.switch_message_likes);
+        switchNotifySuperLikes = (SwitchCompat) view.findViewById(R.id.switch_super_likes);
         return view;
     }
 
@@ -214,6 +229,7 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         ((GradientDrawable) layoutDeleteAccount.getBackground()).setStroke(1, ContextCompat.getColor(getContext(), R.color.gray80));
         ((GradientDrawable) layoutDeleteAccount.getBackground()).setColor(Color.WHITE);
 
+        unitDistance = "";
         valueDistance = getString(R.string.km);
         seekBarDistance.setMax(100);
         isMile = false;
@@ -245,6 +261,47 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         });
 
         layoutLogout.setOnClickListener(this);
+        if (savedInstanceState != null) {
+            settingModel = savedInstanceState.getParcelable("settingModel");
+            discoverModel = savedInstanceState.getParcelable("discoverModel");
+        } else {
+            settingModel = getArguments().getParcelable(Constants.KEY_DATA);
+            discoverModel = getArguments().getParcelable(Constants.KEY_DATA_TWO);
+        }
+
+        loadInfoSetting();
+    }
+
+    private void loadInfoSetting() {
+        String distance = settingModel.getDistanceUnit();
+        if (!TextUtils.isEmpty(distance) && distance.equals("mi")) {
+            unitDistance = "mi";
+            tvChooseDistanceUnit.setText(getString(R.string.mi));
+        } else {
+            unitDistance = "km";
+            tvChooseDistanceUnit.setText(getString(R.string.km));
+        }
+
+        switchNotifyNewMatches.setChecked(settingModel.getNotifyNewMatches());
+        switchNotifyMessage.setChecked(settingModel.getNotifyMessages());
+        switchNotifyMessageLike.setChecked(settingModel.getNotifyMessageLikes());
+        switchNotifySuperLikes.setChecked(settingModel.getNotifySuperLikes());
+        switchShowOnTinder.setChecked(settingModel.getShowMeOnStageMaker());
+
+        switch (discoverModel.getFilterGender()) {
+            case 0:
+                switchMan.setChecked(false);
+                switchWoman.setChecked(true);
+                break;
+            case 1:
+                switchMan.setChecked(true);
+                switchWoman.setChecked(false);
+                break;
+            case 2:
+                switchMan.setChecked(true);
+                switchWoman.setChecked(true);
+                break;
+        }
     }
 
     @Override
@@ -329,6 +386,7 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
             case R.id.bt_km:
                 chooseDistanceUnit(btKm, btMi);
                 isMile = false;
+
                 tvChooseDistanceUnit.setText(getString(R.string.km));
                 calculateDistanceByUnit();
                 break;

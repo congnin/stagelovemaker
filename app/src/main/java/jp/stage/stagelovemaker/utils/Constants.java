@@ -25,6 +25,7 @@ public final class Constants {
     public static final String TAG_CONTROL_INPUT_CONFIRM_PASS = "ControlInputConfirm";
     public static final String TAG_CONTROL_INPUT_FIRSTNAME = "ControlInputFirstName";
     public static final String TAG_CONTROL_INPUT_LASTNAME = "ControlInputLastName";
+    public static final String TAG_CONTROL_INPUT_CODE_NUMBER = "ControlInputCodeNumber";
     public static final String TAG_CONTROL_INPUT_ABOUT_ME = "ControlInputAboutMe";
     public static final String TAG_CONTROL_INPUT_LOCATION = "ControlInputLocation";
     public static final String TAG_CONTROL_INPUT_MESSAGE = "ControlInputMessage";
@@ -57,4 +58,6 @@ public final class Constants {
     public final static int ID_VALIDATE_EMAIL = 4;
     public final static int ID_SELF_INFO = 5;
     public final static int ID_UPDATED_LOCATION = 6;
+    public final static int ID_RESET_PASSWORD = 7;
+    public final static int ID_CHANGE_PASSWORD = 8;
 }

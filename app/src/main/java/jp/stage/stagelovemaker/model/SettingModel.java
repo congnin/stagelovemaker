@@ -14,12 +14,30 @@ public class SettingModel implements Parcelable {
     @SerializedName("id")
     @Expose
     private Integer id;
+    @SerializedName("notify_new_matches")
+    @Expose
+    private Boolean notifyNewMatches = false;
+    @SerializedName("notify_messages")
+    @Expose
+    private Boolean notifyMessages = false;
+    @SerializedName("notify_message_likes")
+    @Expose
+    private Boolean notifyMessageLikes = false;
+    @SerializedName("notify_super_likes")
+    @Expose
+    private Boolean notifySuperLikes = false;
     @SerializedName("distance_unit")
     @Expose
     private String distanceUnit;
+    @SerializedName("show_me_on_stage_maker")
+    @Expose
+    private Boolean showMeOnStageMaker = false;
     @SerializedName("created")
     @Expose
     private String created;
+    @SerializedName("modified")
+    @Expose
+    private String modified;
 
     public Integer getId() {
         return id;
@@ -29,12 +47,52 @@ public class SettingModel implements Parcelable {
         this.id = id;
     }
 
+    public Boolean getNotifyNewMatches() {
+        return notifyNewMatches;
+    }
+
+    public void setNotifyNewMatches(Boolean notifyNewMatches) {
+        this.notifyNewMatches = notifyNewMatches;
+    }
+
+    public Boolean getNotifyMessages() {
+        return notifyMessages;
+    }
+
+    public void setNotifyMessages(Boolean notifyMessages) {
+        this.notifyMessages = notifyMessages;
+    }
+
+    public Boolean getNotifyMessageLikes() {
+        return notifyMessageLikes;
+    }
+
+    public void setNotifyMessageLikes(Boolean notifyMessageLikes) {
+        this.notifyMessageLikes = notifyMessageLikes;
+    }
+
+    public Boolean getNotifySuperLikes() {
+        return notifySuperLikes;
+    }
+
+    public void setNotifySuperLikes(Boolean notifySuperLikes) {
+        this.notifySuperLikes = notifySuperLikes;
+    }
+
     public String getDistanceUnit() {
         return distanceUnit;
     }
 
     public void setDistanceUnit(String distanceUnit) {
         this.distanceUnit = distanceUnit;
+    }
+
+    public Boolean getShowMeOnStageMaker() {
+        return showMeOnStageMaker;
+    }
+
+    public void setShowMeOnStageMaker(Boolean showMeOnStageMaker) {
+        this.showMeOnStageMaker = showMeOnStageMaker;
     }
 
     public String getCreated() {
@@ -53,11 +111,6 @@ public class SettingModel implements Parcelable {
         this.modified = modified;
     }
 
-    @SerializedName("modified")
-    @Expose
-
-    private String modified;
-
     @Override
     public int describeContents() {
         return 0;
@@ -66,7 +119,12 @@ public class SettingModel implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.id);
+        dest.writeValue(this.notifyNewMatches);
+        dest.writeValue(this.notifyMessages);
+        dest.writeValue(this.notifyMessageLikes);
+        dest.writeValue(this.notifySuperLikes);
         dest.writeString(this.distanceUnit);
+        dest.writeValue(this.showMeOnStageMaker);
         dest.writeString(this.created);
         dest.writeString(this.modified);
     }
@@ -76,12 +134,17 @@ public class SettingModel implements Parcelable {
 
     protected SettingModel(Parcel in) {
         this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.notifyNewMatches = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.notifyMessages = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.notifyMessageLikes = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.notifySuperLikes = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.distanceUnit = in.readString();
+        this.showMeOnStageMaker = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.created = in.readString();
         this.modified = in.readString();
     }
 
-    public static final Parcelable.Creator<SettingModel> CREATOR = new Parcelable.Creator<SettingModel>() {
+    public static final Creator<SettingModel> CREATOR = new Creator<SettingModel>() {
         @Override
         public SettingModel createFromParcel(Parcel source) {
             return new SettingModel(source);

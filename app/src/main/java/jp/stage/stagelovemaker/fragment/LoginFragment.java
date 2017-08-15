@@ -165,7 +165,7 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
                 tvPassword.setIssuseText(getString(R.string.password_blank));
             }
             isValid = false;
-        } else if (password.length() < 8) {
+        } else if (password.length() < 6) {
             if (bFlagButtonNext) {
                 tvPassword.setIssuseText(getString(R.string.password_invalid));
             }

@@ -1,5 +1,6 @@
 package jp.stage.stagelovemaker.fragment;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.network.IHttpResponse;
+import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.FormInputText;
@@ -34,15 +37,46 @@ public class ForgotPasswordFragment extends BaseFragment implements FormInputTex
     Button sendMailButton;
     String email;
     Boolean bFlagButtonReset = false;
+    NetworkManager networkManager;
 
     public static ForgotPasswordFragment newInstance() {
-
         Bundle args = new Bundle();
-
         ForgotPasswordFragment fragment = new ForgotPasswordFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        networkManager = new NetworkManager(getActivity(), iHttpResponse);
+    }
+
+    public IHttpResponse iHttpResponse = new IHttpResponse() {
+        @Override
+        public void onHttpComplete(String response, int idRequest) {
+            switch (idRequest) {
+                case Constants.ID_RESET_PASSWORD:
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getActivity(), getString(R.string.reset_password_to_email),
+                                        Toast.LENGTH_LONG).show();
+                                //getActivity().onBackPressed();
+                                ChangePasswordFragment changePasswordFragment = ChangePasswordFragment.newInstance();
+                                replace(changePasswordFragment, ChangePasswordFragment.TAG, false, true);
+                            }
+                        });
+                    }
+            }
+        }
+
+        @Override
+        public void onHttpError(String response, int idRequest, int errorCode) {
+
+        }
+    };
 
     @Nullable
     @Override
@@ -115,11 +149,14 @@ public class ForgotPasswordFragment extends BaseFragment implements FormInputTex
                 Utils.hideSoftKeyboard(getActivity());
                 bFlagButtonReset = true;
                 if (validate()) {
-                    getActivity().onBackPressed();
-                    Toast.makeText(getActivity(), "A new password will send to your email", Toast.LENGTH_LONG).show();
+                    resetPassword();
                 }
             }
         }
+    }
+
+    private void resetPassword() {
+        networkManager.requestApiNoProgress(networkManager.forgotPassword(email), Constants.ID_RESET_PASSWORD);
     }
 
     @Override

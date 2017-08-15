@@ -221,4 +221,18 @@ public class NetworkManager {
 
         return apiService.updateLocation(id, data);
     }
+
+    public Call<ResponseModel> forgotPassword(String email) {
+        JsonObject data = new JsonObject();
+        data.addProperty("email", email);
+        return apiService.forgotPassword(data);
+    }
+
+    public Call<ResponseModel> updatePassword(String email, String code_number, String password) {
+        JsonObject data = new JsonObject();
+        data.addProperty("email", email);
+        data.addProperty("code_number", code_number);
+        data.addProperty("password", password);
+        return apiService.updatePassword(data);
+    }
 }

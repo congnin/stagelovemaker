@@ -19,11 +19,15 @@
     <string name="join_in_stage">Join in Stage</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="code_number">Code number</string>
     <string name="field_blank">Oops, please fill this input field!</string>
     <string name="confirm_password">Confirm password</string>
     <string name="password_blank">Please enter your password.</string>
-    <string name="password_invalid">Required 8 characters at minimum.</string>
+    <string name="password_has_changed">Password has changed.</string>
+    <string name="password_invalid">Required 6 characters at minimum.</string>
     <string name="password_not_match">Seems like this password doesn’t match!</string>
+    <string name="change_password">Input password and code sent to your email</string>
+    <string name="agree_change">Agree to change!</string>
     <string name="des_deny_location">None can be found for\nlocation access is denied.\nPlease allow to access this device"’"s\n location to find other.</string>
     <string name="allow_access_location">Allow access location</string>
     <string name="edit_profile">Edit Profile</string>

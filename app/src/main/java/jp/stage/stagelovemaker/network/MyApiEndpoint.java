@@ -41,4 +41,10 @@ public interface MyApiEndpoint {
     @PUT("api/users/{user_id}")
     Call<ResponseModel> updateLocation(@Path("user_id") int id,
                                        @Body JsonObject data);
+
+    @POST("api/systems/forgotPassword/")
+    Call<ResponseModel> forgotPassword(@Body JsonObject data);
+
+    @POST("api/systems/updatePass/")
+    Call<ResponseModel> updatePassword(@Body JsonObject data);
 }
