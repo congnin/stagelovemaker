@@ -9,12 +9,14 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
@@ -85,17 +87,15 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
         btBoost.setEnabled(false);
         btLike.setEnabled(false);
         btSuperLike.setEnabled(false);
+    }
 
-        if (getActivity() != null && ((MainActivity) getActivity()).getLoginModel() != null &&
-                ((MainActivity) getActivity()).getLoginModel().getAvatars() != null) {
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (!TextUtils.isEmpty(MyApplication.getMainAvatar())) {
             String linkAvatar = null;
-
-            for (int i = 0; i < ((MainActivity) getActivity()).getLoginModel().getAvatars().size(); i++) {
-                if (((MainActivity) getActivity()).getLoginModel().getAvatars().get(i) != null) {
-                    linkAvatar = ((MainActivity) getActivity()).getLoginModel().getAvatars().get(i).getUrl();
-                    break;
-                }
-            }
+            linkAvatar = MyApplication.getMainAvatar();
             Utils.setAvatar(getContext(), ivAvatar, linkAvatar);
         }
         getLocation();
@@ -109,19 +109,13 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
             }
             gps.getLocation();
             final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (getActivity() != null && !getActivity().isFinishing() && !getActivity().isDestroyed()) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (gps != null && gps.getLocation() == null) {
-                                    tvDescription.setText(R.string.des_deny_location);
-                                }
-                            }
-                        });
-                    }
+            handler.postDelayed(() -> {
+                if (getActivity() != null && !getActivity().isFinishing() && !getActivity().isDestroyed()) {
+                    getActivity().runOnUiThread(() -> {
+                        if (gps != null && gps.getLocation() == null) {
+                            tvDescription.setText(R.string.des_deny_location);
+                        }
+                    });
                 }
             }, 2000);
             if (gps.canGetLocation()) {

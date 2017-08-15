@@ -19,6 +19,8 @@ import java.util.Locale;
 
 import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
+import jp.stage.stagelovemaker.model.DiscoverModel;
+import jp.stage.stagelovemaker.model.SettingModel;
 import jp.stage.stagelovemaker.model.SignUpModel;
 import jp.stage.stagelovemaker.utils.Utils;
 import okhttp3.Interceptor;
@@ -218,7 +220,6 @@ public class NetworkManager {
         JsonObject data = new JsonObject();
         data.addProperty("latitude", latitude);
         data.addProperty("longitude", longitude);
-
         return apiService.updateLocation(id, data);
     }
 
@@ -234,5 +235,20 @@ public class NetworkManager {
         data.addProperty("code_number", code_number);
         data.addProperty("password", password);
         return apiService.updatePassword(data);
+    }
+
+    public Call<ResponseModel> updateSettings(int id, SettingModel settingModel, DiscoverModel discoverModel) {
+        JsonObject data = new JsonObject();
+        data.addProperty("notify_new_matches", settingModel.getNotifyNewMatches());
+        data.addProperty("notify_messages", settingModel.getNotifyMessages());
+        data.addProperty("notify_message_likes", settingModel.getNotifyMessageLikes());
+        data.addProperty("notify_super_likes", settingModel.getNotifySuperLikes());
+        data.addProperty("distance_unit", settingModel.getDistanceUnit());
+        data.addProperty("show_me_on_stage_maker", settingModel.getShowMeOnStageMaker());
+        data.addProperty("from_age", discoverModel.getFromAge());
+        data.addProperty("to_age", discoverModel.getToAge());
+        data.addProperty("filter_distance", discoverModel.getFilterDistance());
+        data.addProperty("filter_gender", discoverModel.getFilterGender());
+        return apiService.updateSettings(id, data);
     }
 }

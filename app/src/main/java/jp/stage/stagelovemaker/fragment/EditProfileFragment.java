@@ -38,6 +38,7 @@ import java.util.Calendar;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.base.EventDistributor;
 import jp.stage.stagelovemaker.model.ErrorModel;
 import jp.stage.stagelovemaker.model.InstagramUserModel;
 import jp.stage.stagelovemaker.network.IHttpResponse;
@@ -105,7 +106,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         public void onHttpComplete(String response, int idRequest) {
             switch (idRequest) {
                 case Constants.ID_UPLOAD_AVATAR:
-                    Toast.makeText(getActivity(), "" + indexChange, Toast.LENGTH_SHORT).show();
+                    EventDistributor.getInstance().sendMyProfileUpdateBroadcast();
             }
         }
 

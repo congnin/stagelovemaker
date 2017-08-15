@@ -10,13 +10,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.adapter.FeaturesPagerAdapter;
 import jp.stage.stagelovemaker.base.CommonActivity;
+import jp.stage.stagelovemaker.base.EventDistributor;
+import jp.stage.stagelovemaker.model.AvatarModel;
 import jp.stage.stagelovemaker.model.UserInfo;
 import jp.stage.stagelovemaker.model.UserInfoModel;
 import jp.stage.stagelovemaker.model.UserTokenModel;
@@ -31,6 +37,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends CommonActivity implements MainTabBar.MainTabBarCallback,
         ViewPager.OnPageChangeListener {
+    public static final String TAG = "MainActivity";
     MainTabBar mainTabBar;
     NonSwipeableViewPager viewPager;
     FeaturesPagerAdapter featuresPagerAdapter;
@@ -40,13 +47,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
     NetworkManager networkManager;
     Gson gson = new Gson();
 
-    public UserInfoModel getLoginModel() {
-        return loginModel;
-    }
-
-    public void setLoginModel(UserInfoModel loginModel) {
-        this.loginModel = loginModel;
-    }
+    private static final int EVENTS = EventDistributor.MY_PROFILE_CHANGE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +78,34 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
                     loginModel = bundle.getParcelable(Constants.KEY_DATA);
                 }
             }
-            requestSelfProfile();
+            requestSelfProfile(true);
         } else {
             startNewActivity(LoginActivity.class, null);
             ActivityCompat.finishAffinity(this);
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventDistributor.getInstance().register(contentUpdate);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventDistributor.getInstance().unregister(contentUpdate);
+    }
+
+    private EventDistributor.EventListener contentUpdate = new EventDistributor.EventListener() {
+        @Override
+        public void update(EventDistributor eventDistributor, Integer arg) {
+            if ((EVENTS & arg) != 0) {
+                Log.d(TAG, "Received contentUpdate Intent.");
+                requestSelfProfile(false);
+            }
+        }
+    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -122,9 +145,14 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
         return app != null && !TextUtils.isEmpty(app.getAccessToken(this));
     }
 
-    void requestSelfProfile() {
+    public void requestSelfProfile(boolean init) {
         int id = Utils.getApplication(this).getId(this);
-        networkManager.requestApiNoProgress(networkManager.getProfile(id), Constants.ID_SELF_INFO);
+        if (init) {
+            networkManager.requestApiNoProgress(networkManager.getProfile(id), Constants.ID_SELF_INFO);
+        } else {
+            networkManager.requestApiNoProgress(networkManager.getProfile(id), Constants.ID_UPDATE_USER);
+        }
+
     }
 
     void loadDataProfile() {
@@ -152,12 +180,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
             }
         }
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mainTabBar.changeTab(MainTabBar.TAB_STAGE);
-            }
-        }, 500);
+        handler.postDelayed(() -> mainTabBar.changeTab(MainTabBar.TAB_STAGE), 500);
     }
 
     private void loadFeatures() {
@@ -173,7 +196,15 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
                     UserTokenModel model = gson.fromJson(response, UserTokenModel.class);
                     if (model != null) {
                         loginModel = model.getUserInfo();
+                        setAvatar();
                         loadDataProfile();
+                    }
+                    break;
+                case Constants.ID_UPDATE_USER:
+                    UserTokenModel update = gson.fromJson(response, UserTokenModel.class);
+                    if (update != null) {
+                        setAvatar();
+                        loginModel = update.getUserInfo();
                     }
                     break;
             }
@@ -184,4 +215,16 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
 
         }
     };
+
+    private void setAvatar() {
+        if (loginModel != null && loginModel.getAvatars() != null && !loginModel.getAvatars().isEmpty()) {
+            List<AvatarModel> listAvatar = loginModel.getAvatars();
+            for (int i = 0; i < listAvatar.size(); i++) {
+                if (!TextUtils.isEmpty(listAvatar.get(i).getUrl())) {
+                    MyApplication.setMainAvatar(listAvatar.get(i).getUrl());
+                    break;
+                }
+            }
+        }
+    }
 }

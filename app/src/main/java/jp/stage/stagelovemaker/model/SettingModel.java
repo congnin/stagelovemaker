@@ -16,22 +16,22 @@ public class SettingModel implements Parcelable {
     private Integer id;
     @SerializedName("notify_new_matches")
     @Expose
-    private Boolean notifyNewMatches = false;
+    private Boolean notifyNewMatches;
     @SerializedName("notify_messages")
     @Expose
-    private Boolean notifyMessages = false;
+    private Boolean notifyMessages;
     @SerializedName("notify_message_likes")
     @Expose
-    private Boolean notifyMessageLikes = false;
+    private Boolean notifyMessageLikes;
     @SerializedName("notify_super_likes")
     @Expose
-    private Boolean notifySuperLikes = false;
+    private Boolean notifySuperLikes;
     @SerializedName("distance_unit")
     @Expose
     private String distanceUnit;
     @SerializedName("show_me_on_stage_maker")
     @Expose
-    private Boolean showMeOnStageMaker = false;
+    private Boolean showMeOnStageMaker;
     @SerializedName("created")
     @Expose
     private String created;
@@ -130,6 +130,11 @@ public class SettingModel implements Parcelable {
     }
 
     public SettingModel() {
+        notifyMessages = false;
+        notifyNewMatches = false;
+        notifyMessageLikes = false;
+        notifySuperLikes = false;
+        showMeOnStageMaker = false;
     }
 
     protected SettingModel(Parcel in) {

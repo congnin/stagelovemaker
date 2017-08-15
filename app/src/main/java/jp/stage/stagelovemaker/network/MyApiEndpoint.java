@@ -2,6 +2,8 @@ package jp.stage.stagelovemaker.network;
 
 import com.google.gson.JsonObject;
 
+import jp.stage.stagelovemaker.model.DiscoverModel;
+import jp.stage.stagelovemaker.model.SettingModel;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -47,4 +49,7 @@ public interface MyApiEndpoint {
 
     @POST("api/systems/updatePass/")
     Call<ResponseModel> updatePassword(@Body JsonObject data);
+
+    @PUT("api/settings/{user_id}")
+    Call<ResponseModel> updateSettings(@Path("user_id") int id, @Body JsonObject data);
 }

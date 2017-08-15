@@ -60,4 +60,6 @@ public final class Constants {
     public final static int ID_UPDATED_LOCATION = 6;
     public final static int ID_RESET_PASSWORD = 7;
     public final static int ID_CHANGE_PASSWORD = 8;
+    public final static int ID_UPDATE_SETTING = 9;
+    public final static int ID_UPDATE_USER = 10;
 }

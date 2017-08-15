@@ -2,6 +2,7 @@ package jp.stage.stagelovemaker.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,9 @@ import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.stage.stagelovemaker.R;
+import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.base.EventDistributor;
 import jp.stage.stagelovemaker.model.DiscoverModel;
 import jp.stage.stagelovemaker.model.SettingModel;
 import jp.stage.stagelovemaker.model.UserInfoModel;
@@ -39,6 +42,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     NetworkManager networkManager;
     UserTokenModel userTokenModel;
     Gson gson;
+
+    private static final int EVENTS = EventDistributor.MY_PROFILE_CHANGE;
 
     public static ProfileFragment newInstance() {
         Bundle args = new Bundle();
@@ -98,6 +103,27 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        EventDistributor.getInstance().register(contentUpdate);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventDistributor.getInstance().unregister(contentUpdate);
+    }
+
+    private EventDistributor.EventListener contentUpdate = new EventDistributor.EventListener() {
+        @Override
+        public void update(EventDistributor eventDistributor, Integer arg) {
+            if ((arg & EVENTS) != 0) {
+                requestSelfProfile();
+            }
+        }
+    };
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_settings:
@@ -123,17 +149,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     void handelResultAPI(final int idRequest) {
         if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    switch (idRequest) {
-                        case Constants.ID_SELF_INFO:
-                            updateUserInfo();
-                            break;
+            getActivity().runOnUiThread(() -> {
+                switch (idRequest) {
+                    case Constants.ID_SELF_INFO:
+                        updateUserInfo();
+                        break;
 
-                    }
                 }
-
             });
         }
     }
@@ -158,10 +180,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
-    public SettingFragment.SettingFragmentCallback settingCallback = new SettingFragment.SettingFragmentCallback() {
-        @Override
-        public void onSettingChanged() {
-
-        }
-    };
+    public SettingFragment.SettingFragmentCallback settingCallback =
+            () -> EventDistributor.getInstance().sendMyProfileUpdateBroadcast();
 }

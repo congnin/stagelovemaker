@@ -1,5 +1,6 @@
 package jp.stage.stagelovemaker.fragment;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.edmodo.rangebar.RangeBar;
+import com.google.gson.Gson;
 
 import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
@@ -26,7 +28,10 @@ import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.dialog.QuestionDialog;
 import jp.stage.stagelovemaker.model.DiscoverModel;
+import jp.stage.stagelovemaker.model.ErrorModel;
 import jp.stage.stagelovemaker.model.SettingModel;
+import jp.stage.stagelovemaker.network.IHttpResponse;
+import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.Button;
@@ -99,15 +104,19 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     TextView tvDeleteAccount;
     RelativeLayout layoutDeleteAccount;
 
+    String valueDistance;
     String unitDistance;
     int fromAge;
     int toAge;
     int radius;
+
     Boolean isMile;
-    String valueDistance;
     SettingFragmentCallback callback;
     SettingModel settingModel;
     DiscoverModel discoverModel;
+    NetworkManager networkManager;
+    Gson gson;
+
 
     public static SettingFragment newInstance(SettingModel settingModel, DiscoverModel discoverModel) {
         Bundle args = new Bundle();
@@ -117,6 +126,39 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         fragment.setArguments(args);
         return fragment;
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        networkManager = new NetworkManager(getActivity(), iHttpResponse);
+        gson = new Gson();
+    }
+
+    public IHttpResponse iHttpResponse = new IHttpResponse() {
+        @Override
+        public void onHttpComplete(String response, int idRequest) {
+            switch (idRequest) {
+                case Constants.ID_UPDATE_SETTING:
+                    if (callback != null) {
+                        callback.onSettingChanged();
+                        getActivity().onBackPressed();
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onHttpError(String response, int idRequest, int errorCode) {
+            switch (idRequest) {
+                case Constants.ID_UPDATE_SETTING:
+                    ErrorModel errorModel = gson.fromJson(response, ErrorModel.class);
+                    if (errorModel != null && !TextUtils.isEmpty(errorModel.getErrorMsg())) {
+                        Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_LONG).show();
+                    }
+                    break;
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -184,6 +226,13 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable("settingModel", settingModel);
+        outState.putParcelable("discoverModel", discoverModel);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         titleBar.setTitle(getString(R.string.settings_no_all_cap));
@@ -229,12 +278,16 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         ((GradientDrawable) layoutDeleteAccount.getBackground()).setStroke(1, ContextCompat.getColor(getContext(), R.color.gray80));
         ((GradientDrawable) layoutDeleteAccount.getBackground()).setColor(Color.WHITE);
 
+        if (savedInstanceState != null) {
+            settingModel = savedInstanceState.getParcelable("settingModel");
+            discoverModel = savedInstanceState.getParcelable("discoverModel");
+        } else {
+            settingModel = getArguments().getParcelable(Constants.KEY_DATA);
+            discoverModel = getArguments().getParcelable(Constants.KEY_DATA_TWO);
+        }
+
         unitDistance = "";
-        valueDistance = getString(R.string.km);
-        seekBarDistance.setMax(100);
-        isMile = false;
         rangeAge.setTickCount(Constants.MAX_AGE - Constants.MIN_AGE + 1);
-        tvChooseDistanceUnit.setText(getString(R.string.km));
 
         btMi.setOnClickListener(this);
         btKm.setOnClickListener(this);
@@ -261,13 +314,7 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         });
 
         layoutLogout.setOnClickListener(this);
-        if (savedInstanceState != null) {
-            settingModel = savedInstanceState.getParcelable("settingModel");
-            discoverModel = savedInstanceState.getParcelable("discoverModel");
-        } else {
-            settingModel = getArguments().getParcelable(Constants.KEY_DATA);
-            discoverModel = getArguments().getParcelable(Constants.KEY_DATA_TWO);
-        }
+
 
         loadInfoSetting();
     }
@@ -275,11 +322,15 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     private void loadInfoSetting() {
         String distance = settingModel.getDistanceUnit();
         if (!TextUtils.isEmpty(distance) && distance.equals("mi")) {
-            unitDistance = "mi";
+            unitDistance = "mile";
+            seekBarDistance.setMax(62);
             tvChooseDistanceUnit.setText(getString(R.string.mi));
+            isMile = true;
         } else {
             unitDistance = "km";
+            seekBarDistance.setMax(100);
             tvChooseDistanceUnit.setText(getString(R.string.km));
+            isMile = false;
         }
 
         switchNotifyNewMatches.setChecked(settingModel.getNotifyNewMatches());
@@ -305,13 +356,79 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     }
 
     @Override
+    public void onResume() {
+        updateData();
+        super.onResume();
+    }
+
+    private void updateData() {
+        if (discoverModel != null) {
+            fromAge = discoverModel.getFromAge();
+            if (fromAge < Constants.MIN_AGE && fromAge > Constants.MAX_AGE) {
+                fromAge = Constants.MIN_AGE;
+            }
+
+            toAge = discoverModel.getToAge();
+            if (toAge < Constants.MIN_AGE && toAge > Constants.MAX_AGE) {
+                toAge = Constants.MAX_AGE;
+            }
+            int indexLeft = fromAge - Constants.MIN_AGE;
+            int indexRight = toAge - Constants.MIN_AGE;
+            if (indexLeft >= 0 && indexRight > indexLeft && indexRight < (Constants.MAX_AGE - Constants.MIN_AGE + 1)
+                    && indexLeft < (Constants.MAX_AGE - Constants.MIN_AGE + 1)) {
+                rangeAge.setThumbIndices(indexLeft, indexRight);
+            }
+
+            radius = discoverModel.getFilterDistance();
+            if (radius >= 0) {
+                if (isMile) {
+                    int progress = (int) (radius * 0.62);
+                    seekBarDistance.setProgress(progress);
+                } else {
+                    seekBarDistance.setProgress(radius);
+                }
+            } else {
+                if (isMile) {
+                    seekBarDistance.setProgress(62);
+                } else {
+                    seekBarDistance.setProgress(100);
+                }
+            }
+        }
+    }
+
+    @Override
     public void onTitleBarClicked() {
 
     }
 
     @Override
     public void onRightButtonClicked() {
-        getActivity().onBackPressed();
+        if (switchMan.isChecked() && switchWoman.isChecked()) {
+            discoverModel.setFilterGender(2);
+        } else if (switchMan.isChecked() && !switchWoman.isChecked()) {
+            discoverModel.setFilterGender(1);
+        } else if (!switchMan.isChecked() && switchWoman.isChecked()) {
+            discoverModel.setFilterGender(0);
+        }
+
+        discoverModel.setFromAge(fromAge);
+        discoverModel.setToAge(toAge);
+        discoverModel.setFilterDistance(radius);
+
+        settingModel.setDistanceUnit(unitDistance);
+        settingModel.setNotifyMessages(switchNotifyMessage.isChecked());
+        settingModel.setNotifyNewMatches(switchNotifyNewMatches.isChecked());
+        settingModel.setNotifyMessageLikes(switchNotifyMessageLike.isChecked());
+        settingModel.setNotifySuperLikes(switchNotifySuperLikes.isChecked());
+        settingModel.setShowMeOnStageMaker(switchShowOnTinder.isChecked());
+
+        updateSettings();
+    }
+
+    private void updateSettings() {
+        int id = Utils.getApplication(getActivity()).getId(getActivity());
+        networkManager.requestApi(networkManager.updateSettings(id, settingModel, discoverModel), Constants.ID_UPDATE_SETTING);
     }
 
     @Override
@@ -325,41 +442,29 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     }
 
     private void calculateDistanceByUnit() {
-        String more = "";
         int progress;
         if (isMile) {
-            progress = radius;
-            if (progress == 100 / 1.6) {
-                more = "+";
-            }
+            progress = (int) (radius * 0.625);
             valueDistance = getString(R.string.mi);
         } else {
-            progress = (int) (radius * 1.6);
-            if (progress == 100) {
-                more = "+";
-            }
+            progress = radius;
             valueDistance = getString(R.string.km);
         }
-        tvDistance.setText(progress + valueDistance + more);
+        tvDistance.setText(progress + valueDistance);
         seekBarDistance.setProgress((int) progress);
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (seekBar == seekBarDistance && isMile != null) {
-            String more = "";
             if (isMile) {
-                radius = progress;
-                if (progress == 100 / 1.6) {
-                    more = "+";
-                }
+                radius = (int) (progress * 1.6);
+                valueDistance = getString(R.string.mi);
             } else {
-                radius = (int) (progress * 0.625);
-                if (progress == 100) {
-                    more = "+";
-                }
+                radius = progress;
+                valueDistance = getString(R.string.km);
             }
-            tvDistance.setText(progress + valueDistance + more);
+            tvDistance.setText(progress + valueDistance);
         }
     }
 
@@ -375,8 +480,10 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
 
     @Override
     public void onIndexChangeListener(RangeBar rangeBar, int i, int i1) {
-        fromAge = i + Constants.MIN_AGE;
-        toAge = i1 + Constants.MIN_AGE;
+        if (discoverModel != null) {
+            fromAge = i + Constants.MIN_AGE;
+            toAge = i1 + Constants.MIN_AGE;
+        }
         tvAge.setText((fromAge) + "-" + (toAge));
     }
 
@@ -386,15 +493,18 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
             case R.id.bt_km:
                 chooseDistanceUnit(btKm, btMi);
                 isMile = false;
-
                 tvChooseDistanceUnit.setText(getString(R.string.km));
                 calculateDistanceByUnit();
+                seekBarDistance.setMax(100);
+                unitDistance = "km";
                 break;
             case R.id.bt_mi:
                 chooseDistanceUnit(btMi, btKm);
                 isMile = true;
                 tvChooseDistanceUnit.setText(getString(R.string.mi));
                 calculateDistanceByUnit();
+                unitDistance = "mile";
+                seekBarDistance.setMax(60);
                 break;
             case R.id.layout_logout:
                 QuestionDialog dialog = new QuestionDialog(getActivity(), Utils.capitalize(getString(R.string.log_out)),

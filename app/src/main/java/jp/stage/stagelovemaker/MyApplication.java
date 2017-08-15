@@ -7,6 +7,7 @@ import android.location.Location;
 import android.text.TextUtils;
 
 import jp.stage.stagelovemaker.activity.MainActivity;
+import jp.stage.stagelovemaker.base.EventDistributor;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -25,6 +26,16 @@ public class MyApplication extends Application {
     Boolean isAppShow;
     Boolean userShowWelcome;
 
+    public static String getMainAvatar() {
+        return mainAvatar;
+    }
+
+    public static void setMainAvatar(String mainAvatar) {
+        MyApplication.mainAvatar = mainAvatar;
+    }
+
+    static String mainAvatar;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -35,6 +46,7 @@ public class MyApplication extends Application {
         );
         id = -1;
         isAppShow = false;
+        EventDistributor.getInstance();
     }
 
     public String getAccessToken(Activity activity) {
