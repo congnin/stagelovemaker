@@ -137,14 +137,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 }
                 break;
             case R.id.iv_edit:
-                EditProfileFragment editProfileFragment = EditProfileFragment.newInstance();
+                EditProfileFragment editProfileFragment = EditProfileFragment.newInstance(userTokenModel.getUserInfo());
                 add(editProfileFragment, EditProfileFragment.TAG, true, true, R.id.flContainer);
         }
     }
 
     public void requestSelfProfile() {
         int id = Utils.getApplication(getActivity()).getId(getActivity());
-        networkManager.requestApi(networkManager.getProfile(id), Constants.ID_SELF_INFO);
+        networkManager.requestApiNoProgress(networkManager.getProfile(id), Constants.ID_SELF_INFO);
     }
 
     void handelResultAPI(final int idRequest) {

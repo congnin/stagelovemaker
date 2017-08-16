@@ -203,7 +203,7 @@ public class NetworkManager {
     }
 
     public Call<ResponseModel> uploadAvatar(int index, Bitmap bitmap) {
-        File newfile = Utils.savebitmap(mContext, bitmap, "avatar");
+        File newfile = Utils.compressFile(mContext, Utils.savebitmap(mContext, bitmap));
         newfile.getPath();
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("image/png"), newfile);

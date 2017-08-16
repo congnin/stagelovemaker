@@ -321,15 +321,17 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
 
     private void loadInfoSetting() {
         String distance = settingModel.getDistanceUnit();
-        if (!TextUtils.isEmpty(distance) && distance.equals("mi")) {
+        if (!TextUtils.isEmpty(distance) && distance.equals("mile")) {
             unitDistance = "mile";
             seekBarDistance.setMax(62);
             tvChooseDistanceUnit.setText(getString(R.string.mi));
+            chooseDistanceUnit(btMi, btKm);
             isMile = true;
         } else {
             unitDistance = "km";
             seekBarDistance.setMax(100);
             tvChooseDistanceUnit.setText(getString(R.string.km));
+            chooseDistanceUnit(btKm, btMi);
             isMile = false;
         }
 
@@ -417,11 +419,11 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         discoverModel.setFilterDistance(radius);
 
         settingModel.setDistanceUnit(unitDistance);
-        settingModel.setNotifyMessages(switchNotifyMessage.isChecked());
-        settingModel.setNotifyNewMatches(switchNotifyNewMatches.isChecked());
-        settingModel.setNotifyMessageLikes(switchNotifyMessageLike.isChecked());
-        settingModel.setNotifySuperLikes(switchNotifySuperLikes.isChecked());
-        settingModel.setShowMeOnStageMaker(switchShowOnTinder.isChecked());
+        settingModel.setNotifyMessages(!switchNotifyMessage.isChecked());
+        settingModel.setNotifyNewMatches(!switchNotifyNewMatches.isChecked());
+        settingModel.setNotifyMessageLikes(!switchNotifyMessageLike.isChecked());
+        settingModel.setNotifySuperLikes(!switchNotifySuperLikes.isChecked());
+        settingModel.setShowMeOnStageMaker(!switchShowOnTinder.isChecked());
 
         updateSettings();
     }

@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/ic_flame_pink"/>
+            android:src="@mipmap/loadingscreen_tinderlogo"/>
     </item>
 
 </layer-list>

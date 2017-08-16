@@ -21,6 +21,7 @@ import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,8 +35,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import id.zelory.compressor.Compressor;
 import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
@@ -89,7 +92,7 @@ public final class Utils {
         return result.trim();
     }
 
-    public static File savebitmap(Context context, Bitmap bmp, String name) {
+    public static File savebitmap(Context context, Bitmap bmp) {
         File pictureFile = getOutputMediaFile(context);
         if (pictureFile == null) {
             return null;
@@ -101,6 +104,16 @@ public final class Utils {
             return pictureFile;
         } catch (FileNotFoundException e) {
         } catch (IOException e) {
+        }
+        return null;
+    }
+
+    public static File compressFile(Context context, File actualImageFile) {
+        try {
+            return new Compressor(context)
+                    .compressToFile(actualImageFile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -282,7 +295,7 @@ public final class Utils {
         return null;
     }
 
-    public static void setAvatar(Context context, final ImageView imageView, String avatarUrl) {
+    public static void setAvatar(Context context, ImageView imageView, String avatarUrl) {
         if (context == null) {
             return;
         }
@@ -293,9 +306,11 @@ public final class Utils {
 
         Glide.with(context)
                 .load(url)
-                .centerCrop()
                 .placeholder(R.mipmap.ic_holder)
                 .error(R.mipmap.ic_holder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .dontAnimate()
                 .into(imageView);
     }
 

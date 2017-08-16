@@ -40,9 +40,9 @@
                         android:id="@+id/imageView_1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="@dimen/_3ssp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
                         android:background="@drawable/draw_image_view_bg"
-                        android:scaleType="fitCenter"
                         app:siBorderColor="@android:color/transparent"
                         app:siBorderWidth="0dp"
                         app:siRadius="@dimen/_10ssp"
@@ -67,6 +67,16 @@
                         android:background="@drawable/draw_circle_white_bg"
                         android:src="@drawable/add_image" />
 
+                    <ImageView
+                        android:id="@+id/remove_imageView_1"
+                        android:layout_width="@dimen/_20ssp"
+                        android:layout_height="@dimen/_20ssp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/draw_circle_white_bg"
+                        android:src="@drawable/delete_image"
+                        android:visibility="gone" />
+
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -86,7 +96,7 @@
                             android:layout_marginBottom="@dimen/_5ssp"
                             android:layout_marginStart="@dimen/_5ssp"
                             android:background="@drawable/draw_image_view_bg"
-                            android:scaleType="fitCenter"
+                            android:scaleType="centerCrop"
                             app:siBorderColor="@android:color/transparent"
                             app:siBorderWidth="0dp"
                             app:siRadius="@dimen/_10ssp"
@@ -112,6 +122,16 @@
                             android:background="@drawable/draw_circle_white_bg"
                             android:src="@drawable/add_image" />
 
+                        <ImageView
+                            android:id="@+id/remove_imageView_2"
+                            android:layout_width="@dimen/_20ssp"
+                            android:layout_height="@dimen/_20ssp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentEnd="true"
+                            android:background="@drawable/draw_circle_white_bg"
+                            android:src="@drawable/delete_image"
+                            android:visibility="gone" />
+
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -126,7 +146,7 @@
                             android:layout_marginStart="@dimen/_5ssp"
                             android:layout_marginTop="@dimen/_5ssp"
                             android:background="@drawable/draw_image_view_bg"
-                            android:scaleType="fitCenter"
+                            android:scaleType="centerCrop"
                             app:siBorderColor="@android:color/transparent"
                             app:siBorderWidth="0dp"
                             app:siRadius="@dimen/_10ssp"
@@ -152,6 +172,15 @@
                             android:background="@drawable/draw_circle_white_bg"
                             android:src="@drawable/add_image" />
 
+                        <ImageView
+                            android:id="@+id/remove_imageView_3"
+                            android:layout_width="@dimen/_20ssp"
+                            android:layout_height="@dimen/_20ssp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentEnd="true"
+                            android:background="@drawable/draw_circle_white_bg"
+                            android:src="@drawable/delete_image"
+                            android:visibility="gone" />
                     </RelativeLayout>
 
                 </RelativeLayout>
@@ -176,7 +205,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/draw_image_view_bg"
-                        android:scaleType="fitCenter"
+                        android:scaleType="centerCrop"
                         app:siBorderColor="@android:color/transparent"
                         app:siBorderWidth="0dp"
                         app:siRadius="@dimen/_10ssp"
@@ -186,8 +215,8 @@
                         fontPath="fonts/proximanovasoft-semibold.otf"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_10ssp"
-                        android:layout_marginTop="@dimen/_10ssp"
+                        android:layout_marginStart="@dimen/_6ssp"
+                        android:layout_marginTop="@dimen/_5ssp"
                         android:text="6"
                         android:textColor="#FFFFFF"
                         android:textSize="@dimen/_20ssp"
@@ -201,6 +230,16 @@
                         android:layout_alignParentEnd="true"
                         android:background="@drawable/draw_circle_white_bg"
                         android:src="@drawable/add_image" />
+
+                    <ImageView
+                        android:id="@+id/remove_imageView_6"
+                        android:layout_width="@dimen/_20ssp"
+                        android:layout_height="@dimen/_20ssp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/draw_circle_white_bg"
+                        android:src="@drawable/delete_image"
+                        android:visibility="gone" />
 
                 </RelativeLayout>
 
@@ -216,7 +255,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/draw_image_view_bg"
-                        android:scaleType="fitCenter"
+                        android:scaleType="centerCrop"
                         app:siBorderColor="@android:color/transparent"
                         app:siBorderWidth="0dp"
                         app:siRadius="@dimen/_10ssp"
@@ -226,8 +265,8 @@
                         fontPath="fonts/proximanovasoft-semibold.otf"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_10ssp"
-                        android:layout_marginTop="@dimen/_10ssp"
+                        android:layout_marginStart="@dimen/_6ssp"
+                        android:layout_marginTop="@dimen/_5ssp"
                         android:text="5"
                         android:textColor="#FFFFFF"
                         android:textSize="@dimen/_20ssp"
@@ -242,6 +281,16 @@
                         android:background="@drawable/draw_circle_white_bg"
                         android:src="@drawable/add_image" />
 
+                    <ImageView
+                        android:id="@+id/remove_imageView_5"
+                        android:layout_width="@dimen/_20ssp"
+                        android:layout_height="@dimen/_20ssp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/draw_circle_white_bg"
+                        android:src="@drawable/delete_image"
+                        android:visibility="gone" />
+
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -255,7 +304,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/draw_image_view_bg"
-                        android:scaleType="fitCenter"
+                        android:scaleType="centerCrop"
                         app:siBorderColor="@android:color/transparent"
                         app:siBorderWidth="0dp"
                         app:siRadius="@dimen/_10ssp"
@@ -265,8 +314,10 @@
                         fontPath="fonts/proximanovasoft-semibold.otf"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_10ssp"
-                        android:layout_marginTop="@dimen/_10ssp"
+                        android:layout_below="@+id/remove_imageView_4"
+                        android:layout_marginStart="@dimen/_6ssp"
+                        android:layout_marginTop="@dimen/_5ssp"
+                        android:layout_toEndOf="@+id/remove_imageView_4"
                         android:text="4"
                         android:textColor="#FFFFFF"
                         android:textSize="@dimen/_20ssp"
@@ -281,6 +332,15 @@
                         android:background="@drawable/draw_circle_white_bg"
                         android:src="@drawable/add_image" />
 
+                    <ImageView
+                        android:id="@+id/remove_imageView_4"
+                        android:layout_width="@dimen/_20ssp"
+                        android:layout_height="@dimen/_20ssp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/draw_circle_white_bg"
+                        android:src="@drawable/delete_image"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -360,7 +420,7 @@
                 android:layout_marginTop="@dimen/_3ssp"
                 android:background="@drawable/draw_white_bg">
 
-                <TextView
+                <EditText
                     android:id="@+id/edit_birthday"
                     style="@style/MyContentSettings"
                     android:layout_width="match_parent"

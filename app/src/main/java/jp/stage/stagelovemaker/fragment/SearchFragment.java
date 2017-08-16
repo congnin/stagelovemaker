@@ -1,7 +1,9 @@
 package jp.stage.stagelovemaker.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,6 +102,15 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
             Utils.setAvatar(getContext(), ivAvatar, linkAvatar);
         }
         getLocation();
+        getContext().registerReceiver(gpsReceiver,
+                new IntentFilter("android.location.PROVIDERS_CHANGED"));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        getContext().unregisterReceiver(gpsReceiver);
     }
 
     public void getLocation() {
@@ -142,12 +154,7 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
 
     public void handleRespone() {
         if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    showAnimationSearch(true);
-                }
-            });
+            getActivity().runOnUiThread(() -> showAnimationSearch(true));
         }
     }
 
@@ -155,12 +162,7 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
         tvDescription.setText(R.string.search_people_match_you);
         if (delegate != null && bsearch) {
             final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    delegate.onSearchFinished();
-                }
-            }, 3000);
+            handler.postDelayed(() -> delegate.onSearchFinished(), 3000);
 
         }
         pulsatorLayout.setVisibility(View.VISIBLE);
@@ -210,4 +212,13 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
     public interface SearchFragmentCallback {
         void onSearchFinished();
     }
+
+    private BroadcastReceiver gpsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().matches("android.location.PROVIDERS_CHANGED")) {
+                getLocation();
+            }
+        }
+    };
 }

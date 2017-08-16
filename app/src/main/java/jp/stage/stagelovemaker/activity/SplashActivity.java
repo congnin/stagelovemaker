@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
 import jp.stage.stagelovemaker.MyApplication;
+import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.utils.Utils;
 
 /**
@@ -19,6 +20,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
         if (!isTaskRoot()) {
             final Intent intent = getIntent();
             final String intentAction = intent.getAction();

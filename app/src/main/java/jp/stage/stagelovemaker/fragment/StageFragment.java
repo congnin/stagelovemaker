@@ -72,18 +72,19 @@ public class StageFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         addEvents();
         pgbCard.setVisibility(View.VISIBLE);
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getListUserInfo();
-                cardAdapter = new UserInfoAdapter(getActivity(), userInfos);
-                cardStack.setAdapter(cardAdapter);
-                cardAdapter.notifyDataSetChanged();
-                pgbCard.setVisibility(View.GONE);
-            }
-        }, 1000);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            getListUserInfo();
+            cardAdapter = new UserInfoAdapter(getActivity(), userInfos);
+            cardStack.setAdapter(cardAdapter);
+            cardAdapter.notifyDataSetChanged();
+            pgbCard.setVisibility(View.GONE);
+        }, 2000);
     }
 
     private void addEvents() {

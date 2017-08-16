@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -29,6 +30,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -39,14 +42,21 @@ import java.util.Calendar;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.base.EventDistributor;
+import jp.stage.stagelovemaker.model.AvatarModel;
 import jp.stage.stagelovemaker.model.ErrorModel;
 import jp.stage.stagelovemaker.model.InstagramUserModel;
+import jp.stage.stagelovemaker.model.UserInfoModel;
 import jp.stage.stagelovemaker.network.IHttpResponse;
 import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.OnSingleClickListener;
 import jp.stage.stagelovemaker.views.TitleBar;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import jp.wasabeef.glide.transformations.CropSquareTransformation;
+import jp.wasabeef.glide.transformations.CropTransformation;
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import static android.app.Activity.RESULT_OK;
 import static jp.stage.stagelovemaker.utils.Constants.REQUEST_IMAGE_CAPTURE;
@@ -61,18 +71,21 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
     public static final String TAG = "EditProfileFragment";
 
     TitleBar titleBar;
-    ScrollView scrollView;
-    RelativeLayout avatarMainLayout;
-    LinearLayout avatarAddLayout;
-    TextView smartPhotoTv, aboutUserTv, instagramTv;
+    TextView aboutUserTv;
+    TextView instagramTv;
     TextView currentWorkTv, schoolTv, genderTv;
-    EditText aboutUserEdt;
-    TextView tvBirthday;
-    TextView selectWorkTv, selectSchoolTv, connectInstaTv;
+    EditText tvFirstName;
+    EditText tvLastName;
+    EditText tvBirthday;
+    EditText tvAbout;
+    EditText tvCurrentWork;
+    EditText tvSchool;
+    TextView connectInstaTv;
     RadioButton manBtn, womanBtn;
 
     ArrayList<RoundedImageView> avatarImageView = new ArrayList<>();
     ArrayList<ImageView> removeImageView = new ArrayList<>();
+    ArrayList<ImageView> addImageView = new ArrayList<>();
 
     int indexChange;
     Uri picUri;
@@ -93,9 +106,11 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
     String gender = "";
     NetworkManager networkManager;
     Gson gson;
+    UserInfoModel userInfoModel;
 
-    public static EditProfileFragment newInstance() {
+    public static EditProfileFragment newInstance(UserInfoModel userInfoModel) {
         Bundle args = new Bundle();
+        args.putParcelable(Constants.KEY_DATA, userInfoModel);
         EditProfileFragment fragment = new EditProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -129,6 +144,13 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         gson = new Gson();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        userInfoModel = getArguments().getParcelable(Constants.KEY_DATA);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -140,12 +162,21 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         avatarImageView.add((RoundedImageView) view.findViewById(R.id.imageView_4));
         avatarImageView.add((RoundedImageView) view.findViewById(R.id.imageView_5));
         avatarImageView.add((RoundedImageView) view.findViewById(R.id.imageView_6));
-        removeImageView.add((ImageView) view.findViewById(R.id.add_imageView_1));
-        removeImageView.add((ImageView) view.findViewById(R.id.add_imageView_2));
-        removeImageView.add((ImageView) view.findViewById(R.id.add_imageView_3));
-        removeImageView.add((ImageView) view.findViewById(R.id.add_imageView_4));
-        removeImageView.add((ImageView) view.findViewById(R.id.add_imageView_5));
-        removeImageView.add((ImageView) view.findViewById(R.id.add_imageView_6));
+
+        addImageView.add((ImageView) view.findViewById(R.id.add_imageView_1));
+        addImageView.add((ImageView) view.findViewById(R.id.add_imageView_2));
+        addImageView.add((ImageView) view.findViewById(R.id.add_imageView_3));
+        addImageView.add((ImageView) view.findViewById(R.id.add_imageView_4));
+        addImageView.add((ImageView) view.findViewById(R.id.add_imageView_5));
+        addImageView.add((ImageView) view.findViewById(R.id.add_imageView_6));
+
+        removeImageView.add((ImageView) view.findViewById(R.id.remove_imageView_1));
+        removeImageView.add((ImageView) view.findViewById(R.id.remove_imageView_2));
+        removeImageView.add((ImageView) view.findViewById(R.id.remove_imageView_3));
+        removeImageView.add((ImageView) view.findViewById(R.id.remove_imageView_4));
+        removeImageView.add((ImageView) view.findViewById(R.id.remove_imageView_5));
+        removeImageView.add((ImageView) view.findViewById(R.id.remove_imageView_6));
+
         cropImageView = (CropImageView) view.findViewById(R.id.cropImageView);
         layoutCropView = (RelativeLayout) view.findViewById(R.id.layout_cropview);
         cancelCropView = (TextView) view.findViewById(R.id.back_txt_cropview);
@@ -156,13 +187,16 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         currentWorkTv = (TextView) view.findViewById(R.id.currentWork_tv);
         schoolTv = (TextView) view.findViewById(R.id.school_tv);
         genderTv = (TextView) view.findViewById(R.id.gender_tv);
-        aboutUserEdt = (EditText) view.findViewById(R.id.edt_about_user);
-        selectWorkTv = (TextView) view.findViewById(R.id.select_work_tv);
-        selectSchoolTv = (TextView) view.findViewById(R.id.select_school_tv);
+        tvAbout = (EditText) view.findViewById(R.id.edt_about_user);
         connectInstaTv = (TextView) view.findViewById(R.id.connect_instagram);
         manBtn = (RadioButton) view.findViewById(R.id.man_radio_btn);
         womanBtn = (RadioButton) view.findViewById(R.id.woman_radio_btn);
-        tvBirthday = (TextView) view.findViewById(R.id.edit_birthday);
+        tvBirthday = (EditText) view.findViewById(R.id.edit_birthday);
+        tvFirstName = (EditText) view.findViewById(R.id.edit_first_name);
+        tvLastName = (EditText) view.findViewById(R.id.edit_last_name);
+        tvAbout = (EditText) view.findViewById(R.id.edt_about_user);
+        tvCurrentWork = (EditText) view.findViewById(R.id.select_work_tv);
+        tvSchool = (EditText) view.findViewById(R.id.select_school_tv);
 
         return view;
     }
@@ -187,6 +221,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         rotateImage.setOnClickListener(this);
         for (int i = 0; i < avatarImageView.size(); i++) {
             avatarImageView.get(i).setOnClickListener(mySingleListener);
+            addImageView.get(i).setOnClickListener(mySingleListener);
             removeImageView.get(i).setOnClickListener(this);
         }
 
@@ -206,6 +241,38 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
                 && data != null && data.getData() != null) {
             picUri = data.getData();
             cropImage();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (userInfoModel != null) {
+            updateAppearance();
+        }
+    }
+
+    private void updateAppearance() {
+        tvFirstName.setText(userInfoModel.getFirstName());
+        tvLastName.setText(userInfoModel.getLastName());
+        tvBirthday.setText(userInfoModel.getMeta().getBirthday());
+        tvAbout.setText(userInfoModel.getMeta().getAboutMe());
+        tvCurrentWork.setText(userInfoModel.getMeta().getCurrentWork());
+        tvSchool.setText(userInfoModel.getMeta().getSchool());
+
+        if (userInfoModel.getAvatars() != null && !userInfoModel.getAvatars().isEmpty()) {
+            ArrayList<AvatarModel> avatars = new ArrayList<>(userInfoModel.getAvatars());
+            for (int i = 0; i < avatars.size(); i++) {
+
+                AvatarModel avatarModel = avatars.get(i);
+                if (avatarModel != null && !TextUtils.isEmpty(avatarModel.getUrl())) {
+                    updateAvatar(avatarImageView.get(avatarModel.getNumberIndex()),
+                            addImageView.get(avatarModel.getNumberIndex()),
+                            removeImageView.get(avatarModel.getNumberIndex()), avatarModel);
+                } else {
+                    removeAvatar(avatarImageView.get(i), addImageView.get(i), removeImageView.get(i));
+                }
+            }
         }
     }
 
@@ -240,7 +307,8 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
                 calendar.set(Calendar.YEAR, now.get(Calendar.YEAR) - Constants.MIN_AGE);
                 DatePickerDialog dpd;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    dpd = new DatePickerDialog(getActivity(), R.style.style_date_picker_dialog, myDateListener, iYear, iMonth, iDay);
+                    dpd = new DatePickerDialog(getActivity(),
+                            R.style.style_date_picker_dialog, myDateListener, iYear, iMonth, iDay);
                 } else {
                     dpd = new DatePickerDialog(getActivity(), myDateListener, iYear, iMonth, iDay);
                 }
@@ -256,34 +324,34 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
                 cropImageView.setRotatedDegrees(iRotation);
                 break;
             }
-            case R.id.add_imageView_1: {
+            case R.id.remove_imageView_1: {
                 indexChange = 0;
-                removeAvatar(avatarImageView.get(indexChange), removeImageView.get(indexChange));
+                removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
                 break;
             }
-            case R.id.add_imageView_2: {
+            case R.id.remove_imageView_2: {
                 indexChange = 1;
-                removeAvatar(avatarImageView.get(indexChange), removeImageView.get(indexChange));
+                removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
                 break;
             }
-            case R.id.add_imageView_3: {
+            case R.id.remove_imageView_3: {
                 indexChange = 2;
-                removeAvatar(avatarImageView.get(indexChange), removeImageView.get(indexChange));
+                removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
                 break;
             }
-            case R.id.add_imageView_4: {
+            case R.id.remove_imageView_4: {
                 indexChange = 3;
-                removeAvatar(avatarImageView.get(indexChange), removeImageView.get(indexChange));
+                removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
                 break;
             }
-            case R.id.add_imageView_5: {
+            case R.id.remove_imageView_5: {
                 indexChange = 4;
-                removeAvatar(avatarImageView.get(indexChange), removeImageView.get(indexChange));
+                removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
                 break;
             }
-            case R.id.add_imageView_6: {
+            case R.id.remove_imageView_6: {
                 indexChange = 5;
-                removeAvatar(avatarImageView.get(indexChange), removeImageView.get(indexChange));
+                removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
                 break;
             }
             case R.id.connect_instagram:
@@ -299,32 +367,38 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         public void onSingleClick(View v) {
             Utils.hideSoftKeyboard(getActivity());
             switch (v.getId()) {
-                case R.id.imageView_1: {
+                case R.id.imageView_1:
+                case R.id.add_imageView_1: {
                     indexChange = 0;
                     chooseAvatar();
                     break;
                 }
-                case R.id.imageView_2: {
+                case R.id.imageView_2:
+                case R.id.add_imageView_2: {
                     indexChange = 1;
                     chooseAvatar();
                     break;
                 }
-                case R.id.imageView_3: {
+                case R.id.imageView_3:
+                case R.id.add_imageView_3: {
                     indexChange = 2;
                     chooseAvatar();
                     break;
                 }
-                case R.id.imageView_4: {
+                case R.id.imageView_4:
+                case R.id.add_imageView_4: {
                     indexChange = 3;
                     chooseAvatar();
                     break;
                 }
-                case R.id.imageView_5: {
+                case R.id.imageView_5:
+                case R.id.add_imageView_5: {
                     indexChange = 4;
                     chooseAvatar();
                     break;
                 }
-                case R.id.imageView_6: {
+                case R.id.imageView_6:
+                case R.id.add_imageView_6: {
                     indexChange = 5;
                     chooseAvatar();
                     break;
@@ -344,19 +418,18 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         if (imageBitmap != null) {
             removeImageView.get(indexChange).setVisibility(View.VISIBLE);
             avatarImageView.get(indexChange).setImageBitmap(imageBitmap);
+            addImageView.get(indexChange).setVisibility(View.GONE);
             networkManager.requestApi(networkManager.uploadAvatar(indexChange, imageBitmap), Constants.ID_UPLOAD_AVATAR);
         }
     }
 
     void chooseAvatar() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setItems(getResources().getStringArray(R.array.choose_avatar), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                if (item == 0) {
-                    dispatchSelectImageIntent();
-                } else {
-                    dispatchTakePictureIntent();
-                }
+        builder.setItems(getResources().getStringArray(R.array.choose_avatar), (dialog, item) -> {
+            if (item == 0) {
+                dispatchSelectImageIntent();
+            } else {
+                dispatchTakePictureIntent();
             }
         });
         AlertDialog alert = builder.create();
@@ -391,9 +464,28 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         removeImageView.get(indexChange).setImageResource(R.drawable.delete_image);
     }
 
-    void removeAvatar(RoundedImageView imageView, ImageView removeImage) {
-        removeImage.setImageResource(R.drawable.add_image);
-        imageView.setImageResource(R.drawable.draw_image_view_bg);
+    void updateAvatar(RoundedImageView imageView, ImageView addImage, ImageView removeImage, AvatarModel model) {
+        removeImage.setVisibility(View.VISIBLE);
+        addImage.setVisibility(View.GONE);
+        imageView.setBorderColor(ContextCompat.getColor(getActivity(), R.color.very_light_gray));
+        Glide.with(getContext())
+                .load(model.getUrl())
+                .asBitmap()
+                .placeholder(R.mipmap.ic_holder)
+                .error(R.mipmap.ic_holder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .dontTransform()
+                .centerCrop()
+                .dontAnimate()
+                .into(imageView);
+    }
+
+    void removeAvatar(RoundedImageView imageView, ImageView addImage, ImageView removeImage) {
+        removeImage.setVisibility(View.GONE);
+        addImage.setVisibility(View.VISIBLE);
+        //imageView.setImageResource(R.drawable.ic_add);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_add);
+        imageView.setImageBitmap(bitmap);
         imageView.setBorderColor(Color.TRANSPARENT);
     }
 

@@ -38,8 +38,7 @@
             android:name=".activity.SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.StageLoveMaker.Splash">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

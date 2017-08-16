@@ -180,7 +180,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
             }
         }
         final Handler handler = new Handler();
-        handler.postDelayed(() -> mainTabBar.changeTab(MainTabBar.TAB_STAGE), 500);
+        handler.postDelayed(() -> mainTabBar.changeTab(MainTabBar.TAB_STAGE), 100);
     }
 
     private void loadFeatures() {
