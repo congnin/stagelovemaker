@@ -8,7 +8,9 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -41,7 +43,7 @@ public interface MyApiEndpoint {
     Call<ResponseModel> getProfile(@Path("id") int id);
 
     @PUT("api/users/{user_id}")
-    Call<ResponseModel> updateLocation(@Path("user_id") int id,
+    Call<ResponseModel> updateUserInfo(@Path("user_id") int id,
                                        @Body JsonObject data);
 
     @POST("api/systems/forgotPassword/")
@@ -52,4 +54,9 @@ public interface MyApiEndpoint {
 
     @PUT("api/settings/{user_id}")
     Call<ResponseModel> updateSettings(@Path("user_id") int id, @Body JsonObject data);
+
+    @HTTP(method = "DELETE", path = "api/avatars/{user_id}", hasBody = true)
+    Call<ResponseModel> deleteAvatar(@Path("user_id") int id, @Body JsonObject data);
+
+
 }

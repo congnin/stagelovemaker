@@ -220,7 +220,7 @@ public class NetworkManager {
         JsonObject data = new JsonObject();
         data.addProperty("latitude", latitude);
         data.addProperty("longitude", longitude);
-        return apiService.updateLocation(id, data);
+        return apiService.updateUserInfo(id, data);
     }
 
     public Call<ResponseModel> forgotPassword(String email) {
@@ -250,5 +250,25 @@ public class NetworkManager {
         data.addProperty("filter_distance", discoverModel.getFilterDistance());
         data.addProperty("filter_gender", discoverModel.getFilterGender());
         return apiService.updateSettings(id, data);
+    }
+
+    public Call<ResponseModel> deleteAvatar(int id, int index) {
+        JsonObject data = new JsonObject();
+        data.addProperty("index", index);
+        return apiService.deleteAvatar(id, data);
+    }
+
+    public Call<ResponseModel> updateUserProfile(int id, String first_name, String last_name,
+                                                 String birthday, int gender, String about_me,
+                                                 String current_work, String school) {
+        JsonObject data = new JsonObject();
+        data.addProperty("first_name", first_name);
+        data.addProperty("last_name", last_name);
+        data.addProperty("birthday", birthday);
+        data.addProperty("gender", gender);
+        data.addProperty("about_me", about_me);
+        data.addProperty("current_work", current_work);
+        data.addProperty("school", school);
+        return apiService.updateUserInfo(id, data);
     }
 }

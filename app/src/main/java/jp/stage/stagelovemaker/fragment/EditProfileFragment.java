@@ -122,6 +122,11 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
             switch (idRequest) {
                 case Constants.ID_UPLOAD_AVATAR:
                     EventDistributor.getInstance().sendMyProfileUpdateBroadcast();
+                    break;
+                case Constants.ID_DELETE_AVATAR:
+                    removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
+                    EventDistributor.getInstance().sendMyProfileUpdateBroadcast();
+                    break;
             }
         }
 
@@ -133,6 +138,13 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
                     if (errorModel != null && !TextUtils.isEmpty(errorModel.getErrorMsg())) {
                         Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                     }
+                    break;
+                case Constants.ID_DELETE_AVATAR:
+                    ErrorModel errorDelete = gson.fromJson(response, ErrorModel.class);
+                    if (errorDelete != null && !TextUtils.isEmpty(errorDelete.getErrorMsg())) {
+                        Toast.makeText(getActivity(), errorDelete.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                    }
+                    break;
             }
         }
     };
@@ -326,32 +338,32 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
             }
             case R.id.remove_imageView_1: {
                 indexChange = 0;
-                removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
+                deleteImage();
                 break;
             }
             case R.id.remove_imageView_2: {
                 indexChange = 1;
-                removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
+                deleteImage();
                 break;
             }
             case R.id.remove_imageView_3: {
                 indexChange = 2;
-                removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
+                deleteImage();
                 break;
             }
             case R.id.remove_imageView_4: {
                 indexChange = 3;
-                removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
+                deleteImage();
                 break;
             }
             case R.id.remove_imageView_5: {
                 indexChange = 4;
-                removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
+                deleteImage();
                 break;
             }
             case R.id.remove_imageView_6: {
                 indexChange = 5;
-                removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
+                deleteImage();
                 break;
             }
             case R.id.connect_instagram:
@@ -421,6 +433,11 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
             addImageView.get(indexChange).setVisibility(View.GONE);
             networkManager.requestApi(networkManager.uploadAvatar(indexChange, imageBitmap), Constants.ID_UPLOAD_AVATAR);
         }
+    }
+
+    void deleteImage(){
+        int id = Utils.getApplication(getActivity()).getId(getActivity());
+        networkManager.requestApi(networkManager.deleteAvatar(id, indexChange), Constants.ID_DELETE_AVATAR);
     }
 
     void chooseAvatar() {
