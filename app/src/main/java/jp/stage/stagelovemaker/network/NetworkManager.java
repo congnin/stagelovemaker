@@ -22,6 +22,7 @@ import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.model.DiscoverModel;
 import jp.stage.stagelovemaker.model.SettingModel;
 import jp.stage.stagelovemaker.model.SignUpModel;
+import jp.stage.stagelovemaker.model.UserInfoModel;
 import jp.stage.stagelovemaker.utils.Utils;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -258,17 +259,22 @@ public class NetworkManager {
         return apiService.deleteAvatar(id, data);
     }
 
-    public Call<ResponseModel> updateUserProfile(int id, String first_name, String last_name,
-                                                 String birthday, int gender, String about_me,
-                                                 String current_work, String school) {
+    public Call<ResponseModel> updateUserProfile(UserInfoModel userInfoModel) {
         JsonObject data = new JsonObject();
-        data.addProperty("first_name", first_name);
-        data.addProperty("last_name", last_name);
-        data.addProperty("birthday", birthday);
-        data.addProperty("gender", gender);
-        data.addProperty("about_me", about_me);
-        data.addProperty("current_work", current_work);
-        data.addProperty("school", school);
-        return apiService.updateUserInfo(id, data);
+        data.addProperty("first_name", userInfoModel.getFirstName());
+        data.addProperty("last_name", userInfoModel.getLastName());
+        data.addProperty("birthday", userInfoModel.getMeta().getBirthday());
+        data.addProperty("gender", Utils.getIndexGender(userInfoModel.getGender()));
+        if (!TextUtils.isEmpty(userInfoModel.getMeta().getAboutMe())) {
+            data.addProperty("about_me", userInfoModel.getMeta().getAboutMe());
+        }
+        if (!TextUtils.isEmpty(userInfoModel.getMeta().getCurrentWork())) {
+            data.addProperty("current_work", userInfoModel.getMeta().getCurrentWork());
+        }
+        if (!TextUtils.isEmpty(userInfoModel.getMeta().getSchool())) {
+            data.addProperty("school", userInfoModel.getMeta().getSchool());
+        }
+
+        return apiService.updateUserInfo(userInfoModel.getId(), data);
     }
 }

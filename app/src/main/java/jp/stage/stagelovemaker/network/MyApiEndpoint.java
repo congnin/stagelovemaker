@@ -58,5 +58,6 @@ public interface MyApiEndpoint {
     @HTTP(method = "DELETE", path = "api/avatars/{user_id}", hasBody = true)
     Call<ResponseModel> deleteAvatar(@Path("user_id") int id, @Body JsonObject data);
 
-
+    @GET("api/users/listPeople/{page}")
+    Call<ResponseModel>
 }

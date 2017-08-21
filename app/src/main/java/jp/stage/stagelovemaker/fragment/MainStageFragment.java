@@ -66,4 +66,8 @@ public class MainStageFragment extends BaseFragment implements SearchFragment.Se
             }
         }
     }
+
+    private void getListPeople(){
+
+    }
 }

@@ -12,6 +12,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -38,6 +39,9 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
@@ -50,8 +54,11 @@ import jp.stage.stagelovemaker.network.IHttpResponse;
 import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
+import jp.stage.stagelovemaker.views.FormInputCombobox;
+import jp.stage.stagelovemaker.views.FormInputText;
 import jp.stage.stagelovemaker.views.OnSingleClickListener;
 import jp.stage.stagelovemaker.views.TitleBar;
+import jp.stage.stagelovemaker.views.TitleTextView;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import jp.wasabeef.glide.transformations.CropSquareTransformation;
 import jp.wasabeef.glide.transformations.CropTransformation;
@@ -67,26 +74,23 @@ import static jp.stage.stagelovemaker.utils.Constants.REQUEST_IMAGE_GALLERY;
  */
 
 public class EditProfileFragment extends BaseFragment implements TitleBar.TitleBarCallback,
-        View.OnClickListener, InstagramFragment.InstagramFragmentDelegate {
+        View.OnClickListener, InstagramFragment.InstagramFragmentDelegate, FormInputText.FormInputTextDelegate {
     public static final String TAG = "EditProfileFragment";
-
     TitleBar titleBar;
-    TextView aboutUserTv;
-    TextView instagramTv;
-    TextView currentWorkTv, schoolTv, genderTv;
-    EditText tvFirstName;
-    EditText tvLastName;
-    EditText tvBirthday;
-    EditText tvAbout;
-    EditText tvCurrentWork;
-    EditText tvSchool;
-    TextView connectInstaTv;
-    RadioButton manBtn, womanBtn;
+    FormInputText tvFirstName;
+    FormInputText tvLastName;
+    FormInputCombobox tvBirthday;
+    FormInputCombobox tvGender;
+    FormInputText tvCurrentWork;
+    FormInputText tvSchool;
+    FormInputText tvAbout;
+    TitleTextView tvInstagram;
 
     ArrayList<RoundedImageView> avatarImageView = new ArrayList<>();
     ArrayList<ImageView> removeImageView = new ArrayList<>();
     ArrayList<ImageView> addImageView = new ArrayList<>();
 
+    int indexGender = -1;
     int indexChange;
     Uri picUri;
     CropImageView cropImageView;
@@ -96,6 +100,8 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
     ImageView rotateImage;
     int iRotation;
 
+    String[] genders;
+    String genderValue;
     Calendar now;
     int iMonth;
     int iDay;
@@ -126,6 +132,16 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
                 case Constants.ID_DELETE_AVATAR:
                     removeAvatar(avatarImageView.get(indexChange), addImageView.get(indexChange), removeImageView.get(indexChange));
                     EventDistributor.getInstance().sendMyProfileUpdateBroadcast();
+                    break;
+                case Constants.ID_UPDATE_USER:
+                    EventDistributor.getInstance().sendMyProfileUpdateBroadcast();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getActivity().onBackPressed();
+                        }
+                    }, 200);
                     break;
             }
         }
@@ -194,21 +210,15 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         cancelCropView = (TextView) view.findViewById(R.id.back_txt_cropview);
         chooseCropView = (TextView) view.findViewById(R.id.done_txt_cropview);
         rotateImage = (ImageView) view.findViewById(R.id.rotate_img);
-        aboutUserTv = (TextView) view.findViewById(R.id.about_user_tv);
-        instagramTv = (TextView) view.findViewById(R.id.instagram_tv);
-        currentWorkTv = (TextView) view.findViewById(R.id.currentWork_tv);
-        schoolTv = (TextView) view.findViewById(R.id.school_tv);
-        genderTv = (TextView) view.findViewById(R.id.gender_tv);
-        tvAbout = (EditText) view.findViewById(R.id.edt_about_user);
-        connectInstaTv = (TextView) view.findViewById(R.id.connect_instagram);
-        manBtn = (RadioButton) view.findViewById(R.id.man_radio_btn);
-        womanBtn = (RadioButton) view.findViewById(R.id.woman_radio_btn);
-        tvBirthday = (EditText) view.findViewById(R.id.edit_birthday);
-        tvFirstName = (EditText) view.findViewById(R.id.edit_first_name);
-        tvLastName = (EditText) view.findViewById(R.id.edit_last_name);
-        tvAbout = (EditText) view.findViewById(R.id.edt_about_user);
-        tvCurrentWork = (EditText) view.findViewById(R.id.select_work_tv);
-        tvSchool = (EditText) view.findViewById(R.id.select_school_tv);
+
+        tvBirthday = (FormInputCombobox) view.findViewById(R.id.tv_birthday);
+        tvFirstName = (FormInputText) view.findViewById(R.id.tv_first_name);
+        tvLastName = (FormInputText) view.findViewById(R.id.tv_last_name);
+        tvAbout = (FormInputText) view.findViewById(R.id.tv_about);
+        tvCurrentWork = (FormInputText) view.findViewById(R.id.tv_current_work);
+        tvSchool = (FormInputText) view.findViewById(R.id.tv_school);
+        tvGender = (FormInputCombobox) view.findViewById(R.id.tv_gender);
+        tvInstagram = (TitleTextView) view.findViewById(R.id.tv_instagram);
 
         return view;
     }
@@ -221,11 +231,27 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         titleBar.setTitleRight(getString(R.string.done));
         titleBar.setCallback(this);
 
+        tvFirstName.renderDara(getString(R.string.first_name), false);
+        tvLastName.renderDara(getString(R.string.last_name), false);
+        tvAbout.renderDara(getString(R.string.about_me), false);
+        tvCurrentWork.renderDara(getString(R.string.current_work), false);
+        tvSchool.renderDara(getString(R.string.school), false);
+        tvFirstName.setDelegate(this, Constants.TAG_CONTROL_INPUT_FIRSTNAME);
+        tvLastName.setDelegate(this, Constants.TAG_CONTROL_INPUT_LASTNAME);
+        tvAbout.setDelegate(this, Constants.TAG_CONTROL_INPUT_ABOUT_ME);
+        tvCurrentWork.setDelegate(this, Constants.TAG_CONTROL_INPUT_WORK);
+        tvSchool.setDelegate(this, Constants.TAG_CONTROL_INPUT_SCHOOL);
+        tvBirthday.setTitle(getString(R.string.birthday));
+        tvGender.setTitle(getString(R.string.gender));
+        tvInstagram.setTitle(getString(R.string.instagram));
+
         cancelCropView.setOnClickListener(mySingleListener);
         chooseCropView.setOnClickListener(mySingleListener);
         cropImageView.setGuidelines(CropImageView.Guidelines.ON);
         tvBirthday.setOnClickListener(this);
-        connectInstaTv.setOnClickListener(this);
+        tvGender.setOnClickListener(this);
+        tvAbout.setMaxLength(500);
+        tvInstagram.setOnClickListener(this);
         layoutCropView.setVisibility(View.GONE);
         ((GradientDrawable) rotateImage.getBackground()).setStroke(0,
                 ContextCompat.getColor(getContext(), R.color.very_dark_gray));
@@ -237,6 +263,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
             removeImageView.get(i).setOnClickListener(this);
         }
 
+        genders = getResources().getStringArray(R.array.gender_profile);
         now = Calendar.getInstance();
         iMonth = now.get(Calendar.MONTH);
         iDay = now.get(Calendar.DAY_OF_MONTH);
@@ -265,17 +292,37 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
     }
 
     private void updateAppearance() {
-        tvFirstName.setText(userInfoModel.getFirstName());
-        tvLastName.setText(userInfoModel.getLastName());
-        tvBirthday.setText(userInfoModel.getMeta().getBirthday());
-        tvAbout.setText(userInfoModel.getMeta().getAboutMe());
-        tvCurrentWork.setText(userInfoModel.getMeta().getCurrentWork());
-        tvSchool.setText(userInfoModel.getMeta().getSchool());
+        tvFirstName.setTitle(userInfoModel.getFirstName());
+        tvLastName.setTitle(userInfoModel.getLastName());
+
+        if (!TextUtils.isEmpty(userInfoModel.getMeta().getAboutMe())) {
+            tvAbout.setTitle(userInfoModel.getMeta().getAboutMe());
+        }
+
+        Date birthday = Utils.formatLocalDateString(userInfoModel.getMeta().getBirthday());
+        Calendar now = Calendar.getInstance();
+        if (birthday != null) {
+            now.setTime(birthday);
+            iMonth = now.get(Calendar.MONTH);
+            iDay = now.get(Calendar.DAY_OF_MONTH);
+            iYear = now.get(Calendar.YEAR);
+            tvBirthday.setValue(Utils.formatDateLocal(getContext(), birthday));
+        } else {
+            iMonth = now.get(Calendar.MONTH);
+            iDay = now.get(Calendar.DAY_OF_MONTH);
+            iYear = now.get(Calendar.YEAR) - Constants.MIN_AGE;
+        }
+
+        int indexGender = Utils.getIndexGender(userInfoModel.getGender());
+        genderValue = genders[indexGender];
+        tvGender.setValue(genderValue);
+
+        tvCurrentWork.setTitle(userInfoModel.getMeta().getCurrentWork());
+        tvSchool.setTitle(userInfoModel.getMeta().getSchool());
 
         if (userInfoModel.getAvatars() != null && !userInfoModel.getAvatars().isEmpty()) {
             ArrayList<AvatarModel> avatars = new ArrayList<>(userInfoModel.getAvatars());
             for (int i = 0; i < avatars.size(); i++) {
-
                 AvatarModel avatarModel = avatars.get(i);
                 if (avatarModel != null && !TextUtils.isEmpty(avatarModel.getUrl())) {
                     updateAvatar(avatarImageView.get(avatarModel.getNumberIndex()),
@@ -295,7 +342,10 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
 
     @Override
     public void onRightButtonClicked() {
-        getActivity().onBackPressed();
+        Utils.hideSoftKeyboard(getActivity());
+        if (validate()) {
+            requestUpdateProfile();
+        }
     }
 
     @Override
@@ -312,7 +362,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
     public void onClick(View v) {
         Utils.hideSoftKeyboard(getActivity());
         switch (v.getId()) {
-            case R.id.edit_birthday:
+            case R.id.tv_birthday:
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.DAY_OF_MONTH, 31);
                 calendar.set(Calendar.MONTH, 11);
@@ -327,6 +377,20 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
 
                 dpd.getDatePicker().setMaxDate(calendar.getTimeInMillis());
                 dpd.show();
+                break;
+            case R.id.tv_gender:
+                Utils.hideSoftKeyboard(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setItems(genders, (dialog, item) -> {
+                    indexGender = item;
+                    gender = genders[item];
+                    tvGender.setValue(genders[item]);
+                    Boolean isMale = item == 1;
+                    userInfoModel.setGender(isMale);
+                    tvGender.setIssuseText("");
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
                 break;
             case R.id.rotate_img: {
                 iRotation = iRotation + 90;
@@ -366,7 +430,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
                 deleteImage();
                 break;
             }
-            case R.id.connect_instagram:
+            case R.id.tv_instagram:
                 InstagramFragment fragment = InstagramFragment.createInstance();
                 fragment.setDelegate(this);
                 add(fragment, InstagramFragment.TAG, true, false);
@@ -435,7 +499,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         }
     }
 
-    void deleteImage(){
+    void deleteImage() {
         int id = Utils.getApplication(getActivity()).getId(getActivity());
         networkManager.requestApi(networkManager.deleteAvatar(id, indexChange), Constants.ID_DELETE_AVATAR);
     }
@@ -515,12 +579,78 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
             Calendar calendar = Calendar.getInstance();
             calendar.set(year, monthOfYear, dayOfMonth);
             birthday = Utils.formatDateLocal(getActivity(), calendar.getTime());
-            tvBirthday.setText(birthday);
+            tvBirthday.setValue(birthday);
+            userInfoModel.getMeta().setBirthday(birthday);
         }
     };
 
     @Override
     public void instagramUserInfo(String model) {
-        connectInstaTv.setText(model);
+        tvInstagram.setContent(model);
+    }
+
+    @Override
+    public void valuechange(String tag, String text) {
+        switch (tag) {
+            case Constants.TAG_CONTROL_INPUT_FIRSTNAME:
+                userInfoModel.setFirstName(text);
+                validate();
+                break;
+            case Constants.TAG_CONTROL_INPUT_LASTNAME:
+                userInfoModel.setLastName(text);
+                validate();
+                break;
+            case Constants.TAG_CONTROL_INPUT_ABOUT_ME:
+                userInfoModel.getMeta().setAboutMe(text);
+                break;
+            case Constants.TAG_CONTROL_INPUT_WORK:
+                userInfoModel.getMeta().setCurrentWork(text);
+                break;
+            case Constants.TAG_CONTROL_INPUT_SCHOOL:
+                userInfoModel.getMeta().setSchool(text);
+                break;
+        }
+    }
+
+    Boolean validate() {
+        Boolean validate = true;
+        String blankField = getString(R.string.field_blank);
+        tvFirstName.setIssuseText("");
+        tvLastName.setIssuseText("");
+
+        View view = null;
+
+        if (TextUtils.isEmpty(userInfoModel.getFirstName())) {
+            tvFirstName.setIssuseText(blankField);
+            view = tvFirstName;
+            validate = false;
+        }
+
+        if (TextUtils.isEmpty(userInfoModel.getLastName())) {
+            tvLastName.setIssuseText(blankField);
+            if (view == null) {
+                view = tvLastName;
+            }
+            validate = false;
+        }
+
+        if (!validate) {
+            view.requestFocus();
+        }
+        return validate;
+    }
+
+    @Override
+    public void didReturn(String tag) {
+
+    }
+
+    @Override
+    public void inputTextFocus(Boolean b, String tag) {
+
+    }
+
+    private void requestUpdateProfile() {
+        networkManager.requestApi(networkManager.updateUserProfile(userInfoModel), Constants.ID_UPDATE_USER);
     }
 }

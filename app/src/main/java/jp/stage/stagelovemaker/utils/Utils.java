@@ -269,6 +269,39 @@ public final class Utils {
         return calendar;
     }
 
+    public static Date getDateServer(String date) {
+        if (!TextUtils.isEmpty(date)) {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+            try {
+                Date dateParse = formatter.parse(date);
+                return dateParse;
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public static Date formatLocalDateString(String serverDate) {
+        DateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+        fromFormat.setLenient(false);
+        DateFormat toFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        toFormat.setLenient(false);
+        if (!TextUtils.isEmpty(serverDate)) {
+            Date date = null;
+            Date formattedDate = null;
+            try {
+                date = fromFormat.parse(serverDate);
+                formattedDate = toFormat.parse(toFormat.format(date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return formattedDate;
+        }
+        return null;
+    }
+
     public static Location getLocation(Activity activity) {
         if (Utils.getApplication(activity) != null) {
             return Utils.getApplication(activity).getLocation();
@@ -346,5 +379,12 @@ public final class Utils {
             return null;
         }
         return RequestBody.create(MediaType.parse("text/plain"), text);
+    }
+
+    public static int getIndexGender(Boolean isMale) {
+        if (isMale) {
+            return 1;
+        }
+        return 0;
     }
 }

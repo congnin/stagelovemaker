@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_gray"
+    android:background="@android:color/white"
+    android:clickable="true"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     tools:context=".activity.MainActivity">
 
     <jp.stage.stagelovemaker.views.TitleBar
@@ -93,7 +96,7 @@
                             android:id="@+id/imageView_2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/_5ssp"
+                            android:layout_marginBottom="@dimen/_8ssp"
                             android:layout_marginStart="@dimen/_5ssp"
                             android:background="@drawable/draw_image_view_bg"
                             android:scaleType="centerCrop"
@@ -126,7 +129,7 @@
                             android:id="@+id/remove_imageView_2"
                             android:layout_width="@dimen/_20ssp"
                             android:layout_height="@dimen/_20ssp"
-                            android:layout_alignParentBottom="true"
+                            android:layout_alignBottom="@+id/imageView_2"
                             android:layout_alignParentEnd="true"
                             android:background="@drawable/draw_circle_white_bg"
                             android:src="@drawable/delete_image"
@@ -144,7 +147,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5ssp"
-                            android:layout_marginTop="@dimen/_5ssp"
                             android:background="@drawable/draw_image_view_bg"
                             android:scaleType="centerCrop"
                             app:siBorderColor="@android:color/transparent"
@@ -345,16 +347,11 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/firstname_tv"
-                style="@style/MyTitleSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginStart="@dimen/_10ssp"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:text="@string/first_name"
-                android:textStyle="bold" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/dark_gray" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -362,28 +359,15 @@
                 android:layout_marginTop="@dimen/_3ssp"
                 android:background="@drawable/draw_white_bg">
 
-                <EditText
-                    android:id="@+id/edit_first_name"
-                    style="@style/MyContentSettings"
+                <jp.stage.stagelovemaker.views.FormInputText
+                    android:id="@+id/tv_first_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_10ssp"
-                    android:background="@android:color/transparent"
-                    android:hint="Input first name"
-                    android:textColorHint="@color/light_gray" />
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="8dp" />
 
             </RelativeLayout>
-
-            <TextView
-                android:id="@+id/lastname_tv"
-                style="@style/MyTitleSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginStart="@dimen/_10ssp"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:text="@string/last_name"
-                android:textStyle="bold" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -391,28 +375,39 @@
                 android:layout_marginTop="@dimen/_3ssp"
                 android:background="@drawable/draw_white_bg">
 
-                <EditText
-                    android:id="@+id/edit_last_name"
-                    style="@style/MyContentSettings"
+                <jp.stage.stagelovemaker.views.FormInputText
+                    android:id="@+id/tv_last_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_10ssp"
-                    android:background="@android:color/transparent"
-                    android:hint="Input last name"
-                    android:textColorHint="@color/light_gray" />
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="8dp" />
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/birthday_tv"
-                style="@style/MyTitleSettings"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginStart="@dimen/_10ssp"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:text="@string/birthday"
-                android:textStyle="bold" />
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="@dimen/_3ssp"
+                android:background="@drawable/draw_white_bg"
+                android:orientation="horizontal">
+
+                <jp.stage.stagelovemaker.views.FormInputCombobox
+                    android:id="@+id/tv_birthday"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1" />
+
+                <jp.stage.stagelovemaker.views.FormInputCombobox
+                    android:id="@+id/tv_gender"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -420,28 +415,15 @@
                 android:layout_marginTop="@dimen/_3ssp"
                 android:background="@drawable/draw_white_bg">
 
-                <EditText
-                    android:id="@+id/edit_birthday"
-                    style="@style/MyContentSettings"
+                <jp.stage.stagelovemaker.views.FormInputText
+                    android:id="@+id/tv_about"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_10ssp"
-                    android:background="@android:color/transparent"
-                    android:hint="Input birthday"
-                    android:textColorHint="@color/light_gray" />
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="8dp" />
 
             </RelativeLayout>
-
-            <TextView
-                android:id="@+id/about_user_tv"
-                style="@style/MyTitleSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginStart="@dimen/_10ssp"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:text="@string/about_me"
-                android:textStyle="bold" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -449,126 +431,48 @@
                 android:layout_marginTop="@dimen/_3ssp"
                 android:background="@drawable/draw_white_bg">
 
-                <EditText
-                    android:id="@+id/edt_about_user"
-                    style="@style/MyContentSettings"
+                <jp.stage.stagelovemaker.views.FormInputText
+                    android:id="@+id/tv_current_work"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_10ssp"
-                    android:background="@android:color/transparent"
-                    android:hint="About you"
-                    android:textColorHint="@color/light_gray" />
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="8dp" />
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/currentWork_tv"
-                style="@style/MyTitleSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginStart="@dimen/_10ssp"
-                android:layout_marginTop="@dimen/_12ssp"
-                android:text="Current Work"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/select_work_tv"
-                style="@style/MyContentSettings"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_3ssp"
-                android:background="@drawable/draw_white_bg"
-                android:hint="@string/select_work"
-                android:lines="1"
-                android:padding="@dimen/_10ssp"
-                android:textColorHint="@color/light_gray" />
+                android:background="@drawable/draw_white_bg">
 
-            <TextView
-                android:id="@+id/school_tv"
-                style="@style/MyTitleSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginStart="@dimen/_10ssp"
-                android:layout_marginTop="@dimen/_12ssp"
-                android:text="@string/school"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/select_school_tv"
-                style="@style/MyContentSettings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3ssp"
-                android:background="@drawable/draw_white_bg"
-                android:hint="@string/select_school"
-                android:lines="1"
-                android:padding="@dimen/_10ssp"
-                android:textColorHint="@color/light_gray" />
-
-            <TextView
-                android:id="@+id/instagram_tv"
-                style="@style/MyTitleSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginStart="@dimen/_10ssp"
-                android:layout_marginTop="@dimen/_12ssp"
-                android:text="Show my Instagram Photos"
-
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/connect_instagram"
-                style="@style/MyContentSettings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3ssp"
-                android:background="@drawable/draw_white_bg"
-                android:padding="@dimen/_10ssp"
-                android:text="Connect Instagram"
-                android:textColor="@color/colorAccent" />
-
-            <TextView
-                android:id="@+id/gender_tv"
-                style="@style/MyTitleSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginStart="@dimen/_10ssp"
-                android:layout_marginTop="@dimen/_12ssp"
-                android:text="Gender"
-                android:textColor="@color/colorAccent"
-                android:textStyle="bold" />
-
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3ssp"
-                android:background="@drawable/draw_white_bg"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/man_radio_btn"
-                    style="@style/MyContentSettings"
-                    android:layout_width="wrap_content"
+                <jp.stage.stagelovemaker.views.FormInputText
+                    android:id="@+id/tv_school"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_10ssp"
-                    android:buttonTint="@color/colorAccent"
-                    android:checked="true"
-                    android:text="Man" />
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="8dp" />
 
-                <RadioButton
-                    android:id="@+id/woman_radio_btn"
-                    style="@style/MyContentSettings"
-                    android:layout_width="wrap_content"
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="@dimen/_3ssp"
+                android:background="@drawable/draw_white_bg">
+
+                <jp.stage.stagelovemaker.views.TitleTextView
+                    android:id="@+id/tv_instagram"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_10ssp"
-                    android:layout_marginStart="@dimen/_10ssp"
-                    android:buttonTint="@color/colorAccent"
-                    android:text="Woman" />
-            </RadioGroup>
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="8dp" />
+
+            </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>

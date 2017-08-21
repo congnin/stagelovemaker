@@ -272,11 +272,12 @@ public class StageFragment extends BaseFragment {
         user4.setInstagram_username("xuan");
 
         ArrayList<String> lsAvatar4 = new ArrayList<>();
-        lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/18813592_1353188041414248_3429241207302083409_n.jpg?oh=e36ba30a973944b456c3d37968856318&oe=59F439BE");
+        lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/19701967_1384972424902476_6930566799375355955_n.jpg?oh=2bd3d12e6936ce44179e277506e20e39&oe=5A302822");
+        lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/19642794_1382270831839302_6921708927018071998_n.jpg?oh=561d7df21c26109f1ba864b6844dcc13&oe=5A276237");
         lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/17022363_1254960111237042_6004721529587085946_n.jpg?oh=c41cbe28f1e56a2615c0f504168a281b&oe=59FD1C87");
-        lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/17022363_1254960111237042_6004721529587085946_n.jpg?oh=c41cbe28f1e56a2615c0f504168a281b&oe=59FD1C87");
-        lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/13238969_1017917748274614_2431214287453914295_n.jpg?oh=dd86dbe760c5d1f222db4425be128da7&oe=59F2F0BB");
+        lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t31.0-8/18839541_1355424434523942_3407396031206038211_o.jpg?oh=6e9aaaa719c2be9abe0cd6f72c70e1c3&oe=5A2C654F");
         lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/10583832_933984950001228_5689300757840375409_n.jpg?oh=0e79ed43a8f293f9b4c58df4337f0481&oe=59F05627");
+        lsAvatar4.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/18814332_1349556985110687_2908319357677447037_n.jpg?oh=1a6808dceea0fecb12e769b0e5e90422&oe=5A294321");
         user4.setAvatars(lsAvatar4);
         userInfos.add(user4);
 

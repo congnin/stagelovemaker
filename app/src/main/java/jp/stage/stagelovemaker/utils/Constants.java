@@ -27,6 +27,8 @@ public final class Constants {
     public static final String TAG_CONTROL_INPUT_LASTNAME = "ControlInputLastName";
     public static final String TAG_CONTROL_INPUT_CODE_NUMBER = "ControlInputCodeNumber";
     public static final String TAG_CONTROL_INPUT_ABOUT_ME = "ControlInputAboutMe";
+    public static final String TAG_CONTROL_INPUT_WORK = "ControlInputWork";
+    public static final String TAG_CONTROL_INPUT_SCHOOL = "ControlInputSchool";
     public static final String TAG_CONTROL_INPUT_LOCATION = "ControlInputLocation";
     public static final String TAG_CONTROL_INPUT_MESSAGE = "ControlInputMessage";
     public static final String TAG_CONTROL_INPUT_YOUTUBE = "ControlInputYoutube";
