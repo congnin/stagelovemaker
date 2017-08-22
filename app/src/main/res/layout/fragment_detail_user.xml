@@ -101,7 +101,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_row="0"
                     android:ellipsize="marquee"
-                    android:text="NEW YORD PRESBYTERIAN..."
+                    android:text="@string/dont_know"
                     android:textAllCaps="true"
                     android:textSize="16sp"
                     tools:ignore="MissingPrefix" />
@@ -127,7 +127,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_row="1"
                     android:ellipsize="marquee"
-                    android:text="New York University"
+                    android:text="@string/dont_know"
                     android:textSize="16sp"
                     tools:ignore="MissingPrefix" />
 
@@ -152,10 +152,45 @@
                     android:layout_marginTop="8dp"
                     android:layout_row="2"
                     android:ellipsize="marquee"
-                    android:text="xxx miles away"
+                    android:text="@string/dont_know"
                     android:textSize="16sp"
                     tools:ignore="MissingPrefix" />
             </GridLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="17dp"
+                android:background="@color/dark_gray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20.5dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:text="@string/about_me"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:lineSpacingExtra="5sp"
+                    android:textColor="@color/mostly_black"
+                    android:textSize="15sp" />
+            </LinearLayout>
 
             <View
                 android:id="@+id/line_interest"

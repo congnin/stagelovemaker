@@ -59,6 +59,9 @@ public class UserInfoModel implements Parcelable {
     @SerializedName("modified")
     @Expose
     private String modified;
+    @SerializedName("instagram_user")
+    @Expose
+    private String instagramUser;
 
     public List<AvatarModel> getAvatars() {
         return avatars;
@@ -152,7 +155,7 @@ public class UserInfoModel implements Parcelable {
         return latitude;
     }
 
-    public void setLatitude(Integer latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
@@ -160,7 +163,7 @@ public class UserInfoModel implements Parcelable {
         return longitude;
     }
 
-    public void setLongitude(Integer longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
@@ -180,6 +183,13 @@ public class UserInfoModel implements Parcelable {
         this.modified = modified;
     }
 
+    public String getInstagramUser() {
+        return instagramUser;
+    }
+
+    public void setInstagramUser(String instagramUser) {
+        this.instagramUser = instagramUser;
+    }
 
     @Override
     public int describeContents() {
@@ -203,6 +213,7 @@ public class UserInfoModel implements Parcelable {
         dest.writeDouble(this.longitude);
         dest.writeString(this.created);
         dest.writeString(this.modified);
+        dest.writeString(this.instagramUser);
     }
 
     public UserInfoModel() {
@@ -224,6 +235,7 @@ public class UserInfoModel implements Parcelable {
         this.longitude = in.readDouble();
         this.created = in.readString();
         this.modified = in.readString();
+        this.instagramUser = in.readString();
     }
 
     public static final Creator<UserInfoModel> CREATOR = new Creator<UserInfoModel>() {

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -22,10 +21,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import jp.stage.stagelovemaker.R;
-import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.model.ErrorModel;
-import jp.stage.stagelovemaker.model.SignUp;
 import jp.stage.stagelovemaker.model.SignUpModel;
 import jp.stage.stagelovemaker.network.IHttpResponse;
 import jp.stage.stagelovemaker.network.NetworkManager;

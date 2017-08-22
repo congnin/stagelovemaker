@@ -277,4 +277,10 @@ public class NetworkManager {
 
         return apiService.updateUserInfo(userInfoModel.getId(), data);
     }
+
+    public Call<ResponseModel> getPeopleList(int page) {
+        return apiService.getPeopleList(page);
+    }
+
+    public Call<ResponseModel> setFeeling(int user_id, int user_friend, )
 }

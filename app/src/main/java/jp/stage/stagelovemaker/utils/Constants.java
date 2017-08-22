@@ -65,4 +65,7 @@ public final class Constants {
     public final static int ID_UPDATE_SETTING = 9;
     public final static int ID_UPDATE_USER = 10;
     public final static int ID_DELETE_AVATAR = 11;
+    public final static int ID_LIST_PEOPLE = 12;
+    public final static int ID_REFRESH = 13;
+    public final static int ID_MORE = 14;
 }

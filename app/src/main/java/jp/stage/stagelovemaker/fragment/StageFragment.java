@@ -1,5 +1,6 @@
 package jp.stage.stagelovemaker.fragment;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +29,11 @@ import jp.stage.stagelovemaker.adapter.UserInfoAdapter;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.model.Avatar;
 import jp.stage.stagelovemaker.model.UserInfo;
+import jp.stage.stagelovemaker.model.UserInfoModel;
+import jp.stage.stagelovemaker.model.UsersPageModel;
+import jp.stage.stagelovemaker.network.IHttpResponse;
+import jp.stage.stagelovemaker.network.NetworkManager;
+import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.views.SwipeDeck;
 import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 
@@ -38,19 +44,41 @@ import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 public class StageFragment extends BaseFragment {
     public static final String TAG = "StageFragment";
 
+    NetworkManager networkManager;
     private SwipeDeck cardStack;
     private ArrayList<UserInfo> userInfos = new ArrayList<>();
     private CircleButton btnRefresh, btnClose, btnHeart, btnStar;
     private ProgressBar pgbCard;
     private UserInfoAdapter cardAdapter;
     private CircularImageView ivDetail;
+    List<UserInfoModel> userInfoModels;
+    UsersPageModel usersPageModel;
 
-    public static StageFragment newInstance() {
+    public static StageFragment newInstance(UsersPageModel usersPageModel) {
         Bundle args = new Bundle();
+        args.putParcelable(Constants.KEY_DATA, usersPageModel);
         StageFragment fragment = new StageFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        networkManager = new NetworkManager(context, iHttpResponse);
+    }
+
+    private IHttpResponse iHttpResponse = new IHttpResponse() {
+        @Override
+        public void onHttpComplete(String response, int idRequest) {
+
+        }
+
+        @Override
+        public void onHttpError(String response, int idRequest, int errorCode) {
+
+        }
+    };
 
     @Nullable
     @Override
@@ -71,20 +99,53 @@ public class StageFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         addEvents();
+        if (savedInstanceState != null) {
+            usersPageModel = savedInstanceState.getParcelable("usersPageModel");
+        }
+
+        if (usersPageModel == null) {
+            usersPageModel = getArguments().getParcelable(Constants.KEY_DATA);
+        }
+
         pgbCard.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            getListUserInfo();
-            cardAdapter = new UserInfoAdapter(getActivity(), userInfos);
-            cardStack.setAdapter(cardAdapter);
-            cardAdapter.notifyDataSetChanged();
-            pgbCard.setVisibility(View.GONE);
-        }, 2000);
+//        final Handler handler = new Handler();
+//        handler.postDelayed(() -> {
+//            getListUserInfo();
+//            cardAdapter = new UserInfoAdapter(getActivity(), userInfos);
+//            cardStack.setAdapter(cardAdapter);
+//            cardAdapter.notifyDataSetChanged();
+//            pgbCard.setVisibility(View.GONE);
+//        }, 2000);
+
+        if (usersPageModel != null) {
+            if (Integer.parseInt(usersPageModel.getCurrentPage()) == usersPageModel.getTotalPage()) {
+                updateData(Constants.ID_REFRESH);
+            }
+        }
+    }
+
+    private void updateData(final int idRequest) {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    userInfoModels = usersPageModel.getRecords();
+                    if(userInfoModels != null){
+                        if(cardAdapter == null){
+                            cardAdapter = new UserInfoAdapter(getActivity(), userInfoModels);
+                            cardStack.setAdapter(cardAdapter);
+                            cardAdapter.notifyDataSetChanged();
+                            pgbCard.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private void addEvents() {
@@ -185,7 +246,7 @@ public class StageFragment extends BaseFragment {
                 long index = cardStack.getTopCardItemId();
                 //Toast.makeText(getActivity(), "" + index, Toast.LENGTH_SHORT).show();
                 if (index >= 0 && cardStack.getAdapterIndex() > 0) {
-                    UserInfo userInfo = (UserInfo) cardAdapter.getItem(0);
+                    UserInfoModel userInfo = (UserInfoModel) cardAdapter.getItem(0);
                     DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(userInfo);
                     detailProfileFragment.setCallback(callback);
                     replace(detailProfileFragment, DetailProfileFragment.TAG, true, true);
@@ -337,4 +398,9 @@ public class StageFragment extends BaseFragment {
             }
         }
     };
+
+    private void getListPeople() {
+        int page = 1;
+
+    }
 }

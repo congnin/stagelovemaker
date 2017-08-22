@@ -24,6 +24,7 @@ import jp.stage.stagelovemaker.adapter.InstagramImagePageAdapter;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.model.InstagramPhoto;
 import jp.stage.stagelovemaker.model.UserInfo;
+import jp.stage.stagelovemaker.model.UserInfoModel;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.PageControl;
@@ -42,6 +43,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
     TextView tvAge;
     TextView tvWork;
     TextView tvSchool;
+    TextView tvAbout;
 
     CircularImageView ivBack;
     CircleButton ivNope;
@@ -52,7 +54,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
     String instagramUser;
     PageControl pageControl;
     RelativeLayout instagramLayout;
-    UserInfo userInfo;
+    UserInfoModel userInfoModel;
     DetailProfileCallback delegate;
 
     ViewPager instagramPager;
@@ -60,7 +62,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
     int numberColumn = 0;
     int widthButton;
 
-    public static DetailProfileFragment newInstance(UserInfo user) {
+    public static DetailProfileFragment newInstance(UserInfoModel user) {
 
         Bundle args = new Bundle();
         args.putParcelable("user", user);
@@ -95,6 +97,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
         tvAge = (TextView) view.findViewById(R.id.tv_age);
         tvWork = (TextView) view.findViewById(R.id.tv_work);
         tvSchool = (TextView) view.findViewById(R.id.tv_school);
+        tvAbout = (TextView) view.findViewById(R.id.tv_about);
         ivBack = (CircularImageView) view.findViewById(R.id.iv_back);
         ivNope = (CircleButton) view.findViewById(R.id.circleButtonClose);
         ivLike = (CircleButton) view.findViewById(R.id.circleButtonHeart);
@@ -110,12 +113,27 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        userInfo = getArguments().getParcelable("user");
-        userImageSlide.setAvatar(getChildFragmentManager(), userInfo.getAvatars());
-        tvName.setText(userInfo.getFirstName() + ",");
-        tvAge.setText(String.valueOf(userInfo.getBirthday()));
-        tvSchool.setText(userInfo.getSchool());
-        tvWork.setText(userInfo.getCurrentWork());
+        userInfoModel = getArguments().getParcelable("user");
+        if (userInfoModel.getAvatars() != null && !userInfoModel.getAvatars().isEmpty()) {
+            ArrayList<String> lstAvatar = new ArrayList<>();
+            for (int i = 0; i < userInfoModel.getAvatars().size(); i++) {
+                lstAvatar.add(userInfoModel.getAvatars().get(i).getUrl());
+            }
+            userImageSlide.setAvatar(getChildFragmentManager(), lstAvatar);
+        }
+
+        tvName.setText(userInfoModel.getFirstName() + ",");
+        tvAge.setText(String.valueOf(userInfoModel.getAge()));
+        if (!TextUtils.isEmpty(userInfoModel.getMeta().getSchool())) {
+            tvSchool.setText(userInfoModel.getMeta().getSchool());
+        }
+
+        if (!TextUtils.isEmpty(userInfoModel.getMeta().getCurrentWork())) {
+            tvWork.setText(userInfoModel.getMeta().getCurrentWork());
+        }
+        if (!TextUtils.isEmpty(userInfoModel.getMeta().getAboutMe())) {
+            tvAbout.setText(userInfoModel.getMeta().getAboutMe());
+        }
 
         ivBack.setOnClickListener(this);
         ivNope.setOnClickListener(this);
@@ -123,8 +141,8 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
         ivSuperLike.setOnClickListener(this);
         calculateLayout();
         if (photoModel == null || photoModel.size() == 0) {
-            if (!TextUtils.isEmpty(userInfo.getInstagram_username())) {
-                requestInstagramImage(userInfo.getInstagram_username());
+            if (!TextUtils.isEmpty(userInfoModel.getInstagramUser())) {
+                requestInstagramImage(userInfoModel.getInstagramUser());
                 instagramLayout.setVisibility(View.VISIBLE);
             } else {
                 instagramLayout.setVisibility(View.GONE);
@@ -143,7 +161,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
     }
 
     private void loadInstagramImage() {
-        if (TextUtils.isEmpty(userInfo.getInstagram_username())) {
+        if (TextUtils.isEmpty(userInfoModel.getInstagramUser())) {
             return;
         }
         if (instagramImagePageAdapter == null) {
@@ -171,7 +189,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
             pageControl.setVisibility(View.GONE);
         }
         instagramImagePageAdapter = new InstagramImagePageAdapter(getChildFragmentManager(),
-                photoModel, numberColumn, numberFragment, userInfo.getInstagram_username());
+                photoModel, numberColumn, numberFragment, userInfoModel.getInstagramUser());
         instagramPager.setAdapter(instagramImagePageAdapter);
         instagramPager.addOnPageChangeListener(viewPagerPageChangeListener);
         instagramImagePageAdapter.notifyDataSetChanged();

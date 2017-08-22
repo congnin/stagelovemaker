@@ -33,7 +33,6 @@ import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
-import jp.stage.stagelovemaker.model.SignUp;
 import jp.stage.stagelovemaker.model.SignUpModel;
 import jp.stage.stagelovemaker.model.UserTokenModel;
 import jp.stage.stagelovemaker.network.IHttpResponse;

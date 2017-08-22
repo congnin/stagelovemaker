@@ -91,6 +91,7 @@
     <string name="email_invalid">Your email is invalid.</string>
     <string name="allow">ALLOW</string>
     <string name="deny">DENY</string>
+    <string name="dont_know">Don\'t know</string>
     <string name="instagram">Instagram</string>
     <string name="unknown_error_network">Something went wrong with network!</string>
     <string name="reset_password_to_email">Reset password to email</string>

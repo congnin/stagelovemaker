@@ -59,5 +59,8 @@ public interface MyApiEndpoint {
     Call<ResponseModel> deleteAvatar(@Path("user_id") int id, @Body JsonObject data);
 
     @GET("api/users/listPeople/{page}")
-    Call<ResponseModel>
+    Call<ResponseModel> getPeopleList(@Path("page") int page);
+
+    @POST("api/feelings/")
+    Call<ResponseModel> setFeeling(@Body JsonObject data);
 }

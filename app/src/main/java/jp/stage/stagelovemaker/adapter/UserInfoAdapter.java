@@ -2,6 +2,7 @@ package jp.stage.stagelovemaker.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.model.UserInfo;
+import jp.stage.stagelovemaker.model.UserInfoModel;
 
 /**
  * Created by congn on 8/4/2017.
@@ -24,9 +26,9 @@ public class UserInfoAdapter extends BaseAdapter {
     public static mViewHolder holder;
 
     private Context mContext;
-    private List<UserInfo> modelList;
+    private List<UserInfoModel> modelList;
 
-    public UserInfoAdapter(Context mContext, List<UserInfo> modelList) {
+    public UserInfoAdapter(Context mContext, List<UserInfoModel> modelList) {
         this.modelList = modelList;
         this.mContext = mContext;
     }
@@ -46,7 +48,7 @@ public class UserInfoAdapter extends BaseAdapter {
         return position;
     }
 
-    public void addItem(UserInfo user) {
+    public void addItem(UserInfoModel user) {
         modelList.add(user);
     }
 
@@ -75,11 +77,26 @@ public class UserInfoAdapter extends BaseAdapter {
         } else {
             holder = (mViewHolder) convertView.getTag();
         }
-        holder.txtNameAge.setText(modelList.get(position).getFirstName() + ", " + modelList.get(position).getBirthday());
-        holder.txtAddress.setText(modelList.get(position).getSchool());
-        if (holder.imgAvatar != null && mContext != null) {
-            Glide.with(mContext).load(modelList.get(position).getAvatars().get(0)).centerCrop().into(holder.imgAvatar);
+        holder.txtNameAge.setText(modelList.get(position).getFirstName() + ", " + modelList.get(position).getAge());
+        if (!TextUtils.isEmpty(modelList.get(position).getMeta().getSchool())) {
+            holder.txtAddress.setText(modelList.get(position).getMeta().getSchool());
         }
+
+        if (holder.imgAvatar != null && mContext != null) {
+            if (modelList.get(position).getAvatars() != null && !modelList.get(position).getAvatars().isEmpty()) {
+                for (int i = 0; i < modelList.get(position).getAvatars().size(); i++) {
+                    if (!TextUtils.isEmpty(modelList.get(position).getAvatars().get(i).getUrl())) {
+                        Glide.with(mContext)
+                                .load(modelList.get(position).getAvatars().get(i).getUrl())
+                                .centerCrop()
+                                .into(holder.imgAvatar);
+                        break;
+                    }
+                }
+            }
+
+        }
+
         return rowView;
     }
 

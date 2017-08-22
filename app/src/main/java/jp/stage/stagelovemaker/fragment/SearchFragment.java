@@ -221,4 +221,16 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
             }
         }
     };
+
+    public void changeBackgroundNoPals(int text) {
+        stopTimer();
+        tvDescription.setText(text);
+    }
+
+    public void stopTimer() {
+        if (pulsatorLayout != null) {
+            pulsatorLayout.setVisibility(View.GONE);
+            pulsatorLayout.stop();
+        }
+    }
 }
