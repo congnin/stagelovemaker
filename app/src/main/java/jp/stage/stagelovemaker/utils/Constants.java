@@ -68,4 +68,5 @@ public final class Constants {
     public final static int ID_LIST_PEOPLE = 12;
     public final static int ID_REFRESH = 13;
     public final static int ID_MORE = 14;
+    public static final int ID_UPDATE_FEELING = 15;
 }

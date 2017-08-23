@@ -34,6 +34,7 @@ import jp.stage.stagelovemaker.model.UsersPageModel;
 import jp.stage.stagelovemaker.network.IHttpResponse;
 import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
+import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.SwipeDeck;
 import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 
@@ -54,6 +55,10 @@ public class StageFragment extends BaseFragment {
     List<UserInfoModel> userInfoModels;
     UsersPageModel usersPageModel;
 
+    int userId;
+    int userFriend;
+    int type;
+
     public static StageFragment newInstance(UsersPageModel usersPageModel) {
         Bundle args = new Bundle();
         args.putParcelable(Constants.KEY_DATA, usersPageModel);
@@ -66,6 +71,9 @@ public class StageFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         networkManager = new NetworkManager(context, iHttpResponse);
+        userId = Utils.getApplication(getActivity()).getId(getActivity());
+        userFriend = -1;
+        type = -1;
     }
 
     private IHttpResponse iHttpResponse = new IHttpResponse() {
@@ -135,8 +143,8 @@ public class StageFragment extends BaseFragment {
                 @Override
                 public void run() {
                     userInfoModels = usersPageModel.getRecords();
-                    if(userInfoModels != null){
-                        if(cardAdapter == null){
+                    if (userInfoModels != null) {
+                        if (cardAdapter == null) {
                             cardAdapter = new UserInfoAdapter(getActivity(), userInfoModels);
                             cardStack.setAdapter(cardAdapter);
                             cardAdapter.notifyDataSetChanged();
@@ -154,7 +162,9 @@ public class StageFragment extends BaseFragment {
             public void cardSwipedTop(long stableId) {
                 Log.i("CardFragment", "card was swiped left, position in adapter: " + stableId);
                 if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
-
+                    getCurrentUser();
+                    type = 10;
+                    setFeelings();
                     cardAdapter.remove(0);
                     cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
                 }
@@ -164,6 +174,9 @@ public class StageFragment extends BaseFragment {
             public void cardSwipedLeft(long stableId) {
                 Log.i("CardFragment", "card was swiped left, position in adapter: " + stableId);
                 if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                    getCurrentUser();
+                    type = 0;
+                    setFeelings();
                     cardAdapter.remove(0);
                     cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
                 }
@@ -174,6 +187,9 @@ public class StageFragment extends BaseFragment {
                 if (cardAdapter.getCount() > 0) {
                     Log.i("CardFragment", "card was swiped right, position in adapter: " + stableId);
                     if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                        getCurrentUser();
+                        type = 1;
+                        setFeelings();
                         cardAdapter.remove(0);
                         cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
                     }
@@ -201,6 +217,9 @@ public class StageFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                    getCurrentUser();
+                    type = 0;
+                    setFeelings();
                     cardStack.swipeTopCardLeft(200);
                     cardAdapter.remove(0);
                     cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
@@ -212,6 +231,9 @@ public class StageFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                    getCurrentUser();
+                    type = 1;
+                    setFeelings();
                     cardStack.swipeTopCardRight(200);
                     cardAdapter.remove(0);
                     cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
@@ -223,6 +245,9 @@ public class StageFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                    getCurrentUser();
+                    type = 10;
+                    setFeelings();
                     cardStack.swipeTopCardTop(200);//200 time
                     cardAdapter.remove(0);
                     cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
@@ -372,6 +397,9 @@ public class StageFragment extends BaseFragment {
         public void onNopeClicked() {
             getActivity().onBackPressed();
             if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                getCurrentUser();
+                type = 0;
+                setFeelings();
                 cardStack.swipeTopCardLeft(200);
                 cardAdapter.remove(0);
                 cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
@@ -382,6 +410,9 @@ public class StageFragment extends BaseFragment {
         public void onLikeClicked() {
             getActivity().onBackPressed();
             if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                getCurrentUser();
+                type = 1;
+                setFeelings();
                 cardStack.swipeTopCardRight(200);
                 cardAdapter.remove(0);
                 cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
@@ -392,6 +423,9 @@ public class StageFragment extends BaseFragment {
         public void onStarClicked() {
             getActivity().onBackPressed();
             if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                getCurrentUser();
+                type = 10;
+                setFeelings();
                 cardStack.swipeTopCardTop(200);//200 time
                 cardAdapter.remove(0);
                 cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
@@ -401,6 +435,18 @@ public class StageFragment extends BaseFragment {
 
     private void getListPeople() {
         int page = 1;
+    }
 
+    private void setFeelings() {
+        if(userFriend >= 0 && type >=0){
+            networkManager.requestApiNoProgress(networkManager.setFeeling(userId, userFriend, type), Constants.ID_UPDATE_FEELING);
+        }
+    }
+
+    private void getCurrentUser(){
+        if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+            UserInfoModel userInfo = (UserInfoModel) cardAdapter.getItem(0);
+            userFriend = userInfo.getId();
+        }
     }
 }

@@ -282,5 +282,11 @@ public class NetworkManager {
         return apiService.getPeopleList(page);
     }
 
-    public Call<ResponseModel> setFeeling(int user_id, int user_friend, )
+    public Call<ResponseModel> setFeeling(int user_id, int user_friend, int type) {
+        JsonObject data = new JsonObject();
+        data.addProperty("user_id", user_id);
+        data.addProperty("user_friend", user_friend);
+        data.addProperty("type", type);
+        return apiService.setFeeling(data);
+    }
 }
