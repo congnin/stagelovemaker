@@ -289,4 +289,25 @@ public class NetworkManager {
         data.addProperty("type", type);
         return apiService.setFeeling(data);
     }
+
+    public Call<ResponseModel> contacts(String content) {
+        JsonObject data = new JsonObject();
+        data.addProperty("content", content);
+        return apiService.contacts(data);
+    }
+
+    public Call<ResponseModel> deleteUser(int user_id, String username, String password) {
+        JsonObject data = new JsonObject();
+        data.addProperty("username", username);
+        data.addProperty("password", password);
+        return apiService.deleteUser(user_id, data);
+    }
+
+    public Call<ResponseModel> listMatches(int page, String query) {
+        if (!TextUtils.isEmpty(query)) {
+            return apiService.listMatchesSearch(page, query, query, query);
+        } else {
+            return apiService.listMatches(page);
+        }
+    }
 }

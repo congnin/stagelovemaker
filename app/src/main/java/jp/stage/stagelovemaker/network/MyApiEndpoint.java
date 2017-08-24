@@ -63,4 +63,19 @@ public interface MyApiEndpoint {
 
     @POST("api/feelings/")
     Call<ResponseModel> setFeeling(@Body JsonObject data);
+
+    @POST("api/contacts/")
+    Call<ResponseModel> contacts(@Body JsonObject data);
+
+    @HTTP(method = "DELETE", path = "api/users/{user_id}", hasBody = true)
+    Call<ResponseModel> deleteUser(@Path("user_id") int user_id, @Body JsonObject data);
+
+    @GET("api/users/listMatches/{page}")
+    Call<ResponseModel> listMatches(@Path("page") int page);
+
+    @GET("api/users/listMatches/{page}")
+    Call<ResponseModel> listMatchesSearch(@Path("page") int page,
+                                    @Query("first_name") String first_name,
+                                    @Query("last_name") String last_name,
+                                    @Query("email") String email);
 }

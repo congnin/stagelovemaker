@@ -16,6 +16,7 @@ public class EventDistributor extends Observable {
     private static final String TAG = "EventDistributor";
 
     public static final int MY_PROFILE_CHANGE = 1;
+    public static final int MATCH_CHANGE = 2;
 
     private Handler handler;
     private AbstractQueue<Integer> events;
@@ -70,6 +71,10 @@ public class EventDistributor extends Observable {
 
     public void sendMyProfileUpdateBroadcast() {
         addEvent(MY_PROFILE_CHANGE);
+    }
+
+    public void sendListMatchUpdateBroadcast() {
+        addEvent(MATCH_CHANGE);
     }
 
     public static abstract class EventListener implements Observer {

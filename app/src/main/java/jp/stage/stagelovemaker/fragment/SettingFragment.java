@@ -25,7 +25,10 @@ import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.LoginActivity;
 import jp.stage.stagelovemaker.activity.MainActivity;
+import jp.stage.stagelovemaker.activity.SplashActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.dialog.ContactUsDialog;
+import jp.stage.stagelovemaker.dialog.DeleteAccountDialog;
 import jp.stage.stagelovemaker.dialog.QuestionDialog;
 import jp.stage.stagelovemaker.model.DiscoverModel;
 import jp.stage.stagelovemaker.model.ErrorModel;
@@ -144,6 +147,13 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
                         getActivity().onBackPressed();
                     }
                     break;
+                case Constants.ID_DELETE_ACCOUNT:
+                    Toast.makeText(getContext(), getString(R.string.account_is_deleted), Toast.LENGTH_LONG).show();
+                    Utils.getApplication(getActivity()).setAccessToken("", getActivity());
+                    Bundle bundle = new Bundle();
+                    startNewActivity(SplashActivity.class, bundle);
+                    ActivityCompat.finishAffinity(getActivity());
+                    break;
             }
         }
 
@@ -154,6 +164,12 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
                     ErrorModel errorModel = gson.fromJson(response, ErrorModel.class);
                     if (errorModel != null && !TextUtils.isEmpty(errorModel.getErrorMsg())) {
                         Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                case Constants.ID_DELETE_ACCOUNT:
+                    ErrorModel model = gson.fromJson(response, ErrorModel.class);
+                    if (model != null && !TextUtils.isEmpty(model.getErrorMsg())) {
+                        Toast.makeText(getActivity(), model.getErrorMsg(), Toast.LENGTH_LONG).show();
                     }
                     break;
             }
@@ -291,6 +307,7 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
 
         btMi.setOnClickListener(this);
         btKm.setOnClickListener(this);
+        layoutHelpSupport.setOnClickListener(this);
 
         switchMan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -314,7 +331,7 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         });
 
         layoutLogout.setOnClickListener(this);
-
+        layoutDeleteAccount.setOnClickListener(this);
 
         loadInfoSetting();
     }
@@ -516,6 +533,14 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
                 dialog.setDelegate(questionLogout, "");
                 dialog.show();
                 break;
+            case R.id.layout_help_support:
+                ContactUsDialog contactUsDialog = ContactUsDialog.newInstance();
+                add(contactUsDialog, "", true, false, R.id.flContainer);
+                break;
+            case R.id.layout_delete:
+                DeleteAccountDialog deleteAccountDialog = DeleteAccountDialog.newInstance();
+                deleteAccountDialog.setCallback(callbackDelete);
+                add(deleteAccountDialog, DeleteAccountDialog.TAG, true, false, R.id.flContainer);
         }
     }
 
@@ -553,4 +578,12 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     public interface SettingFragmentCallback {
         void onSettingChanged();
     }
+
+    private DeleteAccountDialog.Callback callbackDelete = new DeleteAccountDialog.Callback() {
+        @Override
+        public void onAccountDeleted(String username, String password) {
+            int id = Utils.getApplication(getActivity()).getId(getActivity());
+            networkManager.requestApi(networkManager.deleteUser(id, username, password), Constants.ID_DELETE_ACCOUNT);
+        }
+    };
 }

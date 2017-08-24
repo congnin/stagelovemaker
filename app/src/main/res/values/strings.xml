@@ -72,6 +72,9 @@
     <string name="select_school">Select school</string>
     <string name="done">Done</string>
     <string name="ok">OK</string>
+    <string name="send">Send</string>
+    <string name="max_500_letters">Max 500 letters</string>
+    <string name="content_contact_us">Is there any question or suggestion? Please let us know.</string>
     <string name="cancel">Cancel</string>
     <string name="about_me">About me</string>
     <string name="first_name">First name</string>
@@ -99,6 +102,10 @@
     <string name="des_forgot_password"><Data><![CDATA[Enter your email address to<br><b>reset</b> your <b>password.</b>]]></Data></string>
     <string name="choose_from_gallery">Choose from Gallery</string>
     <string name="take_photo">Take photo</string>
+    <string name="enter_username">Enter username</string>
+    <string name="enter_password">Enter password</string>
     <string name="select_picture">Select Picture</string>
+    <string name="account_is_deleted">Account is Deleted</string>
+    <string name="question_delete_account">If you delete your account, you will permanatly lose your profile, messages, photos.\nAre you sure you want to delete your account?</string>
     <string name="explain_smart_photos">Smart Photos continuously tests all your profile photos and picks the best one to show first.</string>
 </resources>
