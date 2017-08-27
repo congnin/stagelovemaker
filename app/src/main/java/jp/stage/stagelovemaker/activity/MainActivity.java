@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -20,9 +21,14 @@ import java.util.List;
 import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.adapter.FeaturesPagerAdapter;
+import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.base.CommonActivity;
 import jp.stage.stagelovemaker.base.EventDistributor;
+import jp.stage.stagelovemaker.fragment.MessageFragment;
 import jp.stage.stagelovemaker.model.AvatarModel;
+import jp.stage.stagelovemaker.model.ErrorModel;
+import jp.stage.stagelovemaker.model.InfoRoomModel;
+import jp.stage.stagelovemaker.model.RoomResponseModel;
 import jp.stage.stagelovemaker.model.UserInfo;
 import jp.stage.stagelovemaker.model.UserInfoModel;
 import jp.stage.stagelovemaker.model.UserTokenModel;
@@ -207,12 +213,25 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
                         loginModel = update.getUserInfo();
                     }
                     break;
+//                case Constants.ID_CHAT_ROOM:
+//                    RoomResponseModel roomResponseModel = gson.fromJson(response, RoomResponseModel.class);
+//                    if(roomResponseModel != null){
+//                        InfoRoomModel infoRoomModel = roomResponseModel.getInfoRoom();
+//                        runOnUiThread(() -> {
+//                            MessageFragment messageFragment = MessageFragment.newInstance(infoRoomModel);
+//                            add(messageFragment, MessageFragment.TAG, true, true, R.id.flContainer);
+//                        });
+//                    }
+//                    break;
             }
         }
 
         @Override
         public void onHttpError(String response, int idRequest, int errorCode) {
-
+//            ErrorModel error = gson.fromJson(response, ErrorModel.class);
+//            if(TextUtils.isEmpty(error.getErrorMsg())){
+//                Toast.makeText(MainActivity.this, error.getErrorMsg(), Toast.LENGTH_SHORT).show();
+//            }
         }
     };
 
@@ -226,5 +245,14 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
                 }
             }
         }
+    }
+
+    public void getChatRoom(UserInfoModel receiver) {
+        MessageFragment messageFragment = MessageFragment.newInstance(receiver);
+        add(messageFragment, MessageFragment.TAG, true, true, R.id.flContainer);
+    }
+
+    public UserInfoModel getLoginModel(){
+        return loginModel;
     }
 }

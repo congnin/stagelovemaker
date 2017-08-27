@@ -31,7 +31,7 @@ public class MatchesRecycleAdapter extends RecyclerView.Adapter<MatchesRecycleAd
     public MatchesRecycleAdapter(MainActivity mainActivity,
                                  ItemAccess itemAccess) {
         super();
-        this.mainActivity = new WeakReference<MainActivity>(mainActivity);
+        this.mainActivity = new WeakReference<>(mainActivity);
         this.itemAccess = itemAccess;
     }
 
@@ -111,7 +111,9 @@ public class MatchesRecycleAdapter extends RecyclerView.Adapter<MatchesRecycleAd
         public void onClick(View v) {
             MainActivity mainActivity = mainActivityRef.get();
             if (mainActivity != null) {
+                int receiverId = itemAccess.getItem(position).getId();
 
+                mainActivity.getChatRoom(itemAccess.getItem(position));
             }
         }
 

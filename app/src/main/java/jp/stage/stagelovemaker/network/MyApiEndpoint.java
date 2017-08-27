@@ -78,4 +78,7 @@ public interface MyApiEndpoint {
                                     @Query("first_name") String first_name,
                                     @Query("last_name") String last_name,
                                     @Query("email") String email);
+
+    @POST("api/rooms/")
+    Call<ResponseModel> getRoom(@Body JsonObject data);
 }

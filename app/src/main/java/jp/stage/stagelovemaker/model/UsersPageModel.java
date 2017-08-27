@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ public class UsersPageModel implements Parcelable {
     private String currentPage;
     @SerializedName("records")
     @Expose
-    private List<UserInfoModel> records = null;
+    private List<UserInfoModel> records;
 
     public Integer getTotalRecord() {
         return totalRecord;
@@ -55,7 +56,11 @@ public class UsersPageModel implements Parcelable {
     }
 
     public void setRecords(List<UserInfoModel> records) {
-        this.records = records;
+        if(this.records == null){
+            this.records = new ArrayList<>();
+        }
+        this.records.clear();
+        this.records.addAll(records);
     }
 
     @Override

@@ -148,7 +148,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
                 instagramLayout.setVisibility(View.GONE);
             }
         } else {
-            loadInstagramImage();
+        loadInstagramImage();
         }
 
     }

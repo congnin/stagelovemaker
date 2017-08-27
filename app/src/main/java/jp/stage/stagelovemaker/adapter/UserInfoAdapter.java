@@ -54,10 +54,17 @@ public class UserInfoAdapter extends BaseAdapter {
 
     public void clear() {
         modelList.clear();
+        notifyDataSetChanged();
     }
 
     public void remove(int position) {
         modelList.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void setList(List<UserInfoModel> userInfoModels) {
+        this.modelList.clear();
+        this.modelList.addAll(userInfoModels);
         notifyDataSetChanged();
     }
 
@@ -77,24 +84,26 @@ public class UserInfoAdapter extends BaseAdapter {
         } else {
             holder = (mViewHolder) convertView.getTag();
         }
-        holder.txtNameAge.setText(modelList.get(position).getFirstName() + ", " + modelList.get(position).getAge());
-        if (!TextUtils.isEmpty(modelList.get(position).getMeta().getSchool())) {
-            holder.txtAddress.setText(modelList.get(position).getMeta().getSchool());
-        }
-
-        if (holder.imgAvatar != null && mContext != null) {
-            if (modelList.get(position).getAvatars() != null && !modelList.get(position).getAvatars().isEmpty()) {
-                for (int i = 0; i < modelList.get(position).getAvatars().size(); i++) {
-                    if (!TextUtils.isEmpty(modelList.get(position).getAvatars().get(i).getUrl())) {
-                        Glide.with(mContext)
-                                .load(modelList.get(position).getAvatars().get(i).getUrl())
-                                .centerCrop()
-                                .into(holder.imgAvatar);
-                        break;
-                    }
-                }
+        if (position >= 0 && position < modelList.size()) {
+            holder.txtNameAge.setText(modelList.get(position).getFirstName() + ", " + modelList.get(position).getAge());
+            if (!TextUtils.isEmpty(modelList.get(position).getMeta().getSchool())) {
+                holder.txtAddress.setText(modelList.get(position).getMeta().getSchool());
             }
 
+            if (holder.imgAvatar != null && mContext != null) {
+                if (modelList.get(position).getAvatars() != null && !modelList.get(position).getAvatars().isEmpty()) {
+                    for (int i = 0; i < modelList.get(position).getAvatars().size(); i++) {
+                        if (!TextUtils.isEmpty(modelList.get(position).getAvatars().get(i).getUrl())) {
+                            Glide.with(mContext)
+                                    .load(modelList.get(position).getAvatars().get(i).getUrl())
+                                    .centerCrop()
+                                    .into(holder.imgAvatar);
+                            break;
+                        }
+                    }
+                }
+
+            }
         }
 
         return rowView;

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.siyamed.shapeimageview.CircularImageView;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +32,7 @@ import jp.stage.stagelovemaker.model.Avatar;
 import jp.stage.stagelovemaker.model.UserInfo;
 import jp.stage.stagelovemaker.model.UserInfoModel;
 import jp.stage.stagelovemaker.model.UsersPageModel;
+import jp.stage.stagelovemaker.model.UsersPageResponseModel;
 import jp.stage.stagelovemaker.network.IHttpResponse;
 import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
@@ -54,6 +56,7 @@ public class StageFragment extends BaseFragment {
     private CircularImageView ivDetail;
     List<UserInfoModel> userInfoModels;
     UsersPageModel usersPageModel;
+    Gson gson;
 
     int userId;
     int userFriend;
@@ -74,12 +77,23 @@ public class StageFragment extends BaseFragment {
         userId = Utils.getApplication(getActivity()).getId(getActivity());
         userFriend = -1;
         type = -1;
+        gson = new Gson();
     }
 
     private IHttpResponse iHttpResponse = new IHttpResponse() {
         @Override
         public void onHttpComplete(String response, int idRequest) {
-
+            switch (idRequest) {
+                case Constants.ID_LIST_PEOPLE:
+                    UsersPageResponseModel usersPageResponseModel
+                            = gson.fromJson(response, UsersPageResponseModel.class);
+                    usersPageModel = usersPageResponseModel.getUsersPage();
+                    if (usersPageModel != null && usersPageModel.getRecords() != null &&
+                            usersPageModel.getRecords().size() > 0) {
+                        updateData(Constants.ID_REFRESH);
+                    }
+                    break;
+            }
         }
 
         @Override
@@ -116,6 +130,11 @@ public class StageFragment extends BaseFragment {
         }
 
         pgbCard.setVisibility(View.VISIBLE);
+        if (usersPageModel != null) {
+            if (Integer.parseInt(usersPageModel.getCurrentPage()) == usersPageModel.getTotalPage()) {
+                updateData(Constants.ID_REFRESH);
+            }
+        }
     }
 
     @Override
@@ -130,11 +149,7 @@ public class StageFragment extends BaseFragment {
 //            pgbCard.setVisibility(View.GONE);
 //        }, 2000);
 
-        if (usersPageModel != null) {
-            if (Integer.parseInt(usersPageModel.getCurrentPage()) == usersPageModel.getTotalPage()) {
-                updateData(Constants.ID_REFRESH);
-            }
-        }
+
     }
 
     private void updateData(final int idRequest) {
@@ -148,6 +163,10 @@ public class StageFragment extends BaseFragment {
                             cardAdapter = new UserInfoAdapter(getActivity(), userInfoModels);
                             cardStack.setAdapter(cardAdapter);
                             cardAdapter.notifyDataSetChanged();
+                            pgbCard.setVisibility(View.GONE);
+                        } else {
+                            cardAdapter.clear();
+                            cardAdapter.setList(userInfoModels);
                             pgbCard.setVisibility(View.GONE);
                         }
                     }
@@ -209,7 +228,7 @@ public class StageFragment extends BaseFragment {
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reloadFragment();
+                getListPeople();
             }
         });
 
@@ -434,16 +453,16 @@ public class StageFragment extends BaseFragment {
     };
 
     private void getListPeople() {
-        int page = 1;
+        networkManager.requestApi(networkManager.getPeopleList(1), Constants.ID_LIST_PEOPLE);
     }
 
     private void setFeelings() {
-        if(userFriend >= 0 && type >=0){
+        if (userFriend >= 0 && type >= 0) {
             networkManager.requestApiNoProgress(networkManager.setFeeling(userId, userFriend, type), Constants.ID_UPDATE_FEELING);
         }
     }
 
-    private void getCurrentUser(){
+    private void getCurrentUser() {
         if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
             UserInfoModel userInfo = (UserInfoModel) cardAdapter.getItem(0);
             userFriend = userInfo.getId();

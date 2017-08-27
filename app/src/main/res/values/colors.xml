@@ -34,4 +34,6 @@
     <color name="slide_3">#5ab55d</color>
     <color name="slide_4">#ea2d6d</color>
     <color name="mostly_black">#111111</color>
+    <color name="colorLightOrange">#FBF7F6</color>
+    <color name="colorLightYellow">#F1F0EE</color>
 </resources>

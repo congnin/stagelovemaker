@@ -9,6 +9,8 @@ public final class Constants {
         //no instance
     }
 
+    public static final String ARG_CHAT_ROOMS = "Rooms";
+
     public static final String KEY_DATA = "key_data";
     public static final String KEY_DATA_TWO = "key_data_two";
     public static final String KEY_DATA_THREE = "key_data_three";
@@ -71,4 +73,6 @@ public final class Constants {
     public static final int ID_UPDATE_FEELING = 15;
     public final static int ID_CONTACT_US = 16;
     public final static int ID_DELETE_ACCOUNT = 17;
+    public final static int ID_LIST_MATCHES = 18;
+    public static final int ID_CHAT_ROOM = 19;
 }

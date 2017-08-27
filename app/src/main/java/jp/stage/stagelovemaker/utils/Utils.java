@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Environment;
@@ -19,9 +20,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -386,5 +390,45 @@ public final class Utils {
             return 1;
         }
         return 0;
+    }
+
+    public static String getShowTime(Context context, String time) {
+        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.US);
+        try {
+            Date value = simpleDateFormat.parse(time);
+            return android.text.format.DateFormat.getTimeFormat(context).format(value);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static void setImageByUrl(final Context context, final ImageView imageView,
+                                     final ProgressBar progressBar, String url) {
+        Glide.with(context)
+                .load(url)
+                .asBitmap()
+                .override(768, 768)
+                .fitCenter()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onLoadStarted(Drawable placeholder) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.placeholder));
+                    }
+
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        progressBar.setVisibility(View.GONE);
+                        imageView.setImageBitmap(resource);
+                    }
+
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+
     }
 }

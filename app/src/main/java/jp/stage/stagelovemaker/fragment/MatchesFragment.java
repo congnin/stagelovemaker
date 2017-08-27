@@ -5,16 +5,28 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import jp.stage.stagelovemaker.R;
+import jp.stage.stagelovemaker.activity.MainActivity;
+import jp.stage.stagelovemaker.adapter.ChatAdapter;
 import jp.stage.stagelovemaker.adapter.MatchesRecycleAdapter;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.base.EventDistributor;
+import jp.stage.stagelovemaker.model.UserInfoModel;
+import jp.stage.stagelovemaker.model.UsersPageModel;
+import jp.stage.stagelovemaker.model.UsersPageResponseModel;
 import jp.stage.stagelovemaker.network.IHttpResponse;
 import jp.stage.stagelovemaker.network.NetworkManager;
+import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.views.FormInputText;
 import jp.stage.stagelovemaker.views.SearchEmpty;
 import jp.stage.stagelovemaker.views.TitleBar;
@@ -32,9 +44,15 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
     FormInputText searchInput;
     SearchEmpty searchEmpty;
     NetworkManager networkManager;
+    Gson gson;
 
     protected RecyclerView recyclerViewMatches;
     protected MatchesRecycleAdapter listMatchesAdapter;
+    private List<UserInfoModel> userInfoModels;
+    private UsersPageModel usersPageModel;
+
+    private RecyclerView rcvChat;
+    private ChatAdapter chatAdapter;
 
     private boolean itemsLoaded = false;
     private boolean viewsCreated = false;
@@ -50,13 +68,14 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
     public void onAttach(Context context) {
         super.onAttach(context);
         networkManager = new NetworkManager(context, this);
+        gson = new Gson();
     }
 
     @Override
     public void onStart() {
         super.onStart();
         EventDistributor.getInstance().register(contentUpdate);
-        if(viewsCreated && itemsLoaded){
+        if (viewsCreated && itemsLoaded) {
             onFragmentLoaded();
         }
     }
@@ -79,6 +98,11 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
         resetViewState();
     }
 
+    private void resetViewState() {
+        recyclerViewMatches = null;
+        rcvChat = null;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -86,6 +110,7 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
         searchEmpty = (SearchEmpty) view.findViewById(R.id.search_empty_chat_view);
         searchInput = (FormInputText) view.findViewById(R.id.tv_search);
         recyclerViewMatches = (RecyclerView) view.findViewById(R.id.list);
+        rcvChat = (RecyclerView) view.findViewById(R.id.list_message);
         return view;
     }
 
@@ -97,6 +122,44 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
         searchInput.setDelegate(this, "");
         searchEmpty.setVisibility(View.GONE);
     }
+
+    private void onFragmentLoaded() {
+        if (listMatchesAdapter == null) {
+            MainActivity activity = (MainActivity) getActivity();
+            listMatchesAdapter = new MatchesRecycleAdapter(activity, itemAccess);
+            listMatchesAdapter.setHasStableIds(true);
+            recyclerViewMatches.setAdapter(listMatchesAdapter);
+        }
+
+        if (chatAdapter == null) {
+            chatAdapter = new ChatAdapter(getActivity(), (ArrayList<UserInfoModel>) userInfoModels);
+            chatAdapter.setHasStableIds(true);
+            rcvChat.setAdapter(chatAdapter);
+        }
+
+        if (userInfoModels == null || userInfoModels.size() == 0) {
+            recyclerViewMatches.setVisibility(View.GONE);
+            searchEmpty.setVisibility(View.VISIBLE);
+        } else {
+            searchEmpty.setVisibility(View.GONE);
+            recyclerViewMatches.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private MatchesRecycleAdapter.ItemAccess itemAccess = new MatchesRecycleAdapter.ItemAccess() {
+        @Override
+        public int getCount() {
+            return userInfoModels != null ? userInfoModels.size() : 0;
+        }
+
+        @Override
+        public UserInfoModel getItem(int position) {
+            if (userInfoModels != null && 0 <= position && position < userInfoModels.size()) {
+                return userInfoModels.get(position);
+            }
+            return null;
+        }
+    };
 
     @Override
     public void valuechange(String tag, String text) {
@@ -119,7 +182,24 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
 
     @Override
     public void onHttpComplete(String response, int idRequest) {
-
+        switch (idRequest) {
+            case Constants.ID_LIST_MATCHES:
+                UsersPageResponseModel resp = gson.fromJson(response, UsersPageResponseModel.class);
+                if (resp.getUsersPage() != null) {
+                    usersPageModel = resp.getUsersPage();
+                    if (usersPageModel != null) {
+                        userInfoModels = new ArrayList<>();
+                        if (usersPageModel.getRecords() != null) {
+                            userInfoModels.addAll(usersPageModel.getRecords());
+                            onFragmentLoaded();
+                            if (listMatchesAdapter != null) {
+                                listMatchesAdapter.notifyDataSetChanged();
+                                chatAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }
+        }
     }
 
     @Override
@@ -127,10 +207,20 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
 
     }
 
-    protected void loadMatches(){
-        if(viewsCreated && !itemsLoaded){
+    private EventDistributor.EventListener contentUpdate = new EventDistributor.EventListener() {
+        @Override
+        public void update(EventDistributor eventDistributor, Integer arg) {
+            if ((arg & EVENTS) != 0) {
+                Log.d(TAG, "arg: " + arg);
+                loadMatches();
+            }
+        }
+    };
+
+    protected void loadMatches() {
+        if (viewsCreated && !itemsLoaded) {
             recyclerViewMatches.setVisibility(View.GONE);
         }
-        networkManager
+        networkManager.requestApiNoProgress(networkManager.listMatches(1, ""), Constants.ID_LIST_MATCHES);
     }
 }

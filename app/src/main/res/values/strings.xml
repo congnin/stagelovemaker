@@ -106,6 +106,7 @@
     <string name="enter_password">Enter password</string>
     <string name="select_picture">Select Picture</string>
     <string name="account_is_deleted">Account is Deleted</string>
+    <string name="type_something">Type something</string>
     <string name="question_delete_account">If you delete your account, you will permanatly lose your profile, messages, photos.\nAre you sure you want to delete your account?</string>
     <string name="explain_smart_photos">Smart Photos continuously tests all your profile photos and picks the best one to show first.</string>
 </resources>
