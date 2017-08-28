@@ -450,11 +450,11 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
         }
         Utils.writeBooleanSharedPref(getActivity(), Constants.SHARE_REF_NOTIFICATION, true);
         Bundle bundle = new Bundle();
-        //bundle.putParcelable(Constants.KEY_DATA, userTokenModel.getUserInfo());
-        //Utils.getApplication(getActivity()).setAccessToken(userTokenModel.getTokenCode(), getActivity());
+        bundle.putParcelable(Constants.KEY_DATA, userTokenModel.getUserInfo());
+        Utils.getApplication(getActivity()).setAccessToken(userTokenModel.getTokenCode(), getActivity());
         UserPreferences.setPrefUserAccessToken(userTokenModel.getTokenCode());
         UserPreferences.setPrefUserData(userTokenModel.getUserInfo());
-        //Utils.getApplication(getActivity()).setId(userTokenModel.getUserInfo().getId(), getActivity());
+        Utils.getApplication(getActivity()).setId(userTokenModel.getUserInfo().getId(), getActivity());
         startNewActivity(MainActivity.class, bundle);
         ActivityCompat.finishAffinity(getActivity());
     }
@@ -463,20 +463,17 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
         if (getActivity() == null) {
             return;
         }
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                switch (idRequest) {
-                    case Constants.ID_SIGN_UP:
-                        Utils.getApplication(getActivity()).setAccessToken(userTokenModel.getTokenCode(), getActivity());
-                        if (signUpModel.getAvatar() != null) {
-                            uploadAvatar();
-                            break;
-                        }
-                    case Constants.ID_UPLOAD_AVATAR:
-                        setMainActivity();
+        getActivity().runOnUiThread(() -> {
+            switch (idRequest) {
+                case Constants.ID_SIGN_UP:
+                    Utils.getApplication(getActivity()).setAccessToken(userTokenModel.getTokenCode(), getActivity());
+                    if (signUpModel.getAvatar() != null) {
+                        uploadAvatar();
                         break;
-                }
+                    }
+                case Constants.ID_UPLOAD_AVATAR:
+                    setMainActivity();
+                    break;
             }
         });
     }

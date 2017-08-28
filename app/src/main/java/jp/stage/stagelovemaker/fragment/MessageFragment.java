@@ -363,7 +363,7 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             if (Build.VERSION.SDK_INT >= 24) {
-                picUri = FileProvider.getUriForFile(getContext(), "com.prostage.dental_manage.fileprovider", Utils.getOutputMediaFile(getContext()));
+                picUri = FileProvider.getUriForFile(getContext(), "jp.stage.stagelovemaker.fileprovider", Utils.getOutputMediaFile(getContext()));
             } else {
                 picUri = Uri.fromFile(Utils.getOutputMediaFile(getContext()));
             }
