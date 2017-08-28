@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import jp.stage.stagelovemaker.adapter.FeaturesPagerAdapter;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.base.CommonActivity;
 import jp.stage.stagelovemaker.base.EventDistributor;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.fragment.MessageFragment;
 import jp.stage.stagelovemaker.model.AvatarModel;
 import jp.stage.stagelovemaker.model.ErrorModel;
@@ -76,14 +78,6 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
             networkManager = new NetworkManager(this, iHttpResponse);
             viewPager.addOnPageChangeListener(this);
 
-            if (savedInstanceState != null) {
-                loginModel = savedInstanceState.getParcelable("loginModel");
-            } else {
-                Bundle bundle = getIntent().getExtras();
-                if (bundle != null) {
-                    loginModel = bundle.getParcelable(Constants.KEY_DATA);
-                }
-            }
             requestSelfProfile(true);
         } else {
             startNewActivity(LoginActivity.class, null);
@@ -103,6 +97,11 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
         EventDistributor.getInstance().unregister(contentUpdate);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     private EventDistributor.EventListener contentUpdate = new EventDistributor.EventListener() {
         @Override
         public void update(EventDistributor eventDistributor, Integer arg) {
@@ -114,7 +113,8 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
     };
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 100) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -146,13 +146,13 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
 
     }
 
-    boolean checkLogin() {
-        MyApplication app = Utils.getApplication(this);
-        return app != null && !TextUtils.isEmpty(app.getAccessToken(this));
+    private boolean checkLogin() {
+        String accessToken = UserPreferences.getPrefUserAccessToken();
+        return !TextUtils.isEmpty(accessToken);
     }
 
     public void requestSelfProfile(boolean init) {
-        int id = Utils.getApplication(this).getId(this);
+        int id = UserPreferences.getCurrentUserId();
         if (init) {
             networkManager.requestApiNoProgress(networkManager.getProfile(id), Constants.ID_SELF_INFO);
         } else {
@@ -162,7 +162,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
     }
 
     void loadDataProfile() {
-        int id = Utils.getApplication(this).getId(this);
+        int id = UserPreferences.getCurrentUserId();
         if (Utils.getLocation(this) == null) {
             GPSTracker gps = new GPSTracker(this);
             gps.getLocation();
@@ -182,7 +182,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
         MyApplication app = Utils.getApplication(this);
         if (app != null) {
             if (loginModel.getSetting() != null) {
-                app.setUnitDistance(loginModel.getSetting().getDistanceUnit(), this);
+//                app.setUnitDistance(loginModel.getSetting().getDistanceUnit(), this);
             }
         }
         final Handler handler = new Handler();
@@ -240,7 +240,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
             List<AvatarModel> listAvatar = loginModel.getAvatars();
             for (int i = 0; i < listAvatar.size(); i++) {
                 if (!TextUtils.isEmpty(listAvatar.get(i).getUrl())) {
-                    MyApplication.setMainAvatar(listAvatar.get(i).getUrl());
+//                    MyApplication.setMainAvatar(listAvatar.get(i).getUrl());
                     break;
                 }
             }

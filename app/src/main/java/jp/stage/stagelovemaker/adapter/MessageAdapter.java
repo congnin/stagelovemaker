@@ -27,6 +27,7 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 import jp.stage.stagelovemaker.R;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.model.MessageModel;
 import jp.stage.stagelovemaker.utils.Utils;
 
@@ -205,7 +206,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
         MessageModel messageModel = messageModels.get(position);
 
         int senderId = messageModel.getSender_id();
-        int id = Utils.getApplication((Activity) context).getId((Activity) context);
+        int id = UserPreferences.getCurrentUserId();
         if (!messageModel.getType().equals("image")) {
             if (senderId == id) {
                 return CHATS_SENDER;

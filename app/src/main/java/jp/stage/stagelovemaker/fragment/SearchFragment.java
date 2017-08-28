@@ -4,10 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +25,7 @@ import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.network.IHttpResponse;
 import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.AlertDialog;
@@ -50,6 +53,7 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
     SearchFragmentCallback delegate;
     GPSTracker gps;
     NetworkManager networkManager;
+    SharedPreferences prefs;
 
     public static SearchFragment newInstance() {
         Bundle args = new Bundle();
@@ -90,17 +94,26 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
         btBoost.setEnabled(false);
         btLike.setEnabled(false);
         btSuperLike.setEnabled(false);
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        prefs.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        if (!TextUtils.isEmpty(MyApplication.getMainAvatar())) {
+        if (!TextUtils.isEmpty(UserPreferences.getPrefUserAvatar(0))) {
             String linkAvatar = null;
-            linkAvatar = MyApplication.getMainAvatar();
+            linkAvatar = UserPreferences.getPrefUserAvatar(0);
             Utils.setAvatar(getContext(), ivAvatar, linkAvatar);
         }
+        prefs.registerOnSharedPreferenceChangeListener(avatarChange);
+
         getLocation();
         getContext().registerReceiver(gpsReceiver,
                 new IntentFilter("android.location.PROVIDERS_CHANGED"));
@@ -109,7 +122,7 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
     @Override
     public void onPause() {
         super.onPause();
-
+        prefs.unregisterOnSharedPreferenceChangeListener(avatarChange);
         getContext().unregisterReceiver(gpsReceiver);
     }
 
@@ -129,9 +142,9 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
                         }
                     });
                 }
-            }, 2000);
+            }, 1000);
             if (gps.canGetLocation()) {
-                int id = Utils.getApplication(getActivity()).getId(getActivity());
+                int id = UserPreferences.getCurrentUserId();
                 double latitude = gps.getLatitude();
                 double longitude = gps.getLongitude();
                 Utils.setLocation(getActivity(), latitude, longitude);
@@ -162,7 +175,7 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
         tvDescription.setText(R.string.search_people_match_you);
         if (delegate != null && bsearch) {
             final Handler handler = new Handler();
-            handler.postDelayed(() -> delegate.onSearchFinished(), 3000);
+            handler.postDelayed(() -> delegate.onSearchFinished(), 1000);
 
         }
         pulsatorLayout.setVisibility(View.VISIBLE);
@@ -184,7 +197,7 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
 
     @Override
     public void setYourLocation(Location location) {
-        int id = Utils.getApplication(getActivity()).getId(getActivity());
+        int id = UserPreferences.getCurrentUserId();
         double latitude = gps.getLatitude();
         double longitude = gps.getLongitude();
         Utils.setLocation(getActivity(), latitude, longitude);
@@ -233,4 +246,18 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
             pulsatorLayout.stop();
         }
     }
+
+    private void loadAvatar() {
+        if (!TextUtils.isEmpty(UserPreferences.getPrefUserAvatar(0))) {
+            String linkAvatar;
+            linkAvatar = UserPreferences.getPrefUserAvatar(0);
+            Utils.setAvatar(getContext(), ivAvatar, linkAvatar);
+        }
+    }
+
+    private SharedPreferences.OnSharedPreferenceChangeListener avatarChange = (sharedPreferences, key) -> {
+        if (key.equals(UserPreferences.PREF_USER_AVATAR1)) {
+            loadAvatar();
+        }
+    };
 }

@@ -18,6 +18,7 @@ import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.base.EventDistributor;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.model.DiscoverModel;
 import jp.stage.stagelovemaker.model.SettingModel;
 import jp.stage.stagelovemaker.model.UserInfoModel;
@@ -40,7 +41,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     CircleImageView ivAvatar;
 
     NetworkManager networkManager;
-    UserTokenModel userTokenModel;
+    //UserTokenModel userTokenModel;
+    UserInfoModel userInfoModel;
     Gson gson;
 
     private static final int EVENTS = EventDistributor.MY_PROFILE_CHANGE;
@@ -78,6 +80,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     };
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ivSettings = (CircularImageView) view.findViewById(R.id.iv_settings);
@@ -106,6 +114,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public void onResume() {
         super.onResume();
         EventDistributor.getInstance().register(contentUpdate);
+
     }
 
     @Override
@@ -143,7 +152,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     public void requestSelfProfile() {
-        int id = Utils.getApplication(getActivity()).getId(getActivity());
+        int id = UserPreferences.getCurrentUserId();
         networkManager.requestApiNoProgress(networkManager.getProfile(id), Constants.ID_SELF_INFO);
     }
 

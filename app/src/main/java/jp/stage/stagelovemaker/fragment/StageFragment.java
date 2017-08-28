@@ -29,6 +29,7 @@ import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.adapter.UserInfoAdapter;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.base.EventDistributor;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.model.Avatar;
 import jp.stage.stagelovemaker.model.UserInfo;
 import jp.stage.stagelovemaker.model.UserInfoModel;
@@ -75,7 +76,7 @@ public class StageFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         networkManager = new NetworkManager(context, iHttpResponse);
-        userId = Utils.getApplication(getActivity()).getId(getActivity());
+        userId = UserPreferences.getCurrentUserId();
         userFriend = -1;
         type = -1;
         gson = new Gson();

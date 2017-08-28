@@ -6,11 +6,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import jp.stage.stagelovemaker.fragment.ChatFragment;
 import jp.stage.stagelovemaker.fragment.MainStageFragment;
 import jp.stage.stagelovemaker.fragment.MatchesFragment;
 import jp.stage.stagelovemaker.fragment.ProfileFragment;
-import jp.stage.stagelovemaker.fragment.StageFragment;
 
 /**
  * Created by congn on 7/11/2017.

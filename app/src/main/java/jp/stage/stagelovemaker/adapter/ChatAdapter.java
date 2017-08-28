@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.stage.stagelovemaker.R;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.model.MessageModel;
 import jp.stage.stagelovemaker.model.UserInfoModel;
 import jp.stage.stagelovemaker.utils.Utils;
@@ -46,7 +47,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
     public ChatAdapter(Context context, ArrayList<UserInfoModel> models) {
         this.mContext = context;
         this.userInfoModels = models;
-        userId = Utils.getApplication((Activity) context).getId((Activity) context);
+        userId = UserPreferences.getCurrentUserId();
     }
 
     @Override

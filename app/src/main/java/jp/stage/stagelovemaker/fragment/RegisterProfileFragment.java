@@ -209,14 +209,12 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
             }
             case R.id.tv_gender: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setItems(genders, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        indexGender = item;
-                        gender = genders[item];
-                        tvGender.setValue(genders[item]);
-                        tvGender.setIssuseText("");
-                        validate();
-                    }
+                builder.setItems(genders, (dialog, item) -> {
+                    indexGender = item;
+                    gender = genders[item];
+                    tvGender.setValue(genders[item]);
+                    tvGender.setIssuseText("");
+                    validate();
                 });
                 AlertDialog alert = builder.create();
                 alert.show();
@@ -449,13 +447,9 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
             app.setLocation(null);
         }
         Utils.writeBooleanSharedPref(getActivity(), Constants.SHARE_REF_NOTIFICATION, true);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.KEY_DATA, userTokenModel.getUserInfo());
-        Utils.getApplication(getActivity()).setAccessToken(userTokenModel.getTokenCode(), getActivity());
         UserPreferences.setPrefUserAccessToken(userTokenModel.getTokenCode());
         UserPreferences.setPrefUserData(userTokenModel.getUserInfo());
-        Utils.getApplication(getActivity()).setId(userTokenModel.getUserInfo().getId(), getActivity());
-        startNewActivity(MainActivity.class, bundle);
+        startNewActivity(MainActivity.class, new Bundle());
         ActivityCompat.finishAffinity(getActivity());
     }
 
@@ -466,7 +460,7 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
         getActivity().runOnUiThread(() -> {
             switch (idRequest) {
                 case Constants.ID_SIGN_UP:
-                    Utils.getApplication(getActivity()).setAccessToken(userTokenModel.getTokenCode(), getActivity());
+                    UserPreferences.setPrefUserAccessToken(userTokenModel.getTokenCode());
                     if (signUpModel.getAvatar() != null) {
                         uploadAvatar();
                         break;

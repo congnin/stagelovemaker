@@ -46,6 +46,7 @@ import java.util.Date;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.base.EventDistributor;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.model.AvatarModel;
 import jp.stage.stagelovemaker.model.ErrorModel;
 import jp.stage.stagelovemaker.model.InstagramUserModel;
@@ -500,7 +501,7 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
     }
 
     void deleteImage() {
-        int id = Utils.getApplication(getActivity()).getId(getActivity());
+        int id = UserPreferences.getCurrentUserId();
         networkManager.requestApi(networkManager.deleteAvatar(id, indexChange), Constants.ID_DELETE_AVATAR);
     }
 

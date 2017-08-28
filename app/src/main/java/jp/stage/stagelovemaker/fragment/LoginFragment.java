@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,8 +17,8 @@ import com.google.gson.Gson;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.model.ErrorModel;
-import jp.stage.stagelovemaker.model.SignUpModel;
 import jp.stage.stagelovemaker.model.UserTokenModel;
 import jp.stage.stagelovemaker.network.IHttpResponse;
 import jp.stage.stagelovemaker.network.NetworkManager;
@@ -45,7 +44,6 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
 
     String username = "";
     String password = "";
-    SignUpModel signUpModel;
 
     boolean bFlagButtonNext = false;
     NetworkManager networkManager;
@@ -182,11 +180,9 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
     }
 
     private void loginSuccess(UserTokenModel model) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.KEY_DATA, model.getUserInfo());
-        Utils.getApplication(getActivity()).setAccessToken(model.getTokenCode(), getActivity());
-        Utils.getApplication(getActivity()).setId(model.getUserInfo().getId(), getActivity());
-        startNewActivity(MainActivity.class, bundle);
+        UserPreferences.setPrefUserAccessToken(model.getTokenCode());
+        UserPreferences.setPrefUserData(model.getUserInfo());
+        startNewActivity(MainActivity.class, new Bundle());
         ActivityCompat.finishAffinity(getActivity());
     }
 
@@ -211,7 +207,7 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
                     if (!TextUtils.isEmpty(errorModel.getErrorMsg())) {
                         Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_LONG).show();
                     }
-
+                    break;
             }
         }
     };

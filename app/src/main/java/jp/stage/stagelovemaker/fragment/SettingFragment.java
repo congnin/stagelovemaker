@@ -27,6 +27,7 @@ import jp.stage.stagelovemaker.activity.LoginActivity;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.activity.SplashActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.dialog.ContactUsDialog;
 import jp.stage.stagelovemaker.dialog.DeleteAccountDialog;
 import jp.stage.stagelovemaker.dialog.QuestionDialog;
@@ -149,7 +150,8 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
                     break;
                 case Constants.ID_DELETE_ACCOUNT:
                     Toast.makeText(getContext(), getString(R.string.account_is_deleted), Toast.LENGTH_LONG).show();
-                    Utils.getApplication(getActivity()).setAccessToken("", getActivity());
+
+                    UserPreferences.setPrefUserAccessToken("");
                     Bundle bundle = new Bundle();
                     startNewActivity(SplashActivity.class, bundle);
                     ActivityCompat.finishAffinity(getActivity());
@@ -446,7 +448,7 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     }
 
     private void updateSettings() {
-        int id = Utils.getApplication(getActivity()).getId(getActivity());
+        int id = UserPreferences.getCurrentUserId();
         networkManager.requestApi(networkManager.updateSettings(id, settingModel, discoverModel), Constants.ID_UPDATE_SETTING);
     }
 
@@ -562,7 +564,8 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
                 Toast.makeText(getContext(), getString(R.string.you_are_loggout), Toast.LENGTH_LONG).show();
                 MyApplication app = Utils.getApplication(getActivity());
                 if (app != null) {
-                    app.setAccessToken("", getActivity());
+                    UserPreferences.setPrefUserAccessToken("");
+
                     app.setLocation(null);
                 }
                 startNewActivity(LoginActivity.class, null);
@@ -582,7 +585,7 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
     private DeleteAccountDialog.Callback callbackDelete = new DeleteAccountDialog.Callback() {
         @Override
         public void onAccountDeleted(String username, String password) {
-            int id = Utils.getApplication(getActivity()).getId(getActivity());
+            int id = UserPreferences.getCurrentUserId();
             networkManager.requestApi(networkManager.deleteUser(id, username, password), Constants.ID_DELETE_ACCOUNT);
         }
     };

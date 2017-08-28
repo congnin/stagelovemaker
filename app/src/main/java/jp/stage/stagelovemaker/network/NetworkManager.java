@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.model.DiscoverModel;
 import jp.stage.stagelovemaker.model.SettingModel;
 import jp.stage.stagelovemaker.model.SignUpModel;
@@ -69,7 +70,7 @@ public class NetworkManager {
                     MyApplication app = Utils.getApplication(activity);
                     String accessToken = "";
                     if (app != null) {
-                        accessToken = app.getAccessToken(activity);
+                        accessToken = UserPreferences.getPrefUserAccessToken();
                         if (TextUtils.isEmpty(accessToken)) {
                             accessToken = "";
                         }

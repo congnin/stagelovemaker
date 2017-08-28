@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.utils.Utils;
 
 /**
@@ -40,7 +41,7 @@ public class SplashActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             MyApplication app = Utils.getApplication(SplashActivity.this);
-                            if (app != null && !TextUtils.isEmpty(app.getAccessToken(SplashActivity.this))) {
+                            if (app != null && !TextUtils.isEmpty(UserPreferences.getPrefUserAccessToken())) {
                                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 ActivityCompat.finishAffinity(SplashActivity.this);
