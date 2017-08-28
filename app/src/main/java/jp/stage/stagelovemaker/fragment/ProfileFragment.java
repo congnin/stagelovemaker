@@ -41,9 +41,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     CircleImageView ivAvatar;
 
     NetworkManager networkManager;
-    //UserTokenModel userTokenModel;
+    UserTokenModel userTokenModel;
     UserInfoModel userInfoModel;
     Gson gson;
+    MainActivity mainActivity;
 
     private static final int EVENTS = EventDistributor.MY_PROFILE_CHANGE;
 
@@ -59,6 +60,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         super.onAttach(context);
         networkManager = new NetworkManager(getActivity(), iHttpResponse);
         gson = new Gson();
+        mainActivity = (MainActivity) getActivity();
     }
 
     private IHttpResponse iHttpResponse = new IHttpResponse() {
@@ -68,6 +70,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 case Constants.ID_SELF_INFO:
                     userTokenModel = gson.fromJson(response, UserTokenModel.class);
                     if (userTokenModel != null) {
+                        userInfoModel = userTokenModel.getUserInfo();
                         handelResultAPI(idRequest);
                     }
             }
@@ -82,7 +85,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onStart() {
         super.onStart();
-
     }
 
     @Override
@@ -103,18 +105,27 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         ivSettings.setOnClickListener(this);
         ivEditProfile.setOnClickListener(this);
 
-        if (userTokenModel != null) {
-            updateUserInfo();
-        } else {
-            requestSelfProfile();
-        }
+        loadData(true);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         EventDistributor.getInstance().register(contentUpdate);
+    }
 
+    private void loadData(boolean init) {
+        userInfoModel = mainActivity.getLoginModel();
+        if (init) {
+            userInfoModel = mainActivity.getLoginModel();
+            if (userInfoModel != null) {
+                updateUserInfo();
+            } else {
+                requestSelfProfile();
+            }
+        } else {
+            requestSelfProfile();
+        }
     }
 
     @Override
@@ -127,7 +138,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         @Override
         public void update(EventDistributor eventDistributor, Integer arg) {
             if ((arg & EVENTS) != 0) {
-                requestSelfProfile();
+                loadData(false);
             }
         }
     };
@@ -136,17 +147,16 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_settings:
-                if (userTokenModel != null && userTokenModel.getUserInfo() != null
-                        && userTokenModel.getUserInfo().getSetting() != null) {
-                    SettingModel settingModel = userTokenModel.getUserInfo().getSetting();
-                    DiscoverModel discoverModel = userTokenModel.getUserInfo().getDiscover();
+                if (userInfoModel != null && userInfoModel.getSetting() != null) {
+                    SettingModel settingModel = userInfoModel.getSetting();
+                    DiscoverModel discoverModel = userInfoModel.getDiscover();
                     SettingFragment settingFragment = SettingFragment.newInstance(settingModel, discoverModel);
                     settingFragment.setCallback(settingCallback);
                     add(settingFragment, SettingFragment.TAG, true, true, R.id.flContainer);
                 }
                 break;
             case R.id.iv_edit:
-                EditProfileFragment editProfileFragment = EditProfileFragment.newInstance(userTokenModel.getUserInfo());
+                EditProfileFragment editProfileFragment = EditProfileFragment.newInstance(userInfoModel);
                 add(editProfileFragment, EditProfileFragment.TAG, true, true, R.id.flContainer);
         }
     }
@@ -170,7 +180,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void updateUserInfo() {
-        UserInfoModel userInfoModel = userTokenModel.getUserInfo();
         if (!TextUtils.isEmpty(userInfoModel.getFirstName())) {
             if (userInfoModel.getAge() != null) {
                 tvFormattedName.setText(userInfoModel.getFirstName() + ", " + userInfoModel.getAge());

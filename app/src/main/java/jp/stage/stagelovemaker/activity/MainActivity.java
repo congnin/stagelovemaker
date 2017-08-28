@@ -202,27 +202,17 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
                     UserTokenModel model = gson.fromJson(response, UserTokenModel.class);
                     if (model != null) {
                         loginModel = model.getUserInfo();
-                        setAvatar();
+                        UserPreferences.setPrefUserData(loginModel);
                         loadDataProfile();
                     }
                     break;
                 case Constants.ID_UPDATE_USER:
                     UserTokenModel update = gson.fromJson(response, UserTokenModel.class);
                     if (update != null) {
-                        setAvatar();
+                        UserPreferences.setPrefUserData(loginModel);
                         loginModel = update.getUserInfo();
                     }
                     break;
-//                case Constants.ID_CHAT_ROOM:
-//                    RoomResponseModel roomResponseModel = gson.fromJson(response, RoomResponseModel.class);
-//                    if(roomResponseModel != null){
-//                        InfoRoomModel infoRoomModel = roomResponseModel.getInfoRoom();
-//                        runOnUiThread(() -> {
-//                            MessageFragment messageFragment = MessageFragment.newInstance(infoRoomModel);
-//                            add(messageFragment, MessageFragment.TAG, true, true, R.id.flContainer);
-//                        });
-//                    }
-//                    break;
             }
         }
 
@@ -234,18 +224,6 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
 //            }
         }
     };
-
-    private void setAvatar() {
-        if (loginModel != null && loginModel.getAvatars() != null && !loginModel.getAvatars().isEmpty()) {
-            List<AvatarModel> listAvatar = loginModel.getAvatars();
-            for (int i = 0; i < listAvatar.size(); i++) {
-                if (!TextUtils.isEmpty(listAvatar.get(i).getUrl())) {
-//                    MyApplication.setMainAvatar(listAvatar.get(i).getUrl());
-                    break;
-                }
-            }
-        }
-    }
 
     public void getChatRoom(UserInfoModel receiver) {
         MessageFragment messageFragment = MessageFragment.newInstance(receiver);

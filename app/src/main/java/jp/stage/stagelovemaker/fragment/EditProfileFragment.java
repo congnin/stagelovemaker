@@ -233,10 +233,15 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
         titleBar.setCallback(this);
 
         tvFirstName.renderDara(getString(R.string.first_name), false);
+        tvFirstName.setTitleInputText(getString(R.string.first_name));
         tvLastName.renderDara(getString(R.string.last_name), false);
+        tvLastName.setTitleInputText(getString(R.string.last_name));
         tvAbout.renderDara(getString(R.string.about_me), false);
+        tvAbout.setTitleInputText(getString(R.string.about_me));
         tvCurrentWork.renderDara(getString(R.string.current_work), false);
+        tvCurrentWork.setTitleInputText(getString(R.string.current_work));
         tvSchool.renderDara(getString(R.string.school), false);
+        tvSchool.setTitleInputText(getString(R.string.school));
         tvFirstName.setDelegate(this, Constants.TAG_CONTROL_INPUT_FIRSTNAME);
         tvLastName.setDelegate(this, Constants.TAG_CONTROL_INPUT_LASTNAME);
         tvAbout.setDelegate(this, Constants.TAG_CONTROL_INPUT_ABOUT_ME);

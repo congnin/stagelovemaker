@@ -51,6 +51,7 @@
     <string name="distance_unit">Distance unit</string>
     <string name="mi">Mi.</string>
     <string name="km">Km.</string>
+    <string name="profile">PROFILE</string>
     <string name="show_me_on_tinder">Show me on Tinder</string>
     <string name="notifications">Notifications</string>
     <string name="new_matches">New Matches</string>

@@ -19,7 +19,7 @@
         android:id="@+id/pulsator"
         android:layout_width="match_parent"
         android:layout_height="666dp"
-        android:layout_marginTop="-100dp"
+        android:layout_marginTop="-211dp"
         app:pulse_color="@color/light_red"
         app:pulse_count="4"
         app:pulse_duration="2500"
@@ -29,13 +29,13 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar_user_img"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="@dimen/size_avatar"
+        android:layout_height="@dimen/size_avatar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="130dp"
+        android:layout_marginTop="@dimen/margin_top_avatar_pals"
         app:civ_border_width="1dp"
         app:civ_border_color="@color/light_red"
-        android:src="@drawable/toto" />
+        android:src="@drawable/avatar" />
 
     <TextView
         android:id="@+id/des_search_txt"

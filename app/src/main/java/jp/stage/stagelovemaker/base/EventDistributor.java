@@ -17,6 +17,7 @@ public class EventDistributor extends Observable {
 
     public static final int MY_PROFILE_CHANGE = 1;
     public static final int MATCH_CHANGE = 2;
+    public static final int MY_SETTING_CHANGE = 3;
 
     private Handler handler;
     private AbstractQueue<Integer> events;
@@ -75,6 +76,10 @@ public class EventDistributor extends Observable {
 
     public void sendListMatchUpdateBroadcast() {
         addEvent(MATCH_CHANGE);
+    }
+
+    public void sendMySettingUpdateBroadcast() {
+        addEvent(MY_SETTING_CHANGE);
     }
 
     public static abstract class EventListener implements Observer {

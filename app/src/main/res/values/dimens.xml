@@ -11,4 +11,6 @@
     <dimen name="padding_interest_button">5dp</dimen>
     <dimen name="margin_top_title_bar">-1.8dp</dimen>
     <dimen name="size_edittext">13sp</dimen>
+    <dimen name="size_avatar">100dp</dimen>
+    <dimen name="margin_top_avatar_pals">72dp</dimen>
 </resources>

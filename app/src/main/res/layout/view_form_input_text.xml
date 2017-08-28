@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:text="@string/last_name"
             android:textColor="@color/medium_dark_gray"
-            android:textSize="11dp"
+            android:textSize="13sp"
             android:visibility="gone" />
 
         <jp.stage.stagelovemaker.views.ExtendedEditText

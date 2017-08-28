@@ -150,8 +150,7 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
                     break;
                 case Constants.ID_DELETE_ACCOUNT:
                     Toast.makeText(getContext(), getString(R.string.account_is_deleted), Toast.LENGTH_LONG).show();
-
-                    UserPreferences.setPrefUserAccessToken("");
+                    UserPreferences.clear();
                     Bundle bundle = new Bundle();
                     startNewActivity(SplashActivity.class, bundle);
                     ActivityCompat.finishAffinity(getActivity());
@@ -161,19 +160,11 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
 
         @Override
         public void onHttpError(String response, int idRequest, int errorCode) {
-            switch (idRequest) {
-                case Constants.ID_UPDATE_SETTING:
-                    ErrorModel errorModel = gson.fromJson(response, ErrorModel.class);
-                    if (errorModel != null && !TextUtils.isEmpty(errorModel.getErrorMsg())) {
-                        Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_LONG).show();
-                    }
-                    break;
-                case Constants.ID_DELETE_ACCOUNT:
-                    ErrorModel model = gson.fromJson(response, ErrorModel.class);
-                    if (model != null && !TextUtils.isEmpty(model.getErrorMsg())) {
-                        Toast.makeText(getActivity(), model.getErrorMsg(), Toast.LENGTH_LONG).show();
-                    }
-                    break;
+            if(!TextUtils.isEmpty(response)){
+                ErrorModel errorModel = gson.fromJson(response, ErrorModel.class);
+                if (errorModel != null && !TextUtils.isEmpty(errorModel.getErrorMsg())) {
+                    Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_LONG).show();
+                }
             }
         }
     };
@@ -311,23 +302,17 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         btKm.setOnClickListener(this);
         layoutHelpSupport.setOnClickListener(this);
 
-        switchMan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!switchMan.isChecked()) {
-                    if (!switchWoman.isChecked()) {
-                        switchWoman.setChecked(true);
-                    }
+        switchMan.setOnClickListener(v -> {
+            if (!switchMan.isChecked()) {
+                if (!switchWoman.isChecked()) {
+                    switchWoman.setChecked(true);
                 }
             }
         });
-        switchWoman.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!switchWoman.isChecked()) {
-                    if (!switchMan.isChecked()) {
-                        switchMan.setChecked(true);
-                    }
+        switchWoman.setOnClickListener(v -> {
+            if (!switchWoman.isChecked()) {
+                if (!switchMan.isChecked()) {
+                    switchMan.setChecked(true);
                 }
             }
         });
@@ -557,20 +542,16 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         button2.setTextColor(ContextCompat.getColor(getContext(), R.color.gray37));
     }
 
-    public QuestionDialog.QuestionRequestDialogDelegate questionLogout = new QuestionDialog.QuestionRequestDialogDelegate() {
-        @Override
-        public void clickAllow(Boolean bAllow, String type) {
-            if (bAllow) {
-                Toast.makeText(getContext(), getString(R.string.you_are_loggout), Toast.LENGTH_LONG).show();
-                MyApplication app = Utils.getApplication(getActivity());
-                if (app != null) {
-                    UserPreferences.setPrefUserAccessToken("");
-
-                    app.setLocation(null);
-                }
-                startNewActivity(LoginActivity.class, null);
-                ActivityCompat.finishAffinity(getActivity());
+    public QuestionDialog.QuestionRequestDialogDelegate questionLogout = (bAllow, type) -> {
+        if (bAllow) {
+            Toast.makeText(getContext(), getString(R.string.you_are_loggout), Toast.LENGTH_LONG).show();
+            MyApplication app = Utils.getApplication(getActivity());
+            if (app != null) {
+                UserPreferences.clear();
+                app.setLocation(null);
             }
+            startNewActivity(LoginActivity.class, null);
+            ActivityCompat.finishAffinity(getActivity());
         }
     };
 

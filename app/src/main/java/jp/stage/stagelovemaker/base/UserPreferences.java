@@ -166,7 +166,7 @@ public class UserPreferences {
         return prefs.getString(PREF_USER_DATA, null);
     }
 
-    public static void setPrefUserData(UserInfoModel userInfoModel, String userResponse) {
+    public static void setPrefUserData(UserInfoModel userInfoModel) {
         setCurrentUserId(userInfoModel.getId());
         ArrayList<String> lstAvatar = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
@@ -209,7 +209,11 @@ public class UserPreferences {
 
         setPrefDistanceUnit(userInfoModel.getSetting().getDistanceUnit());
         prefs.edit()
-                .putString(PREF_USER_DATA, userResponse)
+                .putString(PREF_USER_DATA, userInfoModel.toString())
                 .apply();
+    }
+
+    public static void clear(){
+        prefs.edit().clear().apply();
     }
 }

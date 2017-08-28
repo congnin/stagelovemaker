@@ -117,7 +117,7 @@ public class FormInputText extends RelativeLayout implements View.OnFocusChangeL
     public void setTitleInputText(String text) {
         titleInputText.setVisibility(VISIBLE);
         titleInputText.setText(text);
-        editText.setTextSize(11);
+        //editText.setTextSize(11);
     }
 
     public void setIssuseText(String issuseText) {
