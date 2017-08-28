@@ -2,7 +2,6 @@ package jp.stage.stagelovemaker.fragment;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,9 +23,9 @@ import com.google.gson.Gson;
 import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.LoginActivity;
-import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.activity.SplashActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.base.EventDistributor;
 import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.dialog.ContactUsDialog;
 import jp.stage.stagelovemaker.dialog.DeleteAccountDialog;
@@ -38,8 +37,6 @@ import jp.stage.stagelovemaker.network.IHttpResponse;
 import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
-import jp.stage.stagelovemaker.views.Button;
-import jp.stage.stagelovemaker.views.LoginActionBar;
 import jp.stage.stagelovemaker.views.TitleBar;
 
 /**
@@ -49,6 +46,7 @@ import jp.stage.stagelovemaker.views.TitleBar;
 public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCallback,
         SeekBar.OnSeekBarChangeListener, RangeBar.OnRangeBarChangeListener, View.OnClickListener {
     public static final String TAG = "SettingFragment";
+
     TitleBar titleBar;
 
     TextView tvShowMe;
@@ -145,6 +143,7 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
                 case Constants.ID_UPDATE_SETTING:
                     if (callback != null) {
                         callback.onSettingChanged();
+                        EventDistributor.getInstance().sendMySettingUpdateBroadcast();
                         getActivity().onBackPressed();
                     }
                     break;

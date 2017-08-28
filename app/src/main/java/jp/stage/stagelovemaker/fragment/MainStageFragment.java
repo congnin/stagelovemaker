@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.base.EventDistributor;
 import jp.stage.stagelovemaker.model.UsersPageModel;
 import jp.stage.stagelovemaker.model.UsersPageResponseModel;
 import jp.stage.stagelovemaker.network.IHttpResponse;
@@ -23,7 +24,7 @@ import jp.stage.stagelovemaker.utils.Constants;
 
 public class MainStageFragment extends BaseFragment implements SearchFragment.SearchFragmentCallback {
     public static final String TAG = "MainStageFragment";
-
+    private static final int EVENTS = EventDistributor.MY_SETTING_CHANGE;
     NetworkManager networkManager;
     StageFragment stageFragment;
     SearchFragment searchFragment;
@@ -126,6 +127,18 @@ public class MainStageFragment extends BaseFragment implements SearchFragment.Se
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        EventDistributor.getInstance().register(settingUpdate);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventDistributor.getInstance().unregister(settingUpdate);
+    }
+
+    @Override
     public void onSearchFinished() {
 //        StageFragment stageFragment = StageFragment.newInstance();
 //        replace(stageFragment, StageFragment.TAG, false, false, R.id.flPals);
@@ -145,4 +158,23 @@ public class MainStageFragment extends BaseFragment implements SearchFragment.Se
     private void getListPeople() {
         networkManager.requestApiNoProgress(networkManager.getPeopleList(1), Constants.ID_LIST_PEOPLE);
     }
+
+    private void loadSearchFragment(){
+        searchFragment = (SearchFragment) getActivity().getSupportFragmentManager()
+                .findFragmentByTag(SearchFragment.TAG);
+        if (searchFragment == null) {
+            searchFragment = SearchFragment.newInstance();
+        }
+        searchFragment.setCallback(this);
+        replace(searchFragment, SearchFragment.TAG, false, false, R.id.flPals);
+    }
+
+    private EventDistributor.EventListener settingUpdate = new EventDistributor.EventListener() {
+        @Override
+        public void update(EventDistributor eventDistributor, Integer arg) {
+            if ((arg & EVENTS) != 0) {
+                loadSearchFragment();
+            }
+        }
+    };
 }

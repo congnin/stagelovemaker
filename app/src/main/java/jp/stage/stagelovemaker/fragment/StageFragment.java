@@ -98,7 +98,7 @@ public class StageFragment extends BaseFragment {
                 case Constants.ID_UPDATE_FEELING:
                     getActivity().runOnUiThread(() -> {
                         final Handler handler = new Handler();
-                        handler.postDelayed(() -> EventDistributor.getInstance().sendListMatchUpdateBroadcast(), 200);
+//                        handler.postDelayed(() -> EventDistributor.getInstance().sendListMatchUpdateBroadcast(), 200);
                     });
                     break;
             }
