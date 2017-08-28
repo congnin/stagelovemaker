@@ -80,15 +80,12 @@ public class MainStageFragment extends BaseFragment implements SearchFragment.Se
 
     private void updateData() {
         if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (searchFragment != null) {
-                        searchFragment.stopTimer();
-                    }
-                    stageFragment = StageFragment.newInstance(usersPageModel);
-                    replace(stageFragment, StageFragment.TAG, false, false, R.id.flPals);
+            getActivity().runOnUiThread(() -> {
+                if (searchFragment != null) {
+                    searchFragment.stopTimer();
                 }
+                stageFragment = StageFragment.newInstance(usersPageModel);
+                replace(stageFragment, StageFragment.TAG, false, false, R.id.flPals);
             });
         }
     }
@@ -140,8 +137,6 @@ public class MainStageFragment extends BaseFragment implements SearchFragment.Se
 
     @Override
     public void onSearchFinished() {
-//        StageFragment stageFragment = StageFragment.newInstance();
-//        replace(stageFragment, StageFragment.TAG, false, false, R.id.flPals);
         getListPeople();
     }
 

@@ -1,5 +1,6 @@
 package jp.stage.stagelovemaker.fragment;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -19,9 +20,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import at.markushi.ui.CircleButton;
+import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.adapter.InstagramImagePageAdapter;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.model.InstagramPhoto;
 import jp.stage.stagelovemaker.model.UserInfo;
 import jp.stage.stagelovemaker.model.UserInfoModel;
@@ -44,6 +47,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
     TextView tvWork;
     TextView tvSchool;
     TextView tvAbout;
+    TextView tvDistance;
 
     CircularImageView ivBack;
     CircleButton ivNope;
@@ -63,7 +67,6 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
     int widthButton;
 
     public static DetailProfileFragment newInstance(UserInfoModel user) {
-
         Bundle args = new Bundle();
         args.putParcelable("user", user);
         DetailProfileFragment fragment = new DetailProfileFragment();
@@ -90,7 +93,8 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_user, container, false);
         userImageSlide = (UserImageSlide) view.findViewById(R.id.user_image_slide);
         tvName = (TextView) view.findViewById(R.id.tv_name);
@@ -98,6 +102,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
         tvWork = (TextView) view.findViewById(R.id.tv_work);
         tvSchool = (TextView) view.findViewById(R.id.tv_school);
         tvAbout = (TextView) view.findViewById(R.id.tv_about);
+        tvDistance = (TextView) view.findViewById(R.id.tv_location);
         ivBack = (CircularImageView) view.findViewById(R.id.iv_back);
         ivNope = (CircleButton) view.findViewById(R.id.circleButtonClose);
         ivLike = (CircleButton) view.findViewById(R.id.circleButtonHeart);
@@ -135,6 +140,25 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
             tvAbout.setText(userInfoModel.getMeta().getAboutMe());
         }
 
+        if (Utils.getApplication(getActivity()).getLocation() != null) {
+            Location myLocation = Utils.getApplication(getActivity()).getLocation();
+            double myLat = myLocation.getLatitude();
+            double myLng = myLocation.getLongitude();
+
+            double otherLat = userInfoModel.getLatitude();
+            double otherLng = userInfoModel.getLongitude();
+
+            double kmDistance = Utils.distance(myLat, myLng, otherLat, otherLng);
+
+            if (UserPreferences.getPrefDistanceUnit().equals(Constants.MILE)) {
+                kmDistance *= 0.621371;
+                tvDistance.setText(String.valueOf(Utils.roundDistance(kmDistance)) + " mile.");
+            }else{
+                tvDistance.setText(String.valueOf(Utils.roundDistance(kmDistance)) + " km.");
+            }
+
+        }
+
         ivBack.setOnClickListener(this);
         ivNope.setOnClickListener(this);
         ivLike.setOnClickListener(this);
@@ -148,7 +172,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
                 instagramLayout.setVisibility(View.GONE);
             }
         } else {
-        loadInstagramImage();
+            loadInstagramImage();
         }
 
     }

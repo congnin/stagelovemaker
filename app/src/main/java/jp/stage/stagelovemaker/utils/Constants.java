@@ -22,7 +22,7 @@ public final class Constants {
     public static final int REQUEST_IMAGE_GALLERY = 0;
 
     public static final String KM = "km";
-    public static final String MILE = "mi";
+    public static final String MILE = "mile";
 
     public static final String TAG_CONTROL_INPUT_USERNAME= "ControlInputUsername";
     public static final String TAG_CONTROL_INPUT_PASSWORD = "ControlInputPass";

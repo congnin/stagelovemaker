@@ -26,6 +26,7 @@ import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.base.UserPreferences;
+import jp.stage.stagelovemaker.model.UsersPageModel;
 import jp.stage.stagelovemaker.network.IHttpResponse;
 import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.AlertDialog;
@@ -95,23 +96,13 @@ public class SearchFragment extends BaseFragment implements AlertDialog.AlertDia
         btLike.setEnabled(false);
         btSuperLike.setEnabled(false);
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        prefs.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-            }
-        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        if (!TextUtils.isEmpty(UserPreferences.getPrefUserAvatar(0))) {
-            String linkAvatar = null;
-            linkAvatar = UserPreferences.getPrefUserAvatar(0);
-            Utils.setAvatar(getContext(), ivAvatar, linkAvatar);
-        }
+        loadAvatar();
         prefs.registerOnSharedPreferenceChangeListener(avatarChange);
 
         getLocation();

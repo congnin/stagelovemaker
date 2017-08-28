@@ -120,7 +120,7 @@ public class StageFragment extends BaseFragment {
         btnStar = (CircleButton) view.findViewById(R.id.circleButtonStar);
         cardStack = (SwipeDeck) view.findViewById(R.id.swipe_deck);
         pgbCard = (ProgressBar) view.findViewById(R.id.pgbCard);
-        pgbCard.setVisibility(View.VISIBLE);
+
         ivDetail = (CircularImageView) view.findViewById(R.id.iv_detail);
         return view;
     }
@@ -129,54 +129,34 @@ public class StageFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         addEvents();
-        if (savedInstanceState != null) {
-            usersPageModel = savedInstanceState.getParcelable("usersPageModel");
-        }
 
-        if (usersPageModel == null) {
-            usersPageModel = getArguments().getParcelable(Constants.KEY_DATA);
-        }
+        usersPageModel = getArguments().getParcelable(Constants.KEY_DATA);
 
         pgbCard.setVisibility(View.VISIBLE);
         if (usersPageModel != null) {
-            if (Integer.parseInt(usersPageModel.getCurrentPage()) == usersPageModel.getTotalPage()) {
-                updateData(Constants.ID_REFRESH);
-            }
+            updateData(Constants.ID_REFRESH);
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        final Handler handler = new Handler();
-//        handler.postDelayed(() -> {
-//            getListUserInfo();
-//            cardAdapter = new UserInfoAdapter(getActivity(), userInfos);
-//            cardStack.setAdapter(cardAdapter);
-//            cardAdapter.notifyDataSetChanged();
-//            pgbCard.setVisibility(View.GONE);
-//        }, 2000);
-
-
     }
 
     private void updateData(final int idRequest) {
         if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    userInfoModels = usersPageModel.getRecords();
-                    if (userInfoModels != null) {
-                        if (cardAdapter == null) {
-                            cardAdapter = new UserInfoAdapter(getActivity(), userInfoModels);
-                            cardStack.setAdapter(cardAdapter);
-                            cardAdapter.notifyDataSetChanged();
-                            pgbCard.setVisibility(View.GONE);
-                        } else {
-                            cardAdapter.clear();
-                            cardAdapter.setList(userInfoModels);
-                            pgbCard.setVisibility(View.GONE);
-                        }
+            getActivity().runOnUiThread(() -> {
+                userInfoModels = usersPageModel.getRecords();
+                if (userInfoModels != null) {
+                    if (cardAdapter == null) {
+                        cardAdapter = new UserInfoAdapter(getActivity(), userInfoModels);
+                        cardStack.setAdapter(cardAdapter);
+                        cardAdapter.notifyDataSetChanged();
+                        pgbCard.setVisibility(View.GONE);
+                    } else {
+                        cardAdapter.clear();
+                        cardAdapter.setList(userInfoModels);
+                        pgbCard.setVisibility(View.GONE);
                     }
                 }
             });
@@ -233,78 +213,56 @@ public class StageFragment extends BaseFragment {
         cardStack.setLeftImage(R.id.item_swipe_left_indicator);
         cardStack.setRightImage(R.id.item_swipe_right_indicator);
 
-        btnRefresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getListPeople();
+        btnRefresh.setOnClickListener(v -> getListPeople());
+
+        btnClose.setOnClickListener(v -> {
+            if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                getCurrentUser();
+                type = 0;
+                setFeelings();
+                cardStack.swipeTopCardLeft(200);
+                cardAdapter.remove(0);
+                cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
             }
         });
 
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
-                    getCurrentUser();
-                    type = 0;
-                    setFeelings();
-                    cardStack.swipeTopCardLeft(200);
-                    cardAdapter.remove(0);
-                    cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
-                }
+        btnHeart.setOnClickListener(v -> {
+            if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                getCurrentUser();
+                type = 1;
+                setFeelings();
+                cardStack.swipeTopCardRight(200);
+                cardAdapter.remove(0);
+                cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
             }
         });
 
-        btnHeart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
-                    getCurrentUser();
-                    type = 1;
-                    setFeelings();
-                    cardStack.swipeTopCardRight(200);
-                    cardAdapter.remove(0);
-                    cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
-                }
+        btnStar.setOnClickListener(v -> {
+            if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
+                getCurrentUser();
+                type = 10;
+                setFeelings();
+                cardStack.swipeTopCardTop(200);//200 time
+                cardAdapter.remove(0);
+                cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
             }
         });
 
-        btnStar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cardAdapter.getCount() > 0 && cardStack.getAdapterIndex() > 0) {
-                    getCurrentUser();
-                    type = 10;
-                    setFeelings();
-                    cardStack.swipeTopCardTop(200);//200 time
-                    cardAdapter.remove(0);
-                    cardStack.setAdapterIndex(cardStack.getAdapterIndex() - 1);
-                }
+        cardStack.setOnClickListener(v -> {
+            for (UserInfo userInfo : userInfos) {
+                Log.e(TAG, "onClick: " + userInfo.getFirstName());
             }
         });
 
-        cardStack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int index = cardStack.getAdapterIndex();
-                for (UserInfo userInfo : userInfos) {
-                    Log.e(TAG, "onClick: " + userInfo.getFirstName());
-                }
+        ivDetail.setOnClickListener(v -> {
+            long index = cardStack.getTopCardItemId();
+            if (index >= 0 && cardStack.getAdapterIndex() > 0) {
+                UserInfoModel userInfo = (UserInfoModel) cardAdapter.getItem(0);
+                DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(userInfo);
+                detailProfileFragment.setCallback(callback);
+                replace(detailProfileFragment, DetailProfileFragment.TAG, true, true);
             }
-        });
 
-        ivDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                long index = cardStack.getTopCardItemId();
-                //Toast.makeText(getActivity(), "" + index, Toast.LENGTH_SHORT).show();
-                if (index >= 0 && cardStack.getAdapterIndex() > 0) {
-                    UserInfoModel userInfo = (UserInfoModel) cardAdapter.getItem(0);
-                    DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(userInfo);
-                    detailProfileFragment.setCallback(callback);
-                    replace(detailProfileFragment, DetailProfileFragment.TAG, true, true);
-                }
-
-            }
         });
     }
 
@@ -412,11 +370,6 @@ public class StageFragment extends BaseFragment {
         lsAvatar5.add("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-9/18582227_845772922241628_2639825437519428745_n.jpg?oh=353a0fe10debb5ae6f574163ae5738df&oe=5A2C2B85");
         user5.setAvatars(lsAvatar5);
         userInfos.add(user5);
-    }
-
-    private void reloadFragment() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.detach(this).attach(this).commit();
     }
 
     private DetailProfileFragment.DetailProfileCallback callback = new DetailProfileFragment.DetailProfileCallback() {
