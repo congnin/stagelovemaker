@@ -13,6 +13,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -101,6 +104,21 @@ public class MessageAdapter extends RecyclerView.Adapter {
             if (!TextUtils.isEmpty(model.getContent())) {
                 holder.tvMessageSender.setText(model.getContent());
             }
+
+//            if (model.getAvatars() != null && !item.getAvatars().isEmpty()) {
+//                for (int i = 0; i < item.getAvatars().size(); i++) {
+//                    if (!TextUtils.isEmpty(item.getAvatars().get(i).getUrl())) {
+//                        String url = item.getAvatars().get(i).getUrl();
+//                        Glide.with(mainActivity.get())
+//                                .load(url)
+//                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                                .fitCenter()
+//                                .dontAnimate()
+//                                .into(holder.ivAvatar);
+//                        break;
+//                    }
+//                }
+//            }
 
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder
                     .senderLayout.getLayoutParams();
@@ -238,6 +256,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
     }
 
     public static class SenderHolder extends RecyclerView.ViewHolder {
+        CircleImageView ivAvatarSender;
         EmojiconTextView tvMessageSender;
         TextView tvTimeSender;
         TextView tvHeaderTime;
@@ -245,6 +264,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
         public SenderHolder(View view) {
             super(view);
+            ivAvatarSender = (CircleImageView) view.findViewById(R.id.iv_sender_item_avatar);
             tvMessageSender = (EmojiconTextView) view.findViewById(R.id.tv_sender_content_chat);
             tvTimeSender = (TextView) view.findViewById(R.id.tv_sender_time_chat);
             tvHeaderTime = (TextView) view.findViewById(R.id.tv_item_time);
@@ -254,6 +274,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
     public static class ImageReceiverHolder extends RecyclerView.ViewHolder {
         TextView tvHeaderTime;
+        CircleImageView ivAvatarReceiver;
         TextView tvTimeReceiver;
         ImageView ivPhoto;
         ImageView ivAvatar;
@@ -262,6 +283,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
         public ImageReceiverHolder(View view) {
             super(view);
+            ivAvatarReceiver = (CircleImageView) view.findViewById(R.id.iv_receiver_item_avatar);
             tvHeaderTime = (TextView) view.findViewById(R.id.tv_item_time);
             tvTimeReceiver = (TextView) view.findViewById(R.id.tv_receiver_time_chat);
             ivPhoto = (ImageView) view.findViewById(R.id.iv_receiver_image);
@@ -273,6 +295,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
     public static class ImageSenderHolder extends RecyclerView.ViewHolder {
         TextView tvHeaderTime;
+        CircleImageView ivAvatarSender;
         TextView tvTimeSender;
         ImageView ivPhoto;
         LinearLayout senderLayout;
@@ -280,6 +303,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
         public ImageSenderHolder(View view) {
             super(view);
+            ivAvatarSender = (CircleImageView) view.findViewById(R.id.iv_sender_item_avatar);
             tvHeaderTime = (TextView) view.findViewById(R.id.tv_item_time);
             tvTimeSender = (TextView) view.findViewById(R.id.tv_sender_time_chat);
             ivPhoto = (ImageView) view.findViewById(R.id.iv_sender_image);

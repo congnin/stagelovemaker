@@ -26,6 +26,12 @@ public class MyApplication extends Application {
     Boolean isAppShow;
     Boolean userShowWelcome;
 
+    private static MyApplication singleton;
+
+    public static MyApplication getInstance() {
+        return singleton;
+    }
+
     public static String getMainAvatar() {
         return mainAvatar;
     }
@@ -46,6 +52,9 @@ public class MyApplication extends Application {
         );
         id = -1;
         isAppShow = false;
+        singleton = this;
+
+        ClientConfig.initialize(this);
         EventDistributor.getInstance();
     }
 

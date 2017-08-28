@@ -245,15 +245,10 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onTitleBarClicked() {
-        Utils.hideSoftKeyboard(getActivity());
-        getActivity().runOnUiThread(() -> {
-            final Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                if (getActivity() != null) {
-                    getActivity().onBackPressed();
-                }
-            }, 300);
-        });
+        if (receiver != null) {
+            DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(receiver);
+            replace(detailProfileFragment, DetailProfileFragment.TAG, true, true);
+        }
     }
 
     @Override
@@ -263,7 +258,15 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onBackButtonClicked() {
-        getActivity().onBackPressed();
+        Utils.hideSoftKeyboard(getActivity());
+        getActivity().runOnUiThread(() -> {
+            final Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                if (getActivity() != null) {
+                    getActivity().onBackPressed();
+                }
+            }, 300);
+        });
     }
 
     @Override

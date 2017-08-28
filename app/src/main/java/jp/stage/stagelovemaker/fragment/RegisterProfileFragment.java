@@ -33,6 +33,7 @@ import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.model.SignUpModel;
 import jp.stage.stagelovemaker.model.UserTokenModel;
 import jp.stage.stagelovemaker.network.IHttpResponse;
@@ -224,13 +225,11 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
             case R.id.iv_avatar: {
                 updateDataSignup();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setItems(getResources().getStringArray(R.array.choose_avatar), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        if (item == 0) {
-                            dispatchSelectImageIntent();
-                        } else {
-                            dispatchTakePictureIntent();
-                        }
+                builder.setItems(getResources().getStringArray(R.array.choose_avatar), (dialog, item) -> {
+                    if (item == 0) {
+                        dispatchSelectImageIntent();
+                    } else {
+                        dispatchTakePictureIntent();
                     }
                 });
                 AlertDialog alert = builder.create();
@@ -451,9 +450,11 @@ public class RegisterProfileFragment extends BaseFragment implements LoginAction
         }
         Utils.writeBooleanSharedPref(getActivity(), Constants.SHARE_REF_NOTIFICATION, true);
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.KEY_DATA, userTokenModel.getUserInfo());
-        Utils.getApplication(getActivity()).setAccessToken(userTokenModel.getTokenCode(), getActivity());
-        Utils.getApplication(getActivity()).setId(userTokenModel.getUserInfo().getId(), getActivity());
+        //bundle.putParcelable(Constants.KEY_DATA, userTokenModel.getUserInfo());
+        //Utils.getApplication(getActivity()).setAccessToken(userTokenModel.getTokenCode(), getActivity());
+        UserPreferences.setPrefUserAccessToken(userTokenModel.getTokenCode());
+        UserPreferences.setPrefUserData(userTokenModel.getUserInfo());
+        //Utils.getApplication(getActivity()).setId(userTokenModel.getUserInfo().getId(), getActivity());
         startNewActivity(MainActivity.class, bundle);
         ActivityCompat.finishAffinity(getActivity());
     }

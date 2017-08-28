@@ -23,9 +23,11 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.stage.stagelovemaker.R;
+import jp.stage.stagelovemaker.model.MessageModel;
 import jp.stage.stagelovemaker.model.UserInfoModel;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.OnSingleClickListener;
+import retrofit2.http.Query;
 
 import static jp.stage.stagelovemaker.utils.Constants.ARG_CHAT_ROOMS;
 
@@ -68,6 +70,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
             userRef = FirebaseDatabase.getInstance().getReference().child(ARG_CHAT_ROOMS)
                     .child(otherId + "_" + userId);
         }
+        com.google.firebase.database.Query lastQuery = userRef.orderByKey().limitToLast(1);
 
         if (holder instanceof ChatHolder) {
             ChatHolder chatHolder = (ChatHolder) holder;
@@ -97,6 +100,24 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
                 }
             });
+
+            lastQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()){
+                        String lastMessage = (String) child.child("content").getValue();
+                        if(!TextUtils.isEmpty(lastMessage)){
+                            ((ChatHolder) holder).tvLastChat.setText(lastMessage);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
             if (userInfoModel.getAvatars() != null && !userInfoModel.getAvatars().isEmpty()) {
                 for (int i = 0; i < userInfoModel.getAvatars().size(); i++) {
                     if (!TextUtils.isEmpty(userInfoModel.getAvatars().get(i).getUrl())) {

@@ -52,9 +52,7 @@ public class LoginFragment extends BaseFragment implements LoginActionBar.LoginA
     Gson gson;
 
     public static LoginFragment newInstance() {
-
         Bundle args = new Bundle();
-
         LoginFragment fragment = new LoginFragment();
         fragment.setArguments(args);
         return fragment;

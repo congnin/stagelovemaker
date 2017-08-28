@@ -28,6 +28,7 @@ import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.adapter.UserInfoAdapter;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.base.EventDistributor;
 import jp.stage.stagelovemaker.model.Avatar;
 import jp.stage.stagelovemaker.model.UserInfo;
 import jp.stage.stagelovemaker.model.UserInfoModel;
@@ -92,6 +93,12 @@ public class StageFragment extends BaseFragment {
                             usersPageModel.getRecords().size() > 0) {
                         updateData(Constants.ID_REFRESH);
                     }
+                    break;
+                case Constants.ID_UPDATE_FEELING:
+                    getActivity().runOnUiThread(() -> {
+                        final Handler handler = new Handler();
+                        handler.postDelayed(() -> EventDistributor.getInstance().sendListMatchUpdateBroadcast(), 200);
+                    });
                     break;
             }
         }

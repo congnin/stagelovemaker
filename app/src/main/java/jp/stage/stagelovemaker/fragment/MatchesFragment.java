@@ -2,6 +2,7 @@ package jp.stage.stagelovemaker.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -119,7 +120,7 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
         super.onActivityCreated(savedInstanceState);
 
         searchInput.renderDara(getString(R.string.search), false);
-        searchInput.setDelegate(this, "");
+        searchInput.setDelegate(this, Constants.TAG_CONTROL_INPUT_SEARCH);
         searchEmpty.setVisibility(View.GONE);
     }
 
@@ -134,6 +135,7 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
         if (chatAdapter == null) {
             chatAdapter = new ChatAdapter(getActivity(), (ArrayList<UserInfoModel>) userInfoModels);
             chatAdapter.setHasStableIds(true);
+            chatAdapter.setListener(OnChatAdapter);
             rcvChat.setAdapter(chatAdapter);
         }
 
@@ -163,10 +165,25 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
 
     @Override
     public void valuechange(String tag, String text) {
-        if (!TextUtils.isEmpty(text)) {
-            searchEmpty.setVisibility(View.VISIBLE);
-        } else {
-            searchEmpty.setVisibility(View.GONE);
+//        if (!TextUtils.isEmpty(text)) {
+//            searchEmpty.setVisibility(View.VISIBLE);
+//        } else {
+//            searchEmpty.setVisibility(View.GONE);
+//        }
+        if (tag.equals(Constants.TAG_CONTROL_INPUT_SEARCH)) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(() -> {
+                        if (text.length() == 0) {
+                            loadMatches();
+                        } else {
+                            loadMatches(text);
+                        }
+                    }, 200);
+                }
+            });
         }
     }
 
@@ -223,4 +240,19 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
         }
         networkManager.requestApiNoProgress(networkManager.listMatches(1, ""), Constants.ID_LIST_MATCHES);
     }
+
+    protected void loadMatches(String query) {
+        if (viewsCreated && !itemsLoaded) {
+            recyclerViewMatches.setVisibility(View.GONE);
+        }
+        networkManager.requestApiNoProgress(networkManager.listMatches(1, query), Constants.ID_LIST_MATCHES);
+    }
+
+    public ChatAdapter.OnChatAdapterListener OnChatAdapter = new ChatAdapter.OnChatAdapterListener() {
+        @Override
+        public void onShowMessage(UserInfoModel receiver, String chatRoomId, String name, int unreadCount) {
+            MessageFragment messageFragment = MessageFragment.newInstance(receiver);
+            replace(messageFragment, MessageFragment.TAG, true, true);
+        }
+    };
 }

@@ -21,6 +21,9 @@ public final class Constants {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_IMAGE_GALLERY = 0;
 
+    public static final String KM = "km";
+    public static final String MILE = "mi";
+
     public static final String TAG_CONTROL_INPUT_USERNAME= "ControlInputUsername";
     public static final String TAG_CONTROL_INPUT_PASSWORD = "ControlInputPass";
     public static final String TAG_CONTROL_INPUT_EMAIL = "ControlInputEmail";
@@ -35,6 +38,7 @@ public final class Constants {
     public static final String TAG_CONTROL_INPUT_MESSAGE = "ControlInputMessage";
     public static final String TAG_CONTROL_INPUT_YOUTUBE = "ControlInputYoutube";
     public static final String TAG_CONTROL_INPUT_INAPPROPRIATE = "ControlInputInappropriate";
+    public static final String TAG_CONTROL_INPUT_SEARCH = "ControlInputSearch";
 
     public static final String SHARE_REF_TOKEN = "RefToken";
     public static final String SHARE_REF_DISTANCE = "RefDistance";

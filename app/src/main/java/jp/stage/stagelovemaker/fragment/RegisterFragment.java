@@ -40,8 +40,8 @@ import jp.stage.stagelovemaker.views.OnSingleClickListener;
 public class RegisterFragment extends BaseFragment implements LoginActionBarDelegate,
         FormInputText.FormInputTextDelegate {
     public static final String TAG = "RegisterFragment";
-    LoginActionBar actionBar;
-    boolean bFlagButtonNext = false;
+    private LoginActionBar actionBar;
+    private boolean bFlagButtonNext = false;
 
     FormInputText tvUsername;
     FormInputText tvEmail;
@@ -287,8 +287,12 @@ public class RegisterFragment extends BaseFragment implements LoginActionBarDele
     public IHttpResponse iHttpResponse = new IHttpResponse() {
         @Override
         public void onHttpComplete(String response, int idRequest) {
-            RegisterProfileFragment registerProfileFragment = RegisterProfileFragment.newInstance();
-            replace(registerProfileFragment, RegisterProfileFragment.TAG, true, true);
+            switch (idRequest) {
+                case Constants.ID_VALIDATE_EMAIL:
+                    RegisterProfileFragment registerProfileFragment = RegisterProfileFragment.newInstance();
+                    replace(registerProfileFragment, RegisterProfileFragment.TAG, true, true);
+                    break;
+            }
         }
 
         @Override

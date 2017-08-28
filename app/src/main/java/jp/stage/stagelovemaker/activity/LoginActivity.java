@@ -1,10 +1,7 @@
 package jp.stage.stagelovemaker.activity;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
@@ -30,12 +27,12 @@ import jp.stage.stagelovemaker.fragment.RegisterFragment;
  */
 
 public class LoginActivity extends CommonActivity implements View.OnClickListener {
-    ViewPager viewPager;
-    IntroPagerAdapter adapter;
-    PageControl pageControl;
-    Button btLoginFacebook;
-    Button btLoginByPhone;
-    TextView tvAuthPolicy;
+    private ViewPager viewPager;
+    private IntroPagerAdapter adapter;
+    private PageControl pageControl;
+    private Button btSignIn;
+    private Button btSignUp;
+    private TextView tvAuthPolicy;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,8 +41,8 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         pageControl = (PageControl) findViewById(R.id.page_control);
-        btLoginFacebook = (Button) findViewById(R.id.bt_facebook);
-        btLoginByPhone = (Button) findViewById(R.id.bt_login_phone_number);
+        btSignIn = (Button) findViewById(R.id.bt_sign_in);
+        btSignUp = (Button) findViewById(R.id.bt_sign_up);
         tvAuthPolicy = (TextView) findViewById(R.id.tv_authentication_policy);
 
         adapter = new IntroPagerAdapter(getSupportFragmentManager());
@@ -53,11 +50,6 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
 
         pageControl.setViewPager(viewPager);
         pageControl.setPosition(viewPager.getCurrentItem());
-
-        Typeface semiBold = Typeface.createFromAsset(getAssets(), "fonts/proximanovasoft-semibold.otf");
-        btLoginFacebook.setTypeface(semiBold);
-        Typeface regularType = Typeface.createFromAsset(getAssets(), "fonts/proximanovasoft-regular.otf");
-        tvAuthPolicy.setTypeface(regularType);
 
         String tos = getString(R.string.tos);
         String policy = getString(R.string.privacy_policy);
@@ -104,18 +96,18 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
 
         tvAuthPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
-        btLoginFacebook.setOnClickListener(this);
-        btLoginByPhone.setOnClickListener(this);
+        btSignIn.setOnClickListener(this);
+        btSignUp.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bt_facebook:
+            case R.id.bt_sign_in:
                 LoginFragment loginFragment = LoginFragment.newInstance();
                 replace(loginFragment, LoginFragment.TAG, true, true);
                 break;
-            case R.id.bt_login_phone_number:
+            case R.id.bt_sign_up:
                 RegisterFragment registerFragment = RegisterFragment.newInstance();
                 replace(registerFragment, RegisterFragment.TAG, true, true);
                 break;
