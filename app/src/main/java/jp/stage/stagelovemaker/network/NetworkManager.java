@@ -336,4 +336,11 @@ public class NetworkManager {
                 MultipartBody.Part.createFormData("content", newfile.getName(), requestFile);
         return apiService.sendImage(userId, body, "image", chatRoomId);
     }
+
+    public Call<ResponseModel> report(int receiverId, String reason) {
+        JsonObject data = new JsonObject();
+        data.addProperty("receiver_id", receiverId);
+        data.addProperty("reason", reason);
+        return apiService.report(data);
+    }
 }

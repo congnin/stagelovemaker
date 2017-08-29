@@ -91,4 +91,7 @@ public interface MyApiEndpoint {
                                   @Part MultipartBody.Part picture,
                                   @Query("type") String type,
                                   @Query("chat_room_id") String chat_room_id);
+
+    @POST("api/reports/")
+    Call<ResponseModel> report(@Body JsonObject data);
 }

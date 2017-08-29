@@ -152,9 +152,9 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
 
             if (UserPreferences.getPrefDistanceUnit().equals(Constants.MILE)) {
                 kmDistance *= 0.621371;
-                tvDistance.setText(String.valueOf(Utils.roundDistance(kmDistance)) + " mile.");
+                tvDistance.setText(String.valueOf(Utils.roundDistance(kmDistance)) + " mile away");
             }else{
-                tvDistance.setText(String.valueOf(Utils.roundDistance(kmDistance)) + " km.");
+                tvDistance.setText(String.valueOf(Utils.roundDistance(kmDistance)) + " km away");
             }
 
         }

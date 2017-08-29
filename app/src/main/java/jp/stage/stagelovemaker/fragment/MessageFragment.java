@@ -275,8 +275,23 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onRightButtonClicked() {
-
+        Utils.hideSoftKeyboard(getActivity());
+        ArrayList<String> menus = new ArrayList<>();
+        menus.add(getString(R.string.report));
+        RightMenuFragment rightMenuFragment = RightMenuFragment.newInstance(menus);
+        rightMenuFragment.setDelegate(rightMenuFragmentDelagate);
+        add(rightMenuFragment, "", true, false, R.id.flContainer);
     }
+
+    public RightMenuFragment.RightMenuFragmentDelagate rightMenuFragmentDelagate = new RightMenuFragment.RightMenuFragmentDelagate() {
+        @Override
+        public void clickRightMenu(int index) {
+            getActivity().onBackPressed();
+            ReportUserFragment fragment = ReportUserFragment.newInstance(receiverId);
+            fragment.setDelegate(this);
+            addNoneSlideIn(fragment, ReportUserFragment.TAG, true, false, R.id.flContainer);
+        }
+    };
 
     @Override
     public void onBackButtonClicked() {
