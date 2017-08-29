@@ -81,6 +81,7 @@ public final class Constants {
     public final static int ID_LIST_MATCHES = 18;
     public static final int ID_CHAT_ROOM = 19;
     public static final int ID_NEW_MATCH = 20;
+    public final static int ID_SEND_CHAT = 21;
 
     public static final String NOTIFY_MESSAGES = "notify_messages";
     public static final String NOTIFY_MESSAGE_LIKES = "notify_message_likes";

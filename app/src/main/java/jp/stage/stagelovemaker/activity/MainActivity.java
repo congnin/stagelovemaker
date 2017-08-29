@@ -266,11 +266,6 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
         }
     };
 
-    public void getChatRoom(UserInfoModel receiver) {
-        MessageFragment messageFragment = MessageFragment.newInstance(receiver);
-        add(messageFragment, MessageFragment.TAG, true, true, R.id.flContainer);
-    }
-
     public UserInfoModel getLoginModel() {
         return loginModel;
     }

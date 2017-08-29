@@ -109,12 +109,8 @@ public class MatchesRecycleAdapter extends RecyclerView.Adapter<MatchesRecycleAd
 
         @Override
         public void onClick(View v) {
-            MainActivity mainActivity = mainActivityRef.get();
-            if (mainActivity != null) {
-                int receiverId = itemAccess.getItem(position).getId();
-
-                mainActivity.getChatRoom(itemAccess.getItem(position));
-            }
+            UserInfoModel receiver = itemAccess.getItem(position);
+            itemAccess.onClickItem(receiver);
         }
 
         public UserInfoModel getUser() {
@@ -126,5 +122,7 @@ public class MatchesRecycleAdapter extends RecyclerView.Adapter<MatchesRecycleAd
         int getCount();
 
         UserInfoModel getItem(int position);
+
+        void onClickItem(UserInfoModel receiver);
     }
 }

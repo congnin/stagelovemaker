@@ -47,6 +47,8 @@ public class MessageAdapter extends RecyclerView.Adapter {
     private int marginAdjust;
     private int marginNormal;
 
+    String avatarUrl;
+
     public MessageAdapter(Context context, ArrayList<MessageModel> models) {
         this.context = context;
         this.messageModels = models;
@@ -133,7 +135,17 @@ public class MessageAdapter extends RecyclerView.Adapter {
             params.bottomMargin = marginBottom;
         } else if (viewHolder instanceof ReceiverHolder) {
             ReceiverHolder holder = (ReceiverHolder) viewHolder;
-            holder.ivAvatarReceiver.setImageResource(R.drawable.ic_receiver);
+            if (!TextUtils.isEmpty(avatarUrl)) {
+                Glide.with(context)
+                        .load(avatarUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .fitCenter()
+                        .dontAnimate()
+                        .into(holder.ivAvatarReceiver);
+            } else {
+                holder.ivAvatarReceiver.setImageResource(R.drawable.ic_receiver);
+            }
+
             holder.tvTimeReceiver.setText(Utils.getShowTime(context, model.getCreate()));
             holder.tvMessageReceiver.setText(model.getContent());
             if (TextUtils.isEmpty(showTime)) {
@@ -193,7 +205,10 @@ public class MessageAdapter extends RecyclerView.Adapter {
             params.topMargin = marginTop;
             params.bottomMargin = marginBottom;
         }
+    }
 
+    public void setAvatarUrl(String avatar) {
+        this.avatarUrl = avatar;
     }
 
     @Override

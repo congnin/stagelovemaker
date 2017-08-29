@@ -22,6 +22,8 @@ import jp.stage.stagelovemaker.adapter.ChatAdapter;
 import jp.stage.stagelovemaker.adapter.MatchesRecycleAdapter;
 import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.base.EventDistributor;
+import jp.stage.stagelovemaker.model.InfoRoomModel;
+import jp.stage.stagelovemaker.model.RoomResponseModel;
 import jp.stage.stagelovemaker.model.UserInfoModel;
 import jp.stage.stagelovemaker.model.UsersPageModel;
 import jp.stage.stagelovemaker.model.UsersPageResponseModel;
@@ -57,6 +59,8 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
 
     private boolean itemsLoaded = false;
     private boolean viewsCreated = false;
+
+    UserInfoModel receiverModel;
 
     public static MatchesFragment newInstance() {
         Bundle args = new Bundle();
@@ -161,6 +165,14 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
             }
             return null;
         }
+
+        @Override
+        public void onClickItem(UserInfoModel receiver) {
+            if (receiver != null) {
+                receiverModel = receiver;
+                networkManager.requestApi(networkManager.getRoom(receiver.getId()), Constants.ID_CHAT_ROOM);
+            }
+        }
     };
 
     @Override
@@ -209,6 +221,14 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
                     }
                 }
                 break;
+            case Constants.ID_CHAT_ROOM:
+                RoomResponseModel roomResponseModel = gson.fromJson(response, RoomResponseModel.class);
+                if (roomResponseModel != null) {
+                    InfoRoomModel infoRoomModel = roomResponseModel.getInfoRoom();
+                    MessageFragment messageFragment = MessageFragment.newInstance(receiverModel, infoRoomModel.getChatRoomId());
+                    replace(messageFragment, MessageFragment.TAG, true, true);
+                }
+                break;
         }
     }
 
@@ -241,11 +261,8 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
         networkManager.requestApiNoProgress(networkManager.listMatches(1, query), Constants.ID_LIST_MATCHES);
     }
 
-    public ChatAdapter.OnChatAdapterListener OnChatAdapter = new ChatAdapter.OnChatAdapterListener() {
-        @Override
-        public void onShowMessage(UserInfoModel receiver, String chatRoomId, String name, int unreadCount) {
-            MessageFragment messageFragment = MessageFragment.newInstance(receiver);
-            replace(messageFragment, MessageFragment.TAG, true, true);
-        }
+    public ChatAdapter.OnChatAdapterListener OnChatAdapter = (receiver, chatRoomId, name, unreadCount) -> {
+        MessageFragment messageFragment = MessageFragment.newInstance(receiver, chatRoomId);
+        replace(messageFragment, MessageFragment.TAG, true, true);
     };
 }

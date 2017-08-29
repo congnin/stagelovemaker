@@ -3,6 +3,7 @@ package jp.stage.stagelovemaker.fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,7 +33,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,12 +51,15 @@ import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.model.InfoRoomModel;
 import jp.stage.stagelovemaker.model.MessageModel;
 import jp.stage.stagelovemaker.model.UserInfoModel;
+import jp.stage.stagelovemaker.network.IHttpResponse;
+import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.TitleBar;
 
 import static android.app.Activity.RESULT_OK;
 import static jp.stage.stagelovemaker.utils.Constants.ARG_CHAT_ROOMS;
+import static jp.stage.stagelovemaker.utils.Constants.KEY_DATA_TWO;
 import static jp.stage.stagelovemaker.utils.Constants.REQUEST_IMAGE_CAPTURE;
 
 /**
@@ -61,8 +67,10 @@ import static jp.stage.stagelovemaker.utils.Constants.REQUEST_IMAGE_CAPTURE;
  */
 
 public class MessageFragment extends BaseFragment implements View.OnClickListener,
-        TitleBar.TitleBarCallback {
+        TitleBar.TitleBarCallback, IHttpResponse {
     public static final String TAG = "MessageFragment";
+    NetworkManager networkManager;
+    Gson gson;
     private TitleBar titleBar;
     private RecyclerView rcvListMessage;
     private MessageAdapter messageAdapter;
@@ -73,11 +81,10 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
     private ImageView ivMic;
     private EmojiconEditText tvMessageSend;
     private EmojIconActions emojIconActions;
-    private int chatRoomId;
+    private String chatRoomId;
     private String message;
     private int senderId;
     private int receiverId;
-    private String receiverName;
 
     private UserInfoModel sender;
     private UserInfoModel receiver;
@@ -90,9 +97,10 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
     private final DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference();
     private final DatabaseReference chatRef = firebaseRef.child(ARG_CHAT_ROOMS);
 
-    public static MessageFragment newInstance(UserInfoModel receiver) {
+    public static MessageFragment newInstance(UserInfoModel receiver, String chatRoomId) {
         Bundle args = new Bundle();
         args.putParcelable(Constants.KEY_DATA, receiver);
+        args.putString(Constants.KEY_DATA_TWO, chatRoomId);
         MessageFragment fragment = new MessageFragment();
         fragment.setArguments(args);
         return fragment;
@@ -101,6 +109,8 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        networkManager = new NetworkManager(context, this);
+        gson = new Gson();
     }
 
     @Override
@@ -108,6 +118,7 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
         super.onCreate(savedInstanceState);
         messageModels = new ArrayList<>();
         messageAdapter = new MessageAdapter(getActivity(), messageModels);
+
     }
 
     @Nullable
@@ -139,8 +150,17 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
         MainActivity mainActivity = (MainActivity) getActivity();
         sender = mainActivity.getLoginModel();
         receiver = getArguments().getParcelable(Constants.KEY_DATA);
+        chatRoomId = getArguments().getString(KEY_DATA_TWO);
         senderId = sender.getId();
         receiverId = receiver.getId();
+        if (receiver.getAvatars() != null && !receiver.getAvatars().isEmpty()) {
+            for (int i = 0; i < receiver.getAvatars().size(); i++) {
+                if (!TextUtils.isEmpty(receiver.getAvatars().get(i).getUrl())) {
+                    messageAdapter.setAvatarUrl(receiver.getAvatars().get(i).getUrl());
+                    break;
+                }
+            }
+        }
 
         titleBar.setTitle(receiver.getFirstName());
         titleBar.setIconBack(R.drawable.ic_back_red);
@@ -191,11 +211,12 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
 
     private void getMessageData() {
         Query chatQuery;
-        if (senderId < receiverId) {
-            chatQuery = chatRef.child(senderId + "_" + receiverId).limitToLast(50);
-        } else {
-            chatQuery = chatRef.child(receiverId + "_" + senderId).limitToLast(50);
-        }
+//        if (senderId < receiverId) {
+//            chatQuery = chatRef.child(senderId + "_" + receiverId).limitToLast(50);
+//        } else {
+//            chatQuery = chatRef.child(receiverId + "_" + senderId).limitToLast(50);
+//        }
+        chatQuery = chatRef.child(chatRoomId).limitToLast(50);
 
         chatQuery.addChildEventListener(new ChildEventListener() {
             @Override
@@ -245,6 +266,7 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onTitleBarClicked() {
+        Utils.hideSoftKeyboard(getActivity());
         if (receiver != null) {
             DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(receiver);
             replace(detailProfileFragment, DetailProfileFragment.TAG, true, true);
@@ -275,67 +297,75 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void sendMessage() {
-        DatabaseReference chatRef;
-        if (senderId < receiverId) {
-            chatRef = firebaseRef.child(ARG_CHAT_ROOMS).child(senderId + "_" + receiverId);
-        } else {
-            chatRef = firebaseRef.child(ARG_CHAT_ROOMS).child(receiverId + "_" + senderId);
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.US);
-        Date date = new Date();
-        String formattedDate = sdf.format(date);
-        MessageModel model = new MessageModel();
-        model.setContent(message);
-        model.setRead(false);
-        model.setCreate(formattedDate);
-        model.setSender_id(senderId);
-        model.setReceiver_id(receiverId);
-        model.setType("text");
-
-        chatRef.push().setValue(model).addOnSuccessListener(aVoid -> {
-
-        }).addOnFailureListener(e -> Toast.makeText(MessageFragment.this.getActivity(),
-                e.getMessage(), Toast.LENGTH_SHORT).show());
+//        DatabaseReference chatRef;
+//        if (senderId < receiverId) {
+//            chatRef = firebaseRef.child(ARG_CHAT_ROOMS).child(senderId + "_" + receiverId);
+//        } else {
+//            chatRef = firebaseRef.child(ARG_CHAT_ROOMS).child(receiverId + "_" + senderId);
+//        }
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.US);
+//        Date date = new Date();
+//        String formattedDate = sdf.format(date);
+//        MessageModel model = new MessageModel();
+//        model.setContent(message);
+//        model.setRead(false);
+//        model.setCreate(formattedDate);
+//        model.setSender_id(senderId);
+//        model.setReceiver_id(receiverId);
+//        model.setType("text");
+//
+//        chatRef.push().setValue(model).addOnSuccessListener(aVoid -> {
+//
+//        }).addOnFailureListener(e -> Toast.makeText(MessageFragment.this.getActivity(),
+//                e.getMessage(), Toast.LENGTH_SHORT).show());
+        networkManager.requestApiNoProgress(networkManager.sendMessage(senderId, message, chatRoomId), Constants.ID_SEND_CHAT);
         message = "";
         tvMessageSend.setText("");
     }
 
     private void sendImage(final Uri file) {
-        DatabaseReference chatRef;
-        if (senderId < receiverId) {
-            chatRef = firebaseRef.child(ARG_CHAT_ROOMS).child(senderId + "_" + receiverId);
-        } else {
-            chatRef = firebaseRef.child(ARG_CHAT_ROOMS).child(receiverId + "_" + senderId);
+//        DatabaseReference chatRef;
+//        if (senderId < receiverId) {
+//            chatRef = firebaseRef.child(ARG_CHAT_ROOMS).child(senderId + "_" + receiverId);
+//        } else {
+//            chatRef = firebaseRef.child(ARG_CHAT_ROOMS).child(receiverId + "_" + senderId);
+//        }
+//
+//        final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HHmmssSSS", Locale.US);
+//        Date date = new Date();
+//        String name = dateFormat.format(date);
+//        StorageReference imageGalleryRef = storageReference.child(senderId + "_" + name + ".jpg");
+//        UploadTask uploadTask = imageGalleryRef.putFile(file);
+//        uploadTask.addOnFailureListener(e -> {
+//        }).addOnSuccessListener(taskSnapshot -> {
+//            //dinh dang thoi gian gui len firebase
+//            DateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.US);
+//            String dateModified = dateFormat1.format(new Date());
+//
+//            //dinh dang ten file gui len firebase
+//            DateFormat dateFormatFile = new SimpleDateFormat("yyyy_MM_dd_HHmmssSSS", Locale.US);
+//            String nameFile = dateFormatFile.format(new Date());
+//
+//            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+//            //FileModel fileModel = new FileModel(downloadUrl.toString(), senderId + "_" + nameFile + ".jpg");
+//            MessageModel model = new MessageModel();
+//            model.setSender_id(senderId);
+//            model.setReceiver_id(receiverId);
+//            model.setCreate(dateModified);
+//            model.setContent(downloadUrl.toString());
+//            model.setRead(false);
+//            model.setType("image");
+//            //model.setFile(fileModel);
+//            chatRef.push().setValue(model);
+//        });
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), file);
+            networkManager.requestApiNoProgress(networkManager.sendPicture(senderId, bitmap, chatRoomId), Constants.ID_SEND_CHAT);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HHmmssSSS", Locale.US);
-        Date date = new Date();
-        String name = dateFormat.format(date);
-        StorageReference imageGalleryRef = storageReference.child(senderId + "_" + name + ".jpg");
-        UploadTask uploadTask = imageGalleryRef.putFile(file);
-        uploadTask.addOnFailureListener(e -> {
-        }).addOnSuccessListener(taskSnapshot -> {
-            //dinh dang thoi gian gui len firebase
-            DateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.US);
-            String dateModified = dateFormat1.format(new Date());
-
-            //dinh dang ten file gui len firebase
-            DateFormat dateFormatFile = new SimpleDateFormat("yyyy_MM_dd_HHmmssSSS", Locale.US);
-            String nameFile = dateFormatFile.format(new Date());
-
-            Uri downloadUrl = taskSnapshot.getDownloadUrl();
-            //FileModel fileModel = new FileModel(downloadUrl.toString(), senderId + "_" + nameFile + ".jpg");
-            MessageModel model = new MessageModel();
-            model.setSender_id(senderId);
-            model.setReceiver_id(receiverId);
-            model.setCreate(dateModified);
-            model.setContent(downloadUrl.toString());
-            model.setRead(false);
-            model.setType("image");
-            //model.setFile(fileModel);
-            chatRef.push().setValue(model);
-        });
     }
 
     public void addMessage(MessageModel messageModel) {
@@ -396,5 +426,15 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onHttpComplete(String response, int idRequest) {
+
+    }
+
+    @Override
+    public void onHttpError(String response, int idRequest, int errorCode) {
+
     }
 }

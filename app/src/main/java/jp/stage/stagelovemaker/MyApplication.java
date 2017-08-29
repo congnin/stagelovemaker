@@ -1,7 +1,10 @@
 package jp.stage.stagelovemaker;
 
 import android.app.Application;
+import android.content.Context;
 import android.location.Location;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import jp.stage.stagelovemaker.base.EventDistributor;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -10,7 +13,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  * Created by congn on 7/31/2017.
  */
 
-public class MyApplication extends Application {
+public class MyApplication extends MultiDexApplication {
     private Boolean isAppShow;
     private Location location;
 
@@ -18,6 +21,12 @@ public class MyApplication extends Application {
 
     public static MyApplication getInstance() {
         return singleton;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     @Override

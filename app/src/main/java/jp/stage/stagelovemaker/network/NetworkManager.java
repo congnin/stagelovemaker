@@ -314,8 +314,26 @@ public class NetworkManager {
 
     public Call<ResponseModel> getRoom(int receiver_id) {
         JsonObject data = new JsonObject();
-
         data.addProperty("receiver_id", receiver_id);
         return apiService.getRoom(data);
+    }
+
+    public Call<ResponseModel> sendMessage(int userId, String content, String chatRoomId) {
+        JsonObject data = new JsonObject();
+        data.addProperty("user_id", userId);
+        data.addProperty("content", content);
+        data.addProperty("type", "text");
+        data.addProperty("chat_room_id", chatRoomId);
+        return apiService.sendMessage(data);
+    }
+
+    public Call<ResponseModel> sendPicture(int userId, Bitmap bitmap, String chatRoomId) {
+        File newfile = Utils.compressFile(mContext, Utils.savebitmap(mContext, bitmap));
+        newfile.getPath();
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("image/png"), newfile);
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("content", newfile.getName(), requestFile);
+        return apiService.sendImage(userId, body, "image", chatRoomId);
     }
 }

@@ -75,10 +75,20 @@ public interface MyApiEndpoint {
 
     @GET("api/users/listMatches/{page}")
     Call<ResponseModel> listMatchesSearch(@Path("page") int page,
-                                    @Query("first_name") String first_name,
-                                    @Query("last_name") String last_name,
-                                    @Query("email") String email);
+                                          @Query("first_name") String first_name,
+                                          @Query("last_name") String last_name,
+                                          @Query("email") String email);
 
     @POST("api/rooms/")
     Call<ResponseModel> getRoom(@Body JsonObject data);
+
+    @POST("api/messages/")
+    Call<ResponseModel> sendMessage(@Body JsonObject data);
+
+    @Multipart
+    @POST("api/messages/")
+    Call<ResponseModel> sendImage(@Query("user_id") int user_id,
+                                  @Part MultipartBody.Part picture,
+                                  @Query("type") String type,
+                                  @Query("chat_room_id") String chat_room_id);
 }
