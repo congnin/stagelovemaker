@@ -312,9 +312,9 @@ public class NetworkManager {
         }
     }
 
-    public Call<ResponseModel> getRoom(int user_id, int receiver_id) {
+    public Call<ResponseModel> getRoom(int receiver_id) {
         JsonObject data = new JsonObject();
-        data.addProperty("user_id", user_id);
+
         data.addProperty("receiver_id", receiver_id);
         return apiService.getRoom(data);
     }

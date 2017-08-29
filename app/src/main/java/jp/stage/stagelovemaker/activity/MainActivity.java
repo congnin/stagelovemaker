@@ -1,37 +1,32 @@
 package jp.stage.stagelovemaker.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
-import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.adapter.FeaturesPagerAdapter;
-import jp.stage.stagelovemaker.base.BaseFragment;
 import jp.stage.stagelovemaker.base.CommonActivity;
 import jp.stage.stagelovemaker.base.EventDistributor;
+import jp.stage.stagelovemaker.base.NotificationEvent;
 import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.fragment.MessageFragment;
-import jp.stage.stagelovemaker.model.AvatarModel;
-import jp.stage.stagelovemaker.model.ErrorModel;
-import jp.stage.stagelovemaker.model.InfoRoomModel;
-import jp.stage.stagelovemaker.model.RoomResponseModel;
-import jp.stage.stagelovemaker.model.UserInfo;
+import jp.stage.stagelovemaker.fragment.NewMatchFragment;
+import jp.stage.stagelovemaker.model.NotificationModel;
 import jp.stage.stagelovemaker.model.UserInfoModel;
 import jp.stage.stagelovemaker.model.UserTokenModel;
 import jp.stage.stagelovemaker.network.IHttpResponse;
@@ -41,7 +36,7 @@ import jp.stage.stagelovemaker.utils.GPSTracker;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.MainTabBar;
 import jp.stage.stagelovemaker.views.NonSwipeableViewPager;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+import timber.log.Timber;
 
 public class MainActivity extends CommonActivity implements MainTabBar.MainTabBarCallback,
         ViewPager.OnPageChangeListener {
@@ -56,6 +51,36 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
     Gson gson = new Gson();
 
     private static final int EVENTS = EventDistributor.MY_PROFILE_CHANGE;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (checkLogin() && intent != null && intent.getExtras() != null) {
+            NotificationModel model = intent.getExtras().getParcelable(Constants.NOTI_DATA);
+            handleNotification(model);
+        }
+    }
+
+    private void handleNotification(NotificationModel model) {
+        Utils.hideSoftKeyboard(this);
+        if (model != null) {
+            switch (model.getType()) {
+                case Constants.NOTIFY_MESSAGES:
+                    Toast.makeText(this, "new message", Toast.LENGTH_SHORT).show();
+                    break;
+                case Constants.NOTIFY_MESSAGE_LIKES:
+                    Toast.makeText(this, "new like", Toast.LENGTH_SHORT).show();
+                    break;
+                case Constants.NOTIFY_SUPER_LIKES:
+                    Toast.makeText(this, "super like", Toast.LENGTH_SHORT).show();
+                    break;
+                case Constants.NOTIFY_NEW_MATCHES:
+                    Toast.makeText(this, "new matches", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +114,29 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
     protected void onStart() {
         super.onStart();
         EventDistributor.getInstance().register(contentUpdate);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         EventDistributor.getInstance().unregister(contentUpdate);
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(NotificationEvent event) {
+        Timber.d("onEvent(", event);
+        Toast.makeText(this, event.notificationModel.getBody(), Toast.LENGTH_SHORT).show();
+        switch (event.action) {
+            case NEW_MESSAGE:
+                break;
+            case NEW_MATCH:
+                networkManager.requestApiNoProgress(
+                        networkManager.getProfile(event.notificationModel.getSenderId()), Constants.ID_NEW_MATCH);
+                EventDistributor.getInstance().sendListMatchUpdateBroadcast();
+                break;
+        }
     }
 
     @Override
@@ -179,12 +221,6 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
         }
 
         loadFeatures();
-        MyApplication app = Utils.getApplication(this);
-        if (app != null) {
-            if (loginModel.getSetting() != null) {
-//                app.setUnitDistance(loginModel.getSetting().getDistanceUnit(), this);
-            }
-        }
         final Handler handler = new Handler();
         handler.postDelayed(() -> mainTabBar.changeTab(MainTabBar.TAB_STAGE), 100);
     }
@@ -202,6 +238,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
                     UserTokenModel model = gson.fromJson(response, UserTokenModel.class);
                     if (model != null) {
                         loginModel = model.getUserInfo();
+                        FirebaseMessaging.getInstance().subscribeToTopic(loginModel.getNotificationTopic());
                         UserPreferences.setPrefUserData(loginModel);
                         loadDataProfile();
                     }
@@ -213,15 +250,19 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
                         loginModel = update.getUserInfo();
                     }
                     break;
+                case Constants.ID_NEW_MATCH:
+                    UserTokenModel matchUserToken = gson.fromJson(response, UserTokenModel.class);
+                    if (matchUserToken != null) {
+                        UserInfoModel matchUser = matchUserToken.getUserInfo();
+                        NewMatchFragment newMatchFragment = NewMatchFragment.newInstance(loginModel, matchUser);
+                        add(newMatchFragment, NewMatchFragment.TAG, true, false);
+                    }
+                    break;
             }
         }
 
         @Override
         public void onHttpError(String response, int idRequest, int errorCode) {
-//            ErrorModel error = gson.fromJson(response, ErrorModel.class);
-//            if(TextUtils.isEmpty(error.getErrorMsg())){
-//                Toast.makeText(MainActivity.this, error.getErrorMsg(), Toast.LENGTH_SHORT).show();
-//            }
         }
     };
 
@@ -230,7 +271,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
         add(messageFragment, MessageFragment.TAG, true, true, R.id.flContainer);
     }
 
-    public UserInfoModel getLoginModel(){
+    public UserInfoModel getLoginModel() {
         return loginModel;
     }
 }

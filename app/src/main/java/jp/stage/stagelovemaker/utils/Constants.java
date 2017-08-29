@@ -14,6 +14,7 @@ public final class Constants {
     public static final String KEY_DATA = "key_data";
     public static final String KEY_DATA_TWO = "key_data_two";
     public static final String KEY_DATA_THREE = "key_data_three";
+    public static final String NOTI_DATA = "NotiData";
 
     public static final int MIN_AGE = 18;
     public static final int MAX_AGE = 100;
@@ -79,4 +80,10 @@ public final class Constants {
     public final static int ID_DELETE_ACCOUNT = 17;
     public final static int ID_LIST_MATCHES = 18;
     public static final int ID_CHAT_ROOM = 19;
+    public static final int ID_NEW_MATCH = 20;
+
+    public static final String NOTIFY_MESSAGES = "notify_messages";
+    public static final String NOTIFY_MESSAGE_LIKES = "notify_message_likes";
+    public static final String NOTIFY_SUPER_LIKES = "notify_super_likes";
+    public static final String NOTIFY_NEW_MATCHES = "notify_new_matches";
 }

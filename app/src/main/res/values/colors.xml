@@ -36,4 +36,5 @@
     <color name="mostly_black">#111111</color>
     <color name="colorLightOrange">#FBF7F6</color>
     <color name="colorLightYellow">#F1F0EE</color>
+    <color name="color_new_match">#444444</color>
 </resources>

@@ -2,6 +2,7 @@ package jp.stage.stagelovemaker;
 
 import android.app.Application;
 import android.location.Location;
+
 import jp.stage.stagelovemaker.base.EventDistributor;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -10,6 +11,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  */
 
 public class MyApplication extends Application {
+    private Boolean isAppShow;
     private Location location;
 
     private static MyApplication singleton;
@@ -47,5 +49,13 @@ public class MyApplication extends Application {
         } else {
             this.location = null;
         }
+    }
+
+    public Boolean getAppShow() {
+        return isAppShow;
+    }
+
+    public void setAppShow(Boolean appShow) {
+        isAppShow = appShow;
     }
 }

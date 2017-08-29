@@ -165,24 +165,16 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
 
     @Override
     public void valuechange(String tag, String text) {
-//        if (!TextUtils.isEmpty(text)) {
-//            searchEmpty.setVisibility(View.VISIBLE);
-//        } else {
-//            searchEmpty.setVisibility(View.GONE);
-//        }
         if (tag.equals(Constants.TAG_CONTROL_INPUT_SEARCH)) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    final Handler handler = new Handler();
-                    handler.postDelayed(() -> {
-                        if (text.length() == 0) {
-                            loadMatches();
-                        } else {
-                            loadMatches(text);
-                        }
-                    }, 200);
-                }
+            getActivity().runOnUiThread(() -> {
+                final Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    if (text.length() == 0) {
+                        loadMatches();
+                    } else {
+                        loadMatches(text);
+                    }
+                }, 200);
             });
         }
     }
@@ -216,6 +208,7 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
                         }
                     }
                 }
+                break;
         }
     }
 

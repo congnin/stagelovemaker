@@ -191,6 +191,10 @@ public class UserInfoModel implements Parcelable {
         this.instagramUser = instagramUser;
     }
 
+    public String getNotificationTopic() {
+        return "/topics/topic_" + id;
+    }
+
     @Override
     public int describeContents() {
         return 0;

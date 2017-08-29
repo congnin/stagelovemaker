@@ -108,6 +108,10 @@
     <string name="select_picture">Select Picture</string>
     <string name="account_is_deleted">Account is Deleted</string>
     <string name="type_something">Type something</string>
+    <string name="new_talk_pal">It\'s a Match</string>
+    <string name="send_a_message">SEND A MESSAGE</string>
+    <string name="later">Later</string>
+    <string name="say_hi_to_your_new_talk_pal">Say something to your new match.</string>
     <string name="question_delete_account">If you delete your account, you will permanatly lose your profile, messages, photos.\nAre you sure you want to delete your account?</string>
     <string name="explain_smart_photos">Smart Photos continuously tests all your profile photos and picks the best one to show first.</string>
 </resources>
