@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -58,6 +59,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
     String instagramUser;
     PageControl pageControl;
     RelativeLayout instagramLayout;
+    LinearLayout feelingButtonLayout;
     UserInfoModel userInfoModel;
     DetailProfileCallback delegate;
 
@@ -66,9 +68,10 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
     int numberColumn = 0;
     int widthButton;
 
-    public static DetailProfileFragment newInstance(UserInfoModel user) {
+    public static DetailProfileFragment newInstance(UserInfoModel user, Boolean isLoadFeel) {
         Bundle args = new Bundle();
         args.putParcelable("user", user);
+        args.putBoolean(Constants.KEY_DATA, isLoadFeel);
         DetailProfileFragment fragment = new DetailProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -108,6 +111,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
         ivLike = (CircleButton) view.findViewById(R.id.circleButtonHeart);
         ivSuperLike = (CircleButton) view.findViewById(R.id.circleButtonStar);
 
+        feelingButtonLayout = (LinearLayout) view.findViewById(R.id.layout_feeling_button);
         instagramPager = (ViewPager) view.findViewById(R.id.view_pager);
         pageControl = (PageControl) view.findViewById(R.id.instagram_pagecontrol);
         instagramLayout = (RelativeLayout) view.findViewById(R.id.instagram_profile_layout);
@@ -119,6 +123,11 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
         super.onActivityCreated(savedInstanceState);
 
         userInfoModel = getArguments().getParcelable("user");
+        if (getArguments().getBoolean(Constants.KEY_DATA)) {
+            feelingButtonLayout.setVisibility(View.VISIBLE);
+        } else {
+            feelingButtonLayout.setVisibility(View.GONE);
+        }
         if (userInfoModel.getAvatars() != null && !userInfoModel.getAvatars().isEmpty()) {
             ArrayList<String> lstAvatar = new ArrayList<>();
             for (int i = 0; i < userInfoModel.getAvatars().size(); i++) {
@@ -153,7 +162,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
             if (UserPreferences.getPrefDistanceUnit().equals(Constants.MILE)) {
                 kmDistance *= 0.621371;
                 tvDistance.setText(String.valueOf(Utils.roundDistance(kmDistance)) + " mile away");
-            }else{
+            } else {
                 tvDistance.setText(String.valueOf(Utils.roundDistance(kmDistance)) + " km away");
             }
 

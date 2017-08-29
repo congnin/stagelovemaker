@@ -24,6 +24,7 @@ import jp.stage.stagelovemaker.base.CommonActivity;
 import jp.stage.stagelovemaker.base.EventDistributor;
 import jp.stage.stagelovemaker.base.NotificationEvent;
 import jp.stage.stagelovemaker.base.UserPreferences;
+import jp.stage.stagelovemaker.fragment.DetailProfileFragment;
 import jp.stage.stagelovemaker.fragment.MessageFragment;
 import jp.stage.stagelovemaker.fragment.NewMatchFragment;
 import jp.stage.stagelovemaker.model.NotificationModel;
@@ -67,16 +68,17 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
         if (model != null) {
             switch (model.getType()) {
                 case Constants.NOTIFY_MESSAGES:
-                    Toast.makeText(this, "new message", Toast.LENGTH_SHORT).show();
+                    networkManager.requestApiNoProgress(networkManager.getProfile(model.getSenderId()), Constants.ID_SEND_CHAT);
                     break;
                 case Constants.NOTIFY_MESSAGE_LIKES:
-                    Toast.makeText(this, "new like", Toast.LENGTH_SHORT).show();
+                    networkManager.requestApiNoProgress(networkManager.getProfile(model.getSenderId()), Constants.ID_SEND_CHAT);
                     break;
                 case Constants.NOTIFY_SUPER_LIKES:
-                    Toast.makeText(this, "super like", Toast.LENGTH_SHORT).show();
+                    networkManager.requestApiNoProgress(networkManager.getProfile(model.getSenderId()), Constants.ID_SEND_CHAT);
                     break;
                 case Constants.NOTIFY_NEW_MATCHES:
-                    Toast.makeText(this, "new matches", Toast.LENGTH_SHORT).show();
+                    networkManager.requestApiNoProgress(
+                            networkManager.getProfile(model.getSenderId()), Constants.ID_NEW_MATCH);
                     break;
             }
         }
@@ -135,6 +137,10 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
                 networkManager.requestApiNoProgress(
                         networkManager.getProfile(event.notificationModel.getSenderId()), Constants.ID_NEW_MATCH);
                 EventDistributor.getInstance().sendListMatchUpdateBroadcast();
+                break;
+            case NEW_LIKE:
+                break;
+            case NEW_SUPER_LIKE:
                 break;
         }
     }
@@ -256,6 +262,13 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
                         UserInfoModel matchUser = matchUserToken.getUserInfo();
                         NewMatchFragment newMatchFragment = NewMatchFragment.newInstance(loginModel, matchUser);
                         add(newMatchFragment, NewMatchFragment.TAG, true, false);
+                    }
+                    break;
+                case Constants.ID_SEND_CHAT:
+                    UserTokenModel sendUserToken = gson.fromJson(response, UserTokenModel.class);
+                    if(sendUserToken != null){
+                        UserInfoModel detailUser = sendUserToken.getUserInfo();
+                        DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(detailUser, false);
                     }
                     break;
             }

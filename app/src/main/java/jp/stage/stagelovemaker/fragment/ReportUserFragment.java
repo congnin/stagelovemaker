@@ -32,7 +32,6 @@ public class ReportUserFragment extends BaseFragment implements IHttpResponse {
     ReportUserFragmentDelegate delegate;
     NetworkManager networkManager;
     int id;
-    String type;
     String reason = "";
 
     int check = 1;
@@ -91,13 +90,10 @@ public class ReportUserFragment extends BaseFragment implements IHttpResponse {
     @Override
     public void onHttpComplete(String response, final int idRequest) {
         if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (idRequest == API.ID_REPORT_USER) {
-                        if (delegate != null) {
-                            delegate.loadToast();
-                        }
+            getActivity().runOnUiThread(() -> {
+                if (idRequest == Constants.ID_REPORT_USER) {
+                    if (delegate != null) {
+                        delegate.onReportFinished();
                     }
                 }
             });
@@ -109,8 +105,8 @@ public class ReportUserFragment extends BaseFragment implements IHttpResponse {
 
     }
 
-    public void setDelegate(BaseFragment fragment) {
-        delegate = (ReportUserFragmentDelegate) fragment;
+    public void setDelegate(ReportUserFragmentDelegate fragment) {
+        delegate = fragment;
     }
 
     @Override
@@ -166,32 +162,32 @@ public class ReportUserFragment extends BaseFragment implements IHttpResponse {
     public void reportUser() {
         switch (check) {
             case 0: {
-                type = "inappropriate_message";
+                reason = "inappropriate_message";
                 break;
             }
             case 1: {
-                type = "inappropriate_photo";
+                reason = "inappropriate_photo";
                 break;
             }
             case 2: {
-                type = "bad_offline_behavior";
+                reason = "bad_offline_behavior";
                 break;
             }
             case 3: {
-                type = "feel_like_spam";
+                reason = "feel_like_spam";
                 break;
             }
             case 4: {
-                type = "other";
+                reason = "other";
                 break;
             }
         }
-        networkManager.requestApi(networkManager.requestReport(id, type, reason), API.ID_REPORT_USER, true);
+        networkManager.requestApi(networkManager.report(id, reason), Constants.ID_REPORT_USER);
     }
 
     public interface ReportUserFragmentDelegate {
         void clickOther();
 
-        void loadToast();
+        void onReportFinished();
     }
 }

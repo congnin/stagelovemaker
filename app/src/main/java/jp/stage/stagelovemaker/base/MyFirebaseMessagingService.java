@@ -51,6 +51,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             case Constants.NOTIFY_MESSAGES:
                 EventBus.getDefault().post(NotificationEvent.newMessage(model));
                 break;
+            case Constants.NOTIFY_MESSAGE_LIKES:
+                EventBus.getDefault().post(NotificationEvent.newLike(model));
+                break;
+            case Constants.NOTIFY_SUPER_LIKES:
+                EventBus.getDefault().post(NotificationEvent.newSuperLike(model));
+                break;
         }
         MyApplication app = (MyApplication) this.getApplicationContext();
         int id = UserPreferences.getCurrentUserId();

@@ -165,6 +165,7 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
         titleBar.setTitle(receiver.getFirstName());
         titleBar.setIconBack(R.drawable.ic_back_red);
         titleBar.enableBackButton();
+        titleBar.setIconRight(R.mipmap.icon_three_dot);
         titleBar.setCallback(this);
 
         rcvListMessage.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -268,7 +269,7 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
     public void onTitleBarClicked() {
         Utils.hideSoftKeyboard(getActivity());
         if (receiver != null) {
-            DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(receiver);
+            DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(receiver, false);
             replace(detailProfileFragment, DetailProfileFragment.TAG, true, true);
         }
     }
@@ -288,9 +289,30 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
         public void clickRightMenu(int index) {
             getActivity().onBackPressed();
             ReportUserFragment fragment = ReportUserFragment.newInstance(receiverId);
-            fragment.setDelegate(this);
+            fragment.setDelegate(reportUserFragmentDelegate);
             addNoneSlideIn(fragment, ReportUserFragment.TAG, true, false, R.id.flContainer);
         }
+    };
+
+    public ReportUserFragment.ReportUserFragmentDelegate reportUserFragmentDelegate = new ReportUserFragment.ReportUserFragmentDelegate() {
+        @Override
+        public void clickOther() {
+            getActivity().onBackPressed();
+            ReportOtherFragment fragment = ReportOtherFragment.newInstance(receiverId);
+            fragment.setDelegate(reportOtherFragmentDelegate);
+            add(fragment, ReportOtherFragment.TAG, true, false, R.id.flContainer);
+        }
+
+        @Override
+        public void onReportFinished() {
+            getActivity().onBackPressed();
+            Toast.makeText(getActivity(), getString(R.string.report_sent), Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    public ReportOtherFragment.ReportOtherFragmentDelegate reportOtherFragmentDelegate = () -> {
+        getActivity().onBackPressed();
+        Toast.makeText(getActivity(), getString(R.string.report_sent), Toast.LENGTH_SHORT).show();
     };
 
     @Override
@@ -376,7 +398,7 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
 //        });
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), file);
-            networkManager.requestApiNoProgress(networkManager.sendPicture(senderId, bitmap, chatRoomId), Constants.ID_SEND_CHAT);
+            networkManager.requestApiNoProgress(networkManager.sendPicture(senderId, bitmap, chatRoomId), Constants.ID_SEND_IMAGE);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -450,6 +472,10 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onHttpError(String response, int idRequest, int errorCode) {
-
+        switch (idRequest){
+            case Constants.ID_SEND_IMAGE:
+                Toast.makeText(getActivity(), "HU HU HU", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

@@ -258,7 +258,7 @@ public class StageFragment extends BaseFragment {
             long index = cardStack.getTopCardItemId();
             if (index >= 0 && cardStack.getAdapterIndex() > 0) {
                 UserInfoModel userInfo = (UserInfoModel) cardAdapter.getItem(0);
-                DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(userInfo);
+                DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(userInfo, true);
                 detailProfileFragment.setCallback(callback);
                 replace(detailProfileFragment, DetailProfileFragment.TAG, true, true);
             }

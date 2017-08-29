@@ -119,6 +119,8 @@
     <string name="bad_offline_behavior">Bad offline behavior</string>
     <string name="feels_like_spam">Feels like spam</string>
     <string name="other">Other</string>
+    <string name="other_inappropriate">Other: Additional info</string>
+    <string name="report_sent">Your report has been sent!!!</string>
     <string name="say_hi_to_your_new_talk_pal">Say something to your new match.</string>
     <string name="question_delete_account">If you delete your account, you will permanatly lose your profile, messages, photos.\nAre you sure you want to delete your account?</string>
     <string name="explain_smart_photos">Smart Photos continuously tests all your profile photos and picks the best one to show first.</string>

@@ -30,6 +30,14 @@ public class NotificationEvent {
         return new NotificationEvent(Action.NEW_MATCH, notificationModel);
     }
 
+    public static NotificationEvent newLike(NotificationModel notificationModel) {
+        return new NotificationEvent(Action.NEW_LIKE, notificationModel);
+    }
+
+    public static NotificationEvent newSuperLike(NotificationModel notificationModel) {
+        return new NotificationEvent(Action.NEW_SUPER_LIKE, notificationModel);
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
