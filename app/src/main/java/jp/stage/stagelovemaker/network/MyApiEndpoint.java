@@ -85,12 +85,21 @@ public interface MyApiEndpoint {
     @POST("api/messages/")
     Call<ResponseModel> sendMessage(@Body JsonObject data);
 
+//    @Multipart
+//    @POST("api/messages/")
+//    Call<ResponseModel> sendImage(@Part("user_id") int user_id,
+//                                  @Part MultipartBody.Part content,
+//                                  //@Part ("content") String content,
+//                                  @Part("type") String type,
+//                                  @Part("chat_room_id") String chat_room_id);
+
     @Multipart
     @POST("api/messages/")
     Call<ResponseModel> sendImage(@Part("user_id") int user_id,
                                   @Part MultipartBody.Part content,
-                                  @Part("type") String type,
-                                  @Part("chat_room_id") String chat_room_id);
+                                  //@Part ("content") String content,
+                                  @Part("type") RequestBody type,
+                                  @Part("chat_room_id") RequestBody chat_room_id);
 
     @POST("api/reports/")
     Call<ResponseModel> report(@Body JsonObject data);

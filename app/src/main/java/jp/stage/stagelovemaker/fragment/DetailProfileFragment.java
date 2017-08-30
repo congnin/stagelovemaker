@@ -1,5 +1,6 @@
 package jp.stage.stagelovemaker.fragment;
 
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,6 +30,8 @@ import jp.stage.stagelovemaker.base.UserPreferences;
 import jp.stage.stagelovemaker.model.InstagramPhoto;
 import jp.stage.stagelovemaker.model.UserInfo;
 import jp.stage.stagelovemaker.model.UserInfoModel;
+import jp.stage.stagelovemaker.network.IHttpResponse;
+import jp.stage.stagelovemaker.network.NetworkManager;
 import jp.stage.stagelovemaker.utils.Constants;
 import jp.stage.stagelovemaker.utils.Utils;
 import jp.stage.stagelovemaker.views.PageControl;
@@ -42,6 +45,7 @@ import jp.stage.stagelovemaker.views.UserImageSlide;
 public class DetailProfileFragment extends BaseFragment implements View.OnClickListener {
     public static final String TAG = "DetailProfileFragment";
 
+    NetworkManager networkManager;
     UserImageSlide userImageSlide;
     TextView tvName;
     TextView tvAge;
@@ -68,6 +72,8 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
     int numberColumn = 0;
     int widthButton;
 
+    boolean init;
+
     public static DetailProfileFragment newInstance(UserInfoModel user, Boolean isLoadFeel) {
         Bundle args = new Bundle();
         args.putParcelable("user", user);
@@ -90,6 +96,24 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
 
         @Override
         public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        networkManager = new NetworkManager(context, iHttpResponse);
+    }
+
+    public IHttpResponse iHttpResponse = new IHttpResponse() {
+        @Override
+        public void onHttpComplete(String response, int idRequest) {
+
+        }
+
+        @Override
+        public void onHttpError(String response, int idRequest, int errorCode) {
 
         }
     };
@@ -123,6 +147,7 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
         super.onActivityCreated(savedInstanceState);
 
         userInfoModel = getArguments().getParcelable("user");
+        init = getArguments().getBoolean(Constants.KEY_DATA);
         if (getArguments().getBoolean(Constants.KEY_DATA)) {
             feelingButtonLayout.setVisibility(View.VISIBLE);
         } else {
@@ -268,6 +293,10 @@ public class DetailProfileFragment extends BaseFragment implements View.OnClickL
                 }
                 break;
         }
+    }
+
+    private void setFeelings() {
+        //networkManager.requestApiNoProgress(networkManager.setFeeling(userId, userFriend, type), Constants.ID_UPDATE_FEELING);
     }
 
     public void setCallback(DetailProfileCallback callback) {

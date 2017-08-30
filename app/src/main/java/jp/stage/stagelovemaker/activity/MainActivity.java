@@ -136,6 +136,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
 
         switch (event.action) {
             case NEW_MESSAGE:
+                //EventDistributor.getInstance().sendListMatchUpdateBroadcast();
                 break;
             case NEW_MATCH:
                 if (id != event.notificationModel.getSenderId()) {
@@ -183,6 +184,9 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
     public void onTabChanged(int index) {
         Utils.hideSoftKeyboard(this);
         viewPager.setCurrentItem(index - 1, true);
+        if (index == MainTabBar.TAB_CHAT) {
+            EventDistributor.getInstance().sendListMatchUpdateBroadcast();
+        }
     }
 
     @Override
@@ -276,6 +280,7 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
                     if (sendUserToken != null) {
                         UserInfoModel detailUser = sendUserToken.getUserInfo();
                         DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(detailUser, true);
+                        detailProfileFragment.setCallback(detailProfileCallback);
                         addNoneSlideIn(detailProfileFragment, DetailProfileFragment.TAG, true, true, R.id.flContainer);
                     }
                     break;
@@ -284,6 +289,23 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
 
         @Override
         public void onHttpError(String response, int idRequest, int errorCode) {
+        }
+    };
+
+    public DetailProfileFragment.DetailProfileCallback detailProfileCallback = new DetailProfileFragment.DetailProfileCallback() {
+        @Override
+        public void onNopeClicked() {
+            onBackPressed();
+        }
+
+        @Override
+        public void onLikeClicked() {
+            onBackPressed();
+        }
+
+        @Override
+        public void onStarClicked() {
+            onBackPressed();
         }
     };
 

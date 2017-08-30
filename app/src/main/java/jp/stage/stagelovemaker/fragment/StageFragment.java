@@ -96,11 +96,11 @@ public class StageFragment extends BaseFragment {
                     }
                     break;
                 case Constants.ID_UPDATE_FEELING:
-                    getActivity().runOnUiThread(() -> {
-                        final Handler handler = new Handler();
+//                    getActivity().runOnUiThread(() -> {
+//                        final Handler handler = new Handler();
 //                        handler.postDelayed(() -> EventDistributor.getInstance().sendListMatchUpdateBroadcast(), 200);
-                    });
-                    break;
+//                    });
+//                    break;
             }
         }
 

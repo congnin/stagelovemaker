@@ -88,7 +88,8 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
     @Override
     public void onResume() {
         super.onResume();
-        loadMatches();
+        //listMatchesAdapter.notifyDataSetChanged();
+        //chatAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -100,7 +101,7 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        resetViewState();
+        //resetViewState();
     }
 
     private void resetViewState() {
@@ -126,6 +127,8 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
         searchInput.renderDara(getString(R.string.search), false);
         searchInput.setDelegate(this, Constants.TAG_CONTROL_INPUT_SEARCH);
         searchEmpty.setVisibility(View.GONE);
+
+        loadMatches();
     }
 
     private void onFragmentLoaded() {
@@ -134,6 +137,7 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
             listMatchesAdapter = new MatchesRecycleAdapter(activity, itemAccess);
             listMatchesAdapter.setHasStableIds(true);
             recyclerViewMatches.setAdapter(listMatchesAdapter);
+            listMatchesAdapter.notifyDataSetChanged();;
         }
 
         if (chatAdapter == null) {
@@ -141,6 +145,7 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
             chatAdapter.setHasStableIds(true);
             chatAdapter.setListener(OnChatAdapter);
             rcvChat.setAdapter(chatAdapter);
+            chatAdapter.notifyDataSetChanged();
         }
 
         if (userInfoModels == null || userInfoModels.size() == 0) {
@@ -160,7 +165,9 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
 
         @Override
         public UserInfoModel getItem(int position) {
-            if (userInfoModels != null && 0 <= position && position < userInfoModels.size()) {
+            if(userInfoModels == null)
+                userInfoModels = new ArrayList<>();
+            if (0 <= position && position < userInfoModels.size()) {
                 return userInfoModels.get(position);
             }
             return null;
@@ -215,6 +222,10 @@ public class MatchesFragment extends BaseFragment implements FormInputText.FormI
                             onFragmentLoaded();
                             if (listMatchesAdapter != null) {
                                 listMatchesAdapter.notifyDataSetChanged();
+
+                            }
+                            if(chatAdapter != null){
+                                chatAdapter.setList((ArrayList<UserInfoModel>) userInfoModels);
                                 chatAdapter.notifyDataSetChanged();
                             }
                         }

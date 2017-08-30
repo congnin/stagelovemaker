@@ -477,10 +477,10 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
     public void onHttpError(String response, int idRequest, int errorCode) {
         switch (idRequest) {
             case Constants.ID_SEND_IMAGE:
-                ErrorModel errorModel = gson.fromJson(response, ErrorModel.class);
-                if (errorModel != null && !TextUtils.isEmpty(errorModel.getErrorMsg())) {
-                    Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
-                }
+//                ErrorModel errorModel = gson.fromJson(response, ErrorModel.class);
+//                if (errorModel != null && !TextUtils.isEmpty(errorModel.getErrorMsg())) {
+//                    Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
+//                }
                 break;
         }
     }

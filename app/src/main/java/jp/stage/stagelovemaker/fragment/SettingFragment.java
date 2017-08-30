@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.edmodo.rangebar.RangeBar;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 
 import jp.stage.stagelovemaker.MyApplication;
@@ -545,6 +546,8 @@ public class SettingFragment extends BaseFragment implements TitleBar.TitleBarCa
         if (bAllow) {
             Toast.makeText(getContext(), getString(R.string.you_are_loggout), Toast.LENGTH_LONG).show();
             MyApplication app = Utils.getApplication(getActivity());
+            int id = UserPreferences.getCurrentUserId();
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("/topics/topic_" + id);
             if (app != null) {
                 UserPreferences.clear();
                 app.setLocation(null);

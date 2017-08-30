@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -15,7 +14,6 @@ import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 
 import jp.stage.stagelovemaker.MyApplication;
 import jp.stage.stagelovemaker.R;
@@ -327,14 +325,27 @@ public class NetworkManager {
         return apiService.sendMessage(data);
     }
 
+//    public Call<ResponseModel> sendPicture(int userId, Bitmap bitmap, String chatRoomId) {
+//        File newfile = Utils.compressFile(mContext, Utils.savebitmap(mContext, bitmap));
+//        newfile.getPath();
+//        RequestBody requestFile =
+//                RequestBody.create(MediaType.parse("image/**"), newfile);
+//        MultipartBody.Part body =
+//                MultipartBody.Part.createFormData("content", newfile.getName(), requestFile);
+//        return apiService.sendImage(userId, body, "image", chatRoomId);
+//    }
+
     public Call<ResponseModel> sendPicture(int userId, Bitmap bitmap, String chatRoomId) {
         File newfile = Utils.compressFile(mContext, Utils.savebitmap(mContext, bitmap));
         newfile.getPath();
         RequestBody requestFile =
-                RequestBody.create(MediaType.parse("image/png"), newfile);
+                RequestBody.create(MediaType.parse("image/**"), newfile);
         MultipartBody.Part body =
                 MultipartBody.Part.createFormData("content", newfile.getName(), requestFile);
-        return apiService.sendImage(userId, body, "image", chatRoomId);
+        return apiService.sendImage(userId,
+                body,
+                Utils.toRequestBody("image"),
+                Utils.toRequestBody(chatRoomId));
     }
 
     public Call<ResponseModel> report(int receiverId, String reason) {

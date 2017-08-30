@@ -584,8 +584,9 @@ public class EditProfileFragment extends BaseFragment implements TitleBar.TitleB
             iYear = year;
             Calendar calendar = Calendar.getInstance();
             calendar.set(year, monthOfYear, dayOfMonth);
-            birthday = Utils.formatDateLocal(getActivity(), calendar.getTime());
+            birthday = Utils.formatDate(getActivity(), calendar.getTime());
             tvBirthday.setValue(birthday);
+            tvBirthday.setIssuseText("");
             userInfoModel.getMeta().setBirthday(birthday);
         }
     };

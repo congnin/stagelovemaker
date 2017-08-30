@@ -154,7 +154,7 @@ public class MainStageFragment extends BaseFragment implements SearchFragment.Se
         networkManager.requestApiNoProgress(networkManager.getPeopleList(1), Constants.ID_LIST_PEOPLE);
     }
 
-    private void loadSearchFragment(){
+    private void loadSearchFragment() {
         searchFragment = (SearchFragment) getActivity().getSupportFragmentManager()
                 .findFragmentByTag(SearchFragment.TAG);
         if (searchFragment == null) {
