@@ -87,10 +87,10 @@ public interface MyApiEndpoint {
 
     @Multipart
     @POST("api/messages/")
-    Call<ResponseModel> sendImage(@Query("user_id") int user_id,
-                                  @Part MultipartBody.Part picture,
-                                  @Query("type") String type,
-                                  @Query("chat_room_id") String chat_room_id);
+    Call<ResponseModel> sendImage(@Part("user_id") int user_id,
+                                  @Part MultipartBody.Part content,
+                                  @Part("type") String type,
+                                  @Part("chat_room_id") String chat_room_id);
 
     @POST("api/reports/")
     Call<ResponseModel> report(@Body JsonObject data);

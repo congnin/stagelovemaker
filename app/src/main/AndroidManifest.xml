@@ -77,6 +77,8 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".base.MessageService"
+            android:exported="false"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

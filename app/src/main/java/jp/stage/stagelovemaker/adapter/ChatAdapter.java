@@ -102,7 +102,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 }
             });
 
-            lastQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            lastQuery.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot child : dataSnapshot.getChildren()){

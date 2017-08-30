@@ -48,6 +48,8 @@ import jp.stage.stagelovemaker.R;
 import jp.stage.stagelovemaker.activity.MainActivity;
 import jp.stage.stagelovemaker.adapter.MessageAdapter;
 import jp.stage.stagelovemaker.base.BaseFragment;
+import jp.stage.stagelovemaker.base.MessageService;
+import jp.stage.stagelovemaker.model.ErrorModel;
 import jp.stage.stagelovemaker.model.InfoRoomModel;
 import jp.stage.stagelovemaker.model.MessageModel;
 import jp.stage.stagelovemaker.model.UserInfoModel;
@@ -463,6 +465,7 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
+        checkMessageRead(chatRoomId);
     }
 
     @Override
@@ -472,10 +475,26 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onHttpError(String response, int idRequest, int errorCode) {
-        switch (idRequest){
+        switch (idRequest) {
             case Constants.ID_SEND_IMAGE:
-                Toast.makeText(getActivity(), "HU HU HU", Toast.LENGTH_SHORT).show();
+                ErrorModel errorModel = gson.fromJson(response, ErrorModel.class);
+                if (errorModel != null && !TextUtils.isEmpty(errorModel.getErrorMsg())) {
+                    Toast.makeText(getActivity(), errorModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
+    }
+
+    private void checkMessageReadAsync(String receiverId) {
+        Runnable runnable = () -> checkMessageRead(receiverId);
+        new Thread(runnable).start();
+    }
+
+    private void checkMessageRead(String chatRoomId) {
+        Intent i = new Intent(getActivity(), MessageService.class);
+        //i.putExtra("receiverId", receiverId);
+        //i.putExtra("senderId", senderId);
+        i.putExtra("chat_room_id", chatRoomId);
+        getActivity().startService(i);
     }
 }

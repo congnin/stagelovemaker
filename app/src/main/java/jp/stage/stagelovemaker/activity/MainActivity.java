@@ -128,14 +128,20 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NotificationEvent event) {
+        int id = UserPreferences.getCurrentUserId();
         Timber.d("onEvent(", event);
-        Toast.makeText(this, event.notificationModel.getBody(), Toast.LENGTH_SHORT).show();
+        if (id != event.notificationModel.getSenderId()) {
+            Toast.makeText(this, event.notificationModel.getBody(), Toast.LENGTH_SHORT).show();
+        }
+
         switch (event.action) {
             case NEW_MESSAGE:
                 break;
             case NEW_MATCH:
-                networkManager.requestApiNoProgress(
-                        networkManager.getProfile(event.notificationModel.getSenderId()), Constants.ID_NEW_MATCH);
+                if (id != event.notificationModel.getSenderId()) {
+                    networkManager.requestApiNoProgress(
+                            networkManager.getProfile(event.notificationModel.getSenderId()), Constants.ID_NEW_MATCH);
+                }
                 EventDistributor.getInstance().sendListMatchUpdateBroadcast();
                 break;
             case NEW_LIKE:
@@ -261,14 +267,16 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
                     if (matchUserToken != null) {
                         UserInfoModel matchUser = matchUserToken.getUserInfo();
                         NewMatchFragment newMatchFragment = NewMatchFragment.newInstance(loginModel, matchUser);
+                        newMatchFragment.setDelegate(newMatchDelegate);
                         add(newMatchFragment, NewMatchFragment.TAG, true, false);
                     }
                     break;
                 case Constants.ID_SEND_CHAT:
                     UserTokenModel sendUserToken = gson.fromJson(response, UserTokenModel.class);
-                    if(sendUserToken != null){
+                    if (sendUserToken != null) {
                         UserInfoModel detailUser = sendUserToken.getUserInfo();
-                        DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(detailUser, false);
+                        DetailProfileFragment detailProfileFragment = DetailProfileFragment.newInstance(detailUser, true);
+                        addNoneSlideIn(detailProfileFragment, DetailProfileFragment.TAG, true, true, R.id.flContainer);
                     }
                     break;
             }
@@ -277,6 +285,12 @@ public class MainActivity extends CommonActivity implements MainTabBar.MainTabBa
         @Override
         public void onHttpError(String response, int idRequest, int errorCode) {
         }
+    };
+
+    public NewMatchFragment.NewMatchDelegate newMatchDelegate = (matchUser, chatRoom) -> {
+        onBackPressed();
+        MessageFragment messageFragment = MessageFragment.newInstance(matchUser, chatRoom);
+        addNoneSlideIn(messageFragment, MessageFragment.TAG, true, true, R.id.flContainer);
     };
 
     public UserInfoModel getLoginModel() {

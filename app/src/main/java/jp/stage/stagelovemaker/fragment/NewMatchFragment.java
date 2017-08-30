@@ -218,6 +218,10 @@ public class NewMatchFragment extends BaseFragment implements IHttpResponse {
 
     }
 
+    public void setDelegate(NewMatchDelegate delegate){
+        this.delegate = delegate;
+    }
+
     public interface NewMatchDelegate {
         void onShowChatWithMatch(UserInfoModel matchUser, String chatRoom);
     }

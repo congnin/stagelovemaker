@@ -342,7 +342,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
     private String showCurrentTime(int position) {
         try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.ENGLISH);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
             MessageModel model = messageModels.get(position);
 
             Date value = null;
